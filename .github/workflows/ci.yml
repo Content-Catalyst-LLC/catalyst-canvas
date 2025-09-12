@@ -1,0 +1,22 @@
+name: CI (web)
+on: { push: {}, pull_request: {} }
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy: { matrix: { node: [18, 20] } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: ${{ matrix.node }}, cache: npm }
+      - name: Install deps (if present)
+        run: |
+          if [ -f package.json ]; then npm ci; else echo "No package.json yet"; fi
+      - name: Lint (if configured)
+        run: |
+          if [ -f package.json ] && npm run | grep -q "lint"; then npm run lint; else echo "No lint script"; fi
+      - name: Build (if configured)
+        run: |
+          if [ -f package.json ] && npm run | grep -q "build"; then npm run build; else echo "No build script"; fi
+      - name: Test (if configured)
+        run: |
+          if [ -f package.json ] && npm run | grep -q "test"; then npm test -- --ci; else echo "No tests"; fi
