@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="h4 mb-3">Ideate — {{ framework }} ({{ p['name'] }})</h1>
+<form method="get" class="mb-3">
+ <label class="form-label">Framework</label>
+ <div class="input-group">
+ <select name="framework" class="form-select" onchange="this.form.submit">
+ <option value="AIDA" {{ 'selected' if framework=='AIDA' else '' }}>AIDA</option>
+ <option value="Hero’s Journey" {{ 'selected' if framework=='Hero’s Journey' else '' }}>Hero’s Journey</option>
+ <option value="JTBD" {{ 'selected' if framework=='JTBD' else '' }}>JTBD</option>
+ <option value="Content Matrix" {{ 'selected' if framework=='Content Matrix' else '' }}>Content Matrix</option>
+ </select>
+ <a class="btn btn-outline-secondary" href="/personas/{{ p['id'] }}">Back</a>
+ {% if framework == 'Content Matrix' %}
+ <a class="btn btn-outline-primary" href="/personas/{{ p['id'] }}/matrix">Open 2×2 Board</a>
+ {% endif %}
+ </div>
+</form>
+<div class="card mb-3">
+ <div class="card-header">Guided prompts</div>
+ <div class="card-body">
+ <ul class="mb-0">
+ {% for f in fields %}<li>{{ f }}</li>{% endfor %}
+ </ul>
+ </div>
+</div>
+{% if framework == 'Content Matrix' %}
+<form method="post" class="mb-3">
+ <label class="form-label">Add idea to a matrix quadrant</label>
+ <div class="row g-2">
+ <div class="col-md-8">
+ <input name="idea" class="form-control" placeholder="e.g., 'Quarterly benchmark report (evergreen educational)'" />
+ </div>
+ <div class="col-md-4">
+ <select name="matrix_quadrant" class="form-select">
+ {% for q in quadrants %}<option value="{{ q }}">{{ q }}</option>{% endfor %}
+ </select>
+ </div>
+ </div>
+ <div class="mt-2">
+ <button class="btn btn-primary" type="submit">Add</button>
+ </div>
+</form>
+{% elif framework == 'JTBD' %}
+<form method="post" class="mb-3">
+ <label class="form-label">JTBD inputs</label>
+ <div class="row g-2">
+ <div class="col-md-4"><input name="fj" class="form-control" placeholder="Functional Job"></div>
+ <div class="col-md-4"><input name="ej" class="form-control" placeholder="Emotional Job"></div>
+ <div class="col-md-4"><input name="sj" class="form-control" placeholder="Social Job"></div>
+ <div class="col-md-3"><input name="push" class="form-control" placeholder="Forces: Push"></div>
+ <div class="col-md-3"><input name="pull" class="form-control" placeholder="Forces: Pull"></div>
+ <div class="col-md-3"><input name="anx" class="form-control" placeholder="Forces: Anxieties"></div>
+ <div class="col-md-3"><input name="habits" class="form-control" placeholder="Forces: Habits"></div>
+ </div>
+ <div class="mt-2">
+ <button class="btn btn-primary" type="submit">Add Ideas</button>
+ </div>
+</form>
+{% elif framework == 'Hero’s Journey' %}
+<form method="post" class="mb-3">
+ <label class="form-label">Hero’s Journey inputs</label>
+ <div class="row g-2">
+ <div class="col-md-6"><input name="call" class="form-control" placeholder="Call to Adventure"></div>
+ <div class="col-md-6"><input name="trials" class="form-control" placeholder="Trials"></div>
+ <div class="col-md-6"><input name="trans" class="form-control" placeholder="Transformation"></div>
+ <div class="col-md-6"><input name="return" class="form-control" placeholder="Return with Elixir"></div>
+ </div>
+ <div class="mt-2">
+ <button class="btn btn-primary" type="submit">Add Ideas</button>
+ </div>
+</form>
+{% else %}
+<form method="post" class="mb-3">
+ <label class="form-label">Add idea</label>
+ <div class="input-group">
+ <input name="idea" class="form-control" placeholder="Write a concise idea card">
+ <button class="btn btn-primary" type="submit">Add</button>
+ </div>
+</form>
+{% endif %}
+<ul class="list-group">
+ {% for idea in ideas %}
+ <li class="list-group-item d-flex justify-content-between align-items-center">
+ <div>
+ <div>{{ idea['text'] }}</div>
+ <div class="small text-muted">
+ {{ idea['framework'] }}{% if idea['matrix_quadrant'] %} • {{ idea['matrix_quadrant'] }}{% endif %}
+ </div>
+ </div>
+ <span class="d-flex align-items-center gap-2">
+ <span class="badge bg-secondary">{{ idea['votes'] }}</span>
+ <button name="vote" value="{{ idea['id'] }}" formmethod="post" formaction="" class="btn btn-sm btn-outline-primary">+1</button>
+ </span>
+ </li>
+ {% else %}
+ <li class="list-group-item">No ideas yet. Add one above.</li>
+ {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="h4 mb-3">Prototype — Storyboard ({{ p['name'] }})</h1>
+<form method="post">
+ <div class="mb-2"><input name="title" class="form-control" placeholder="Storyboard title (optional)" /></div>
+ <div class="row g-2">
+ {% for i in range(1,7) %}
+ <div class="col-md-6">
+ <div class="card mb-2">
+ <div class="card-body">
+ <div class="mb-1"><strong>Panel {{ i }}</strong></div>
+ <input name="panel_title_{{ i }}" class="form-control mb-1" placeholder="Title" value="{{ panels[i-1]['title'] if panels and i-1 < panels|length else '' }}" />
+ <textarea name="panel_body_{{ i }}" class="form-control" rows="3" placeholder="Narrative">{{ panels[i-1]['body'] if panels and i-1 < panels|length else '' }}</textarea>
+ </div>
+ </div>
+ </div>
+ {% endfor %}
+ </div>
+ <div class="mt-2 d-flex gap-2">
+ <button class="btn btn-primary" type="submit">Save Storyboard</button>
+ <a class="btn btn-secondary" href="/personas/{{ p['id'] }}">Back</a>
+ </div>
+</form>
+{% endblock %}

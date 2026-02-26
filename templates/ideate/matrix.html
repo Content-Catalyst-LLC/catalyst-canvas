@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="h4 mb-3">Ideate — Content Matrix ({{ p['name'] }})</h1>
+<p>Place ideas in the 2x2 matrix: Evergreen vs Timely × Educational vs Entertaining</p>
+<div class="row">
+ <div class="col-md-6">
+ <h6>Evergreen • Educational</h6>
+ <textarea name="eg_ed" class="form-control" rows="4" form="matrixform"></textarea>
+ </div>
+ <div class="col-md-6">
+ <h6>Timely • Educational</h6>
+ <textarea name="timely_ed" class="form-control" rows="4" form="matrixform"></textarea>
+ </div>
+ <div class="col-md-6 mt-3">
+ <h6>Evergreen • Entertaining</h6>
+ <textarea name="eg_ent" class="form-control" rows="4" form="matrixform"></textarea>
+ </div>
+ <div class="col-md-6 mt-3">
+ <h6>Timely • Entertaining</h6>
+ <textarea name="timely_ent" class="form-control" rows="4" form="matrixform"></textarea>
+ </div>
+</div>
+<form method="post" id="matrixform" class="mt-3">
+ <button class="btn btn-primary" type="submit">Save Matrix</button>
+ <a class="btn btn-secondary" href="/personas/{{ p['id'] }}">Back</a>
+</form>
+{% endblock %}

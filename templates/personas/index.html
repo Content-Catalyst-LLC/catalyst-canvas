@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="h4 mb-3">Personas</h1>
+<div class="mb-3 d-flex gap-2">
+ <a href="{{ url_for('core.personas') }}" class="btn btn-primary">New Persona</a>
+ <a href="{{ url_for('core.import_ga4') }}" class="btn btn-outline-secondary">Import from GA4 CSV</a>
+</div>
+<ul class="list-group">
+ {% for per in personas %}
+ <li class="list-group-item d-flex justify-content-between align-items-center">
+ <div>
+ <strong>{{ per['name'] }}</strong>
+ <div class="small text-muted">
+ {{ per['role'] }}{% if per['segment'] %} • {{ per['segment'] }}{% endif %}
+ </div>
+ </div>
+ <div class="btn-group">
+ <a class="btn btn-sm btn-outline-primary" href="{{ url_for('core.view_persona', pid=per['id']) }}">Open</a>
+ <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('core.empathy', pid=per['id']) }}">Empathy</a>
+ <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('core.define', pid=per['id']) }}">Define</a>
+ <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('core.ideate', pid=per['id']) }}">Ideate</a>
+ <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('core.prototype', pid=per['id']) }}">Prototype</a>
+ <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('core.test_stage',pid=per['id']) }}">Test</a>
+ </div>
+ </li>
+ {% else %}
+ <li class="list-group-item text-muted">No personas yet — click “New Persona”.</li>
+ {% endfor %}
+</ul>
+{% endblock %}

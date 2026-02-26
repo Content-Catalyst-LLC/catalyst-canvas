@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="h4 mb-3">{{ p['name'] }}</h1>
+<div class="row g-3 mb-3">
+ <div class="col-md-4"><div class="card"><div class="card-body">
+ <div><strong>Role:</strong> {{ p['role'] }}</div>
+ <div><strong>Segment:</strong> {{ p['segment'] }}</div>
+ </div></div></div>
+ <div class="col-md-8"><div class="card"><div class="card-body">
+ <div><strong>Goals:</strong><br>{{ p['goals']|replace('\n','<br>')|safe }}</div>
+ <div class="mt-2"><strong>Pain Points:</strong><br>{{ p['pains']|replace('\n','<br>')|safe }}</div>
+ </div></div></div>
+</div>
+<div class="d-flex gap-2 mb-3">
+ <a class="btn btn-outline-primary" href="/personas/{{ p['id'] }}/empathy">Empathy Map</a>
+ <a class="btn btn-outline-primary" href="/personas/{{ p['id'] }}/define">Define (POV/HMW)</a>
+ <a class="btn btn-outline-primary" href="/personas/{{ p['id'] }}/ideate">Ideate</a>
+ <a class="btn btn-outline-primary" href="/personas/{{ p['id'] }}/prototype">Prototype</a>
+ <a class="btn btn-outline-primary" href="/personas/{{ p['id'] }}/test">Test</a>
+ <a class="btn btn-outline-secondary" href="/export/persona/{{ p['id'] }}.json">Export JSON</a>
+</div>
+<div class="row g-3">
+ <div class="col-md-6">
+ <div class="card h-100"><div class="card-header">Latest Empathy Map</div>
+ <div class="card-body">
+ {% if em %}
+ <strong>Says</strong><div class="text-muted small">{{ em['says'] }}</div>
+ <strong>Thinks</strong><div class="text-muted small">{{ em['thinks'] }}</div>
+ <strong>Does</strong><div class="text-muted small">{{ em['does'] }}</div>
+ <strong>Feels</strong><div class="text-muted small">{{ em['feels'] }}</div>
+ {% else %}
+ <em>No empathy map yet.</em>
+ {% endif %}
+ </div>
+ </div>
+ </div>
+ <div class="col-md-6">
+ <div class="card h-100"><div class="card-header">Latest POV/HMW</div>
+ <div class="card-body">
+ {% if pd %}
+ <strong>POV</strong><div class="text-muted small">{{ pd['pov'] }}</div>
+ <strong>HMW</strong><pre class="small">{{ pd['hmw'] }}</pre>
+ {% else %}
+ <em>No POV/HMW yet.</em>
+ {% endif %}
+ </div>
+ </div>
+ </div>
+</div>
+{% endblock %}

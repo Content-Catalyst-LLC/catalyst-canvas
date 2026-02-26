@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="h4 mb-3">Prototype — Concept Cards ({{ p['name'] }})</h1>
+<form method="post" class="mb-3">
+ <div class="row g-2">
+ <div class="col-md-4"><input name="title" class="form-control" placeholder="Concept title"></div>
+ <div class="col-md-8"><input name="description" class="form-control" placeholder="Short description / goal"></div>
+ </div>
+ <div class="mt-2"><button class="btn btn-primary">Add Concept</button>
+ <a class="btn btn-secondary" href="/personas/{{ p['id'] }}">Back</a></div>
+</form>
+<div class="row g-3">
+ {% for pr in protos %}
+ <div class="col-md-6">
+ <div class="card h-100">
+ <div class="card-body">
+ <h5 class="card-title">{{ pr['title'] }}</h5>
+ <p class="card-text">{{ pr['description'] }}</p>
+ </div>
+ </div>
+ </div>
+ {% else %}
+ <div class="col-12"><em>No prototypes yet.</em></div>
+ {% endfor %}
+</div>
+{% endblock %}

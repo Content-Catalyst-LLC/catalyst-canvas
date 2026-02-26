@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="h4 mb-3">Ideate — JTBD ({{ p['name'] }})</h1>
+<form method="post" class="mb-3">
+ <div class="row g-3">
+ <div class="col-md-4"><label class="form-label">Functional Job</label><textarea name="job_functional" class="form-control" rows="2"></textarea></div>
+ <div class="col-md-4"><label class="form-label">Emotional Job</label><textarea name="job_emotional" class="form-control" rows="2"></textarea></div>
+ <div class="col-md-4"><label class="form-label">Social Job</label><textarea name="job_social" class="form-control" rows="2"></textarea></div>
+ </div>
+ <div class="mt-3 d-flex gap-2">
+ <button class="btn btn-primary" type="submit">Save JTBD</button>
+ <a class="btn btn-secondary" href="/personas/{{ p['id'] }}">Back</a>
+ </div>
+</form>
+{% endblock %}

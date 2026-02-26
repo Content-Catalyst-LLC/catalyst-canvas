@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="h4 mb-3">Import Personas from GA4 CSV</h1>
+<p class="text-muted">Upload a CSV with columns like: <code>deviceCategory</code>, <code>sessionDefaultChannelGroup</code>, <code>country</code>, <code>sessions</code>, <code>engagedSessions</code>, <code>averageSessionDuration</code>, <code>conversions</code>.</p>
+<form method="post" enctype="multipart/form-data" class="mb-3">
+ <input type="file" name="csv" class="form-control" accept=".csv">
+ <div class="mt-2">
+ <button class="btn btn-primary" type="submit">Import</button>
+ <a class="btn btn-secondary" href="/">Back</a>
+ </div>
+</form>
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+{% if created %}
+<div class="alert alert-success">
+ <div><strong>Created personas:</strong></div>
+ <ul>{% for n in created %}<li>{{ n }}</li>{% endfor %}</ul>
+ <a href="/" class="btn btn-sm btn-success">View Personas</a>
+</div>
+{% endif %}
+{% endblock %}

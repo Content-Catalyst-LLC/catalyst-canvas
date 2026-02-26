@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="h4 mb-3">Ideate — Hero's Journey ({{ p['name'] }})</h1>
+<form method="post" class="mb-3">
+ <div class="mb-2"><label class="form-label">Call to Adventure</label><textarea name="call" class="form-control"></textarea></div>
+ <div class="mb-2"><label class="form-label">Trials</label><textarea name="trials" class="form-control"></textarea></div>
+ <div class="mb-2"><label class="form-label">Transformation</label><textarea name="transform" class="form-control"></textarea></div>
+ <div class="mb-2"><label class="form-label">Return with Elixir</label><textarea name="return" class="form-control"></textarea></div>
+ <div class="mt-3 d-flex gap-2">
+ <button class="btn btn-primary" type="submit">Save Hero's Journey</button>
+ <a class="btn btn-secondary" href="/personas/{{ p['id'] }}">Back</a>
+ </div>
+</form>
+{% endblock %}

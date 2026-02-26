@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="h4 mb-3">Test — Feedback Capture ({{ p['name'] }})</h1>
+<form method="post">
+ <div class="mb-2">
+ <label class="form-label">Prototype</label>
+ <select name="prototype_id" class="form-select">
+ {% for pr in protos %}<option value="{{ pr['id'] }}">{{ pr['title'] }}</option>{% endfor %}
+ </select>
+ </div>
+ <div class="row g-3">
+ <div class="col-md-6"><label class="form-label">What worked?</label><textarea name="worked" class="form-control" rows="3"></textarea></div>
+ <div class="col-md-6"><label class="form-label">What didn't?</label><textarea name="didnt" class="form-control" rows="3"></textarea></div>
+ <div class="col-md-6"><label class="form-label">Questions</label><textarea name="questions" class="form-control" rows="3"></textarea></div>
+ <div class="col-md-6"><label class="form-label">Ideas</label><textarea name="ideas" class="form-control" rows="3"></textarea></div>
+ </div>
+ <div class="mt-3 d-flex gap-2">
+ <button class="btn btn-primary" type="submit">Save Feedback</button>
+ <a class="btn btn-secondary" href="/personas/{{ p['id'] }}">Back</a>
+ </div>
+</form>
+{% endblock %}

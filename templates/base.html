@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>Catalyst Canvas</title>
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+ <div class="container-fluid">
+ <!-- Brand goes to Empathize stage (persona if available, else global) -->
+ <a class="navbar-brand"
+ href="{{ url_for('core.empathy', pid=nav_pid) if nav_pid else url_for('core.empathy') }}">
+ Catalyst Canvas
+ </a>
+ <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav"
+ aria-controls="topNav" aria-expanded="false" aria-label="Toggle navigation">
+ <span class="navbar-toggler-icon"></span>
+ </button>
+ <div class="collapse navbar-collapse" id="topNav">
+ <ul class="navbar-nav ms-auto">
+ <!-- Empathize -->
+ <li class="nav-item">
+ <a class="nav-link {{ 'active' if request.endpoint in ['core.empathy'] else '' }}"
+ href="{{ url_for('core.empathy', pid=nav_pid) if nav_pid else url_for('core.empathy') }}">
+ Empathize
+ </a>
+ </li>
+ <!-- Define -->
+ <li class="nav-item">
+ <a class="nav-link {{ 'active' if request.endpoint in ['core.define'] else '' }}"
+ href="{{ url_for('core.define', pid=nav_pid) if nav_pid else url_for('core.define') }}">
+ Define
+ </a>
+ </li>
+ <!-- Ideate -->
+ <li class="nav-item">
+ <a class="nav-link {{ 'active' if request.endpoint in ['core.ideate'] else '' }}"
+ href="{{ url_for('core.ideate', pid=nav_pid) if nav_pid else url_for('core.ideate') }}">
+ Ideate
+ </a>
+ </li>
+ <!-- Prototype -->
+ <li class="nav-item">
+ <a class="nav-link {{ 'active' if request.endpoint in ['core.prototype'] else '' }}"
+ href="{{ url_for('core.prototype', pid=nav_pid) if nav_pid else url_for('core.prototype') }}">
+ Prototype
+ </a>
+ </li>
+ <!-- Test -->
+ <li class="nav-item">
+ <a class="nav-link {{ 'active' if request.endpoint in ['core.test_stage'] else '' }}"
+ href="{{ url_for('core.test_stage', pid=nav_pid) if nav_pid else url_for('core.test_stage') }}">
+ Test
+ </a>
+ </li>
+ </ul>
+ </div>
+ </div>
+</nav>
+<main class="container py-4">
+ {# flash messages #}
+ {% with messages = get_flashed_messages(with_categories=true) %}
+ {% if messages %}
+ {% for category, message in messages %}
+ <div class="alert alert-{{ 'warning' if category=='warning' else ('danger' if category=='error' else ('success' if category=='success' else 'info')) }} alert-dismissible fade show" role="alert">
+ {{ message }}
+ <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+ </div>
+ {% endfor %}
+ {% endif %}
+ {% endwith %}
+ {% block content %}{% endblock %}
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

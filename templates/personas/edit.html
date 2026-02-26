@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="h4 mb-3">New Persona</h1>
+<form method="post">
+ <div class="row g-3">
+ <div class="col-md-4"><label class="form-label">Name</label><input name="name" class="form-control" required></div>
+ <div class="col-md-4"><label class="form-label">Role</label><input name="role" class="form-control"></div>
+ <div class="col-md-4"><label class="form-label">Segment</label><input name="segment" class="form-control"></div>
+ <div class="col-6"><label class="form-label">Goals</label><textarea name="goals" class="form-control" rows="3"></textarea></div>
+ <div class="col-6"><label class="form-label">Pain Points</label><textarea name="pains" class="form-control" rows="3"></textarea></div>
+ <div class="col-12"><label class="form-label">Notes</label><textarea name="notes" class="form-control" rows="3"></textarea></div>
+ </div>
+ <div class="mt-3 d-flex gap-2">
+ <button class="btn btn-primary" type="submit">Save</button>
+ <a class="btn btn-secondary" href="/">Cancel</a>
+ </div>
+</form>
+{% endblock %}
