@@ -5,7 +5,7 @@ Catalyst Canvas is an open-source design-thinking and problem-framing workspace 
 The repository now includes three connected layers:
 
 1. **Core Canvas logic** — a lightweight Python brief generator for reproducible design-thinking outputs.
-2. **Application layer** — the existing Flask application and templates for structured Canvas workflows.
+2. **Application layer** — a refreshed local Flask application and templates for structured Canvas workflows.
 3. **WordPress demo plugin** — a browser-based online demo for the Catalyst Canvas page using the shortcode `[catalyst_canvas_demo]`.
 
 ## Why this exists
@@ -23,9 +23,9 @@ The module is intentionally practical. It is designed for builders, sustainabili
 ## Repository structure
 
 ```text
-app/                         Existing Flask application layer
-templates/                   Existing Flask templates
-demo/                        Existing demo database and sample assets
+app/                         Refreshed local Flask application layer
+templates/                   Refreshed Flask workflow templates
+demo/                        Refreshed seed database, reset script, and sample assets
 python/                      Reproducible Canvas brief generator and CLI
 data/                        Sample input data
 schemas/                     JSON schema for Canvas brief outputs
@@ -37,6 +37,21 @@ tests/                       Lightweight test suite
 outputs/                     Generated local outputs, ignored except .gitkeep
 notebooks/                   Notebook workspace and notes
 ```
+
+
+## Local Flask demo
+
+Run the refreshed local demo:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python3 demo/seed_demo.py
+python3 app.py
+```
+
+Open <http://127.0.0.1:5000>.
 
 ## WordPress demo
 

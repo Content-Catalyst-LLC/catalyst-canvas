@@ -1,5 +1,5 @@
-#!/bin/bash
-# Reset Catalyst Canvas demo environment with pre-seeded DB
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-cp "$SCRIPT_DIR/catalyst_seed.sqlite3" "$SCRIPT_DIR/../catalyst.sqlite3"
-echo "Demo DB copied into place. Run: make run"
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+python3 demo/seed_demo.py
+printf '\nDemo databases refreshed. Run locally with:\n  python3 app.py\n\n'

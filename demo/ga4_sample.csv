@@ -1,8 +1,6 @@
-deviceCategory,sessionDefaultChannelGroup,country,sessions,engagedSessions,averageSessionDuration,conversions
-mobile,Organic Search,United States,1200,800,65.4,45
-desktop,Direct,United States,700,520,98.2,60
-mobile,Social,Canada,500,200,32.1,12
-tablet,Referral,United Kingdom,200,140,77.5,15
-desktop,Email,United States,350,280,110.3,40
-mobile,Paid Search,India,450,300,55.0,22
-desktop,Organic Search,Germany,300,220,80.6,18
+event_date,source,event_name,persona_hint,page_path,count
+2026-02-28,organic,page_view,sustainability-manager,/catalyst-canvas/,42
+2026-02-28,organic,scroll,sustainability-manager,/catalyst-canvas/,18
+2026-02-28,linkedin,page_view,technical-content-lead,/narrative-risk/,21
+2026-02-28,github,click,civic-program-lead,/global-impact-catalyst/,9
+2026-02-28,direct,form_start,sustainability-manager,/contact/,4

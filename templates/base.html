@@ -1,78 +1,41 @@
 <!doctype html>
 <html lang="en">
 <head>
- <meta charset="utf-8">
- <meta name="viewport" content="width=device-width, initial-scale=1">
- <title>Catalyst Canvas</title>
- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Catalyst Canvas{% endblock %}</title>
+  <style>
+    :root{--black:#000;--red:#9b1111;--cream:#f7f3ea;--soft:#fbfaf6;--border:#d9d2c4;--text:#171717;--muted:#555;--white:#fff}
+    *{box-sizing:border-box} body{margin:0;background:var(--cream);color:var(--text);font-family:Helvetica,Arial,sans-serif;line-height:1.55}
+    a{color:inherit}.wrap{max-width:1120px;margin:0 auto;padding:28px 18px 60px}.hero,.panel{background:var(--white);border:1px solid var(--border);box-shadow:0 10px 26px rgba(0,0,0,.045)}
+    .hero{position:relative;border-top:7px solid var(--black);padding:34px}.hero:before{content:"";position:absolute;top:8px;left:34px;right:34px;height:3px;background:var(--red)}
+    .kicker,.label{color:var(--red);font-size:.72rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;margin:0 0 10px}.hero h1{font-size:clamp(2.3rem,6vw,4.4rem);line-height:.96;letter-spacing:-.055em;margin:0 0 14px}.lede{font-size:1.15rem;font-weight:800;max-width:850px}.muted{color:var(--muted)}
+    .nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.btn,.small-link{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--black);background:var(--white);min-height:38px;padding:9px 13px;text-decoration:none;text-transform:uppercase;letter-spacing:.075em;font-size:.72rem;font-weight:850}.btn:hover,.small-link:hover{background:var(--black);color:var(--white)}
+    .panel{margin-top:22px;padding:26px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.card{border:1px solid var(--border);border-top:4px solid var(--black);background:var(--soft);padding:18px}.card h3,.panel h2{margin-top:0}.card p{color:var(--muted)}
+    label{display:block;font-weight:900;margin:14px 0 5px} input,textarea,select{width:100%;padding:11px;border:1px solid var(--border);background:#fff;font:inherit} textarea{min-height:92px}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}button{cursor:pointer}.trace{margin-top:18px;padding:16px;border:1px solid var(--border);border-left:4px solid var(--red);background:var(--soft);color:var(--muted)}pre{white-space:pre-wrap;background:#111;color:#fff;padding:16px;overflow:auto}.footer{margin-top:24px;color:var(--muted);font-size:.85rem}
+    @media(max-width:850px){.grid,.grid.two{grid-template-columns:1fr}.hero,.panel{padding:22px}.hero:before{left:22px;right:22px}.btn{width:100%}}
+  </style>
 </head>
-<body class="bg-light">
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
- <div class="container-fluid">
- <!-- Brand goes to Empathize stage (persona if available, else global) -->
- <a class="navbar-brand"
- href="{{ url_for('core.empathy', pid=nav_pid) if nav_pid else url_for('core.empathy') }}">
- Catalyst Canvas
- </a>
- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav"
- aria-controls="topNav" aria-expanded="false" aria-label="Toggle navigation">
- <span class="navbar-toggler-icon"></span>
- </button>
- <div class="collapse navbar-collapse" id="topNav">
- <ul class="navbar-nav ms-auto">
- <!-- Empathize -->
- <li class="nav-item">
- <a class="nav-link {{ 'active' if request.endpoint in ['core.empathy'] else '' }}"
- href="{{ url_for('core.empathy', pid=nav_pid) if nav_pid else url_for('core.empathy') }}">
- Empathize
- </a>
- </li>
- <!-- Define -->
- <li class="nav-item">
- <a class="nav-link {{ 'active' if request.endpoint in ['core.define'] else '' }}"
- href="{{ url_for('core.define', pid=nav_pid) if nav_pid else url_for('core.define') }}">
- Define
- </a>
- </li>
- <!-- Ideate -->
- <li class="nav-item">
- <a class="nav-link {{ 'active' if request.endpoint in ['core.ideate'] else '' }}"
- href="{{ url_for('core.ideate', pid=nav_pid) if nav_pid else url_for('core.ideate') }}">
- Ideate
- </a>
- </li>
- <!-- Prototype -->
- <li class="nav-item">
- <a class="nav-link {{ 'active' if request.endpoint in ['core.prototype'] else '' }}"
- href="{{ url_for('core.prototype', pid=nav_pid) if nav_pid else url_for('core.prototype') }}">
- Prototype
- </a>
- </li>
- <!-- Test -->
- <li class="nav-item">
- <a class="nav-link {{ 'active' if request.endpoint in ['core.test_stage'] else '' }}"
- href="{{ url_for('core.test_stage', pid=nav_pid) if nav_pid else url_for('core.test_stage') }}">
- Test
- </a>
- </li>
- </ul>
- </div>
- </div>
-</nav>
-<main class="container py-4">
- {# flash messages #}
- {% with messages = get_flashed_messages(with_categories=true) %}
- {% if messages %}
- {% for category, message in messages %}
- <div class="alert alert-{{ 'warning' if category=='warning' else ('danger' if category=='error' else ('success' if category=='success' else 'info')) }} alert-dismissible fade show" role="alert">
- {{ message }}
- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
- </div>
- {% endfor %}
- {% endif %}
- {% endwith %}
- {% block content %}{% endblock %}
-</main>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <p class="kicker">Sustainable Catalyst</p>
+      <h1>Catalyst Canvas</h1>
+      <p class="lede">A local design-thinking workspace for turning messy problems into reviewable experiments, personas, POV statements, HMW prompts, prototypes, and test plans.</p>
+      <nav class="nav" aria-label="Canvas navigation">
+        <a class="btn" href="{{ url_for('canvas.index') }}">Home</a>
+        <a class="btn" href="{{ url_for('canvas.define') }}">Define</a>
+        <a class="btn" href="{{ url_for('canvas.empathy') }}">Empathize</a>
+        <a class="btn" href="{{ url_for('canvas.ideate') }}">Ideate</a>
+        <a class="btn" href="{{ url_for('canvas.prototype') }}">Prototype</a>
+        <a class="btn" href="{{ url_for('canvas.test_plan') }}">Test</a>
+        <a class="btn" href="{{ url_for('canvas.report') }}">Report</a>
+      </nav>
+    </header>
+
+    {% block content %}{% endblock %}
+
+    <p class="footer">Boundary: Catalyst Canvas supports problem framing and experimentation. It does not guarantee product-market fit, funding, implementation success, compliance, or impact.</p>
+  </main>
 </body>
 </html>

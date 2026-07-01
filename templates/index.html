@@ -1,20 +1,32 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% block title %}Catalyst Canvas — Local Demo{% endblock %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
- <h1 class="h4">Personas</h1>
- <a class="btn btn-primary" href="/personas">New Persona</a>
- <a class="btn btn-outline-primary" href="/personas/import/ga4">Import GA4 CSV</a>
-</div>
-<ul class="list-group">
- {% for p in personas %}
- <li class="list-group-item d-flex justify-content-between align-items-center">
- <div>
- <strong>{{ p['name'] }}</strong> — {{ p['role'] }} ({{ p['segment'] }})
- </div>
- <a class="btn btn-sm btn-outline-secondary" href="/personas/{{ p['id'] }}">Open</a>
- </li>
- {% else %}
- <li class="list-group-item">No personas yet. Create one.</li>
- {% endfor %}
-</ul>
+<section class="panel">
+  <p class="label">Local Flask Demo</p>
+  <h2>Start with a reviewable Canvas workflow</h2>
+  <p class="muted">Use the sequence below to move from ambiguous challenge to a structured brief. The WordPress page demo is public-facing; this Flask app is the local repository companion.</p>
+  <div class="grid">
+    <article class="card"><h3>Frame</h3><p>Define challenge, audience, goal, constraint, and known evidence.</p><a class="small-link" href="{{ url_for('canvas.define') }}">Start defining →</a></article>
+    <article class="card"><h3>Empathize</h3><p>Clarify the user, needs, pains, context, and friction.</p><a class="small-link" href="{{ url_for('canvas.empathy') }}">Map empathy →</a></article>
+    <article class="card"><h3>Export</h3><p>Create a JSON/Markdown brief that can be reviewed and revised.</p><a class="small-link" href="{{ url_for('canvas.report') }}">View report →</a></article>
+  </div>
+</section>
+<section class="panel">
+  <p class="label">Recent Briefs</p>
+  <h2>Saved Canvas briefs</h2>
+  {% if canvases %}
+    <div class="grid">
+      {% for item in canvases %}
+      <article class="card">
+        <h3>{{ item.title }}</h3>
+        <p>Updated {{ item.updated_at }}</p>
+        <a class="small-link" href="/api/canvas/{{ item.id }}.json">JSON →</a>
+        <a class="small-link" href="/export/{{ item.id }}.md">Markdown →</a>
+      </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="muted">No saved briefs yet.</p>
+  {% endif %}
+</section>
 {% endblock %}
