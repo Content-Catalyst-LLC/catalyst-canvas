@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/catalyst_canvas_brief.schema.json",
+  "title": "Catalyst Canvas Brief",
+  "type": "object",
+  "required": [
+    "generated_at",
+    "challenge",
+    "audience",
+    "goal",
+    "constraint",
+    "framework",
+    "persona",
+    "point_of_view",
+    "how_might_we",
+    "ideation_prompts",
+    "prototype",
+    "test_plan",
+    "assumptions",
+    "review_questions"
+  ],
+  "properties": {
+    "generated_at": {"type": "string"},
+    "challenge": {"type": "string"},
+    "audience": {"type": "string"},
+    "goal": {"type": "string"},
+    "constraint": {"type": "string"},
+    "framework": {"type": "string"},
+    "persona": {
+      "type": "object",
+      "required": ["name", "description"],
+      "properties": {
+        "name": {"type": "string"},
+        "description": {"type": "string"}
+      }
+    },
+    "point_of_view": {"type": "string"},
+    "how_might_we": {"type": "array", "items": {"type": "string"}},
+    "ideation_prompts": {"type": "array", "items": {"type": "string"}},
+    "prototype": {
+      "type": "object",
+      "required": ["title", "description"],
+      "properties": {
+        "title": {"type": "string"},
+        "description": {"type": "string"}
+      }
+    },
+    "test_plan": {
+      "type": "object",
+      "required": ["signal", "method", "learning_goal"],
+      "properties": {
+        "signal": {"type": "string"},
+        "method": {"type": "string"},
+        "learning_goal": {"type": "string"}
+      }
+    },
+    "assumptions": {"type": "array", "items": {"type": "string"}},
+    "review_questions": {"type": "array", "items": {"type": "string"}}
+  }
+}

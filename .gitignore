@@ -1,3 +1,6 @@
 __pycache__/
 *.pyc
 .DS_Store
+outputs/*
+!outputs/.gitkeep
+catalyst-canvas-demo.zip

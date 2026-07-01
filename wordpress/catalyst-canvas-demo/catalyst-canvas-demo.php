@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Catalyst Canvas Demo
  * Plugin URI: https://sustainablecatalyst.com/catalyst-canvas/
- * Description: Adds a guided, client-side Catalyst Canvas demo for WordPress pages via the [catalyst_canvas_demo] shortcode.
- * Version: 1.0.0
+ * Description: Adds a guided, client-side Catalyst Canvas demo via the [catalyst_canvas_demo] shortcode.
+ * Version: 1.1.0
  * Author: Content Catalyst LLC
  * License: MIT
  * Text Domain: catalyst-canvas-demo
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 }
 
 final class Catalyst_Canvas_Demo_Plugin {
-    private const VERSION = '1.0.0';
+    private const VERSION = '1.1.0';
     private const SHORTCODE = 'catalyst_canvas_demo';
 
     public function __construct() {
@@ -71,22 +71,10 @@ final class Catalyst_Canvas_Demo_Plugin {
                 <form class="ccanvasdemo-inputs" data-canvas-form>
                     <div class="ccanvasdemo-panel">
                         <p class="ccanvasdemo-section-label">Problem framing</p>
-                        <label>
-                            <span>Challenge</span>
-                            <textarea data-field="challenge" rows="3" placeholder="Example: A nonprofit needs a clearer way to explain program impact to funders."></textarea>
-                        </label>
-                        <label>
-                            <span>Audience / user</span>
-                            <input data-field="audience" type="text" placeholder="Example: Program director at a community nonprofit">
-                        </label>
-                        <label>
-                            <span>Goal</span>
-                            <input data-field="goal" type="text" placeholder="Example: Build a defensible impact story with traceable indicators">
-                        </label>
-                        <label>
-                            <span>Constraint</span>
-                            <input data-field="constraint" type="text" placeholder="Example: Limited data, small team, stakeholder pressure">
-                        </label>
+                        <label><span>Challenge</span><textarea data-field="challenge" rows="3" placeholder="Example: A nonprofit needs a clearer way to explain program impact to funders."></textarea></label>
+                        <label><span>Audience / user</span><input data-field="audience" type="text" placeholder="Example: Program director at a community nonprofit"></label>
+                        <label><span>Goal</span><input data-field="goal" type="text" placeholder="Example: Build a defensible impact story with traceable indicators"></label>
+                        <label><span>Constraint</span><input data-field="constraint" type="text" placeholder="Example: Limited data, small team, stakeholder pressure"></label>
                     </div>
 
                     <div class="ccanvasdemo-panel">
@@ -100,10 +88,7 @@ final class Catalyst_Canvas_Demo_Plugin {
                                 <option value="Matrix">Content Matrix</option>
                             </select>
                         </label>
-                        <label>
-                            <span>Custom idea</span>
-                            <input data-field="customIdea" type="text" placeholder="Add your own idea after generating the draft">
-                        </label>
+                        <label><span>Custom idea</span><input data-field="customIdea" type="text" placeholder="Add your own idea after generating the draft"></label>
                         <div class="ccanvasdemo-actions">
                             <button type="button" class="ccanvasdemo-btn ccanvasdemo-btn-primary" data-action="generate">Generate draft canvas</button>
                             <button type="button" class="ccanvasdemo-btn" data-action="add-idea">Add custom idea</button>
@@ -120,62 +105,40 @@ final class Catalyst_Canvas_Demo_Plugin {
                     </div>
 
                     <div class="ccanvasdemo-grid">
-                        <article class="ccanvasdemo-card">
-                            <span>Persona</span>
-                            <h4 data-output="personaName">Primary user</h4>
-                            <p data-output="personaBody">A draft persona will appear here.</p>
-                        </article>
+                        <article class="ccanvasdemo-card"><span>Persona</span><h4 data-output="personaName">Primary user</h4><p data-output="personaBody">A draft persona will appear here.</p></article>
+                        <article class="ccanvasdemo-card"><span>POV</span><h4>Point of view</h4><p data-output="pov">A point-of-view statement will appear here.</p></article>
+                        <article class="ccanvasdemo-card"><span>HMW</span><h4>How might we?</h4><ul data-output="hmw"></ul></article>
+                        <article class="ccanvasdemo-card"><span>Prototype</span><h4 data-output="prototypeTitle">Concept card</h4><p data-output="prototypeBody">A prototype concept will appear here.</p></article>
+                    </div>
 
-                        <article class="ccanvasdemo-card">
-                            <span>POV</span>
-                            <h4>Point of view</h4>
-                            <p data-output="pov">A point-of-view statement will appear here.</p>
-                        </article>
-
-                        <article class="ccanvasdemo-card">
-                            <span>HMW</span>
-                            <h4>How might we?</h4>
-                            <ul data-output="hmw"></ul>
-                        </article>
-
-                        <article class="ccanvasdemo-card">
-                            <span>Prototype</span>
-                            <h4 data-output="prototypeTitle">Concept card</h4>
-                            <p data-output="prototypeBody">A prototype concept will appear here.</p>
-                        </article>
+                    <div class="ccanvasdemo-panel">
+                        <p class="ccanvasdemo-section-label">Experiment plan</p>
+                        <div class="ccanvasdemo-grid ccanvasdemo-grid-three">
+                            <article class="ccanvasdemo-mini"><strong>Signal</strong><p data-output="signal">What evidence would show whether this idea is working?</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Test</strong><p data-output="test">What small test could be run next?</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Risk</strong><p data-output="risk">What could be overclaimed or misunderstood?</p></article>
+                        </div>
                     </div>
 
                     <div class="ccanvasdemo-panel">
                         <p class="ccanvasdemo-section-label">Ideas</p>
-                        <ol class="ccanvasdemo-ideas" data-output="ideas"></ol>
+                        <ul class="ccanvasdemo-ideas" data-output="ideas"></ul>
                     </div>
 
-                    <div class="ccanvasdemo-panel ccanvasdemo-review">
-                        <p class="ccanvasdemo-section-label">Test plan</p>
-                        <div class="ccanvasdemo-review-grid">
-                            <div><strong>What to test</strong><p data-output="testWhat">The key assumption will appear here.</p></div>
-                            <div><strong>Signal to watch</strong><p data-output="testSignal">A test signal will appear here.</p></div>
-                            <div><strong>Risk</strong><p data-output="testRisk">A risk note will appear here.</p></div>
-                            <div><strong>Next iteration</strong><p data-output="nextStep">A next step will appear here.</p></div>
-                        </div>
-                    </div>
-
-                    <div class="ccanvasdemo-actions ccanvasdemo-actions-bottom">
-                        <button type="button" class="ccanvasdemo-btn ccanvasdemo-btn-primary" data-action="copy">Copy brief</button>
+                    <div class="ccanvasdemo-actions ccanvasdemo-export-actions">
+                        <button type="button" class="ccanvasdemo-btn" data-action="copy">Copy brief</button>
                         <button type="button" class="ccanvasdemo-btn" data-action="download">Download JSON</button>
-                        <button type="button" class="ccanvasdemo-btn" data-action="print">Print</button>
+                        <button type="button" class="ccanvasdemo-btn" data-action="print">Print / Save PDF</button>
                     </div>
-
-                    <p class="ccanvasdemo-boundary">Boundary: this demo supports structured design thinking. It does not validate a business model, certify impact, replace research, or make professional recommendations.</p>
                 </div>
             </div>
         </section>
         <?php
-        return (string) ob_get_clean();
+        return ob_get_clean();
     }
 
     public function register_admin_page(): void {
-        add_management_page(
+        add_options_page(
             'Catalyst Canvas Demo',
             'Catalyst Canvas Demo',
             'manage_options',
@@ -185,18 +148,18 @@ final class Catalyst_Canvas_Demo_Plugin {
     }
 
     public function render_admin_page(): void {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
         ?>
         <div class="wrap">
             <h1>Catalyst Canvas Demo</h1>
-            <p>Add the demo to any page with this shortcode:</p>
-            <p><code>[catalyst_canvas_demo]</code></p>
-            <p>Optional title:</p>
-            <p><code>[catalyst_canvas_demo title="Catalyst Canvas Demo" subtitle="Turn a messy problem into a structured design-thinking brief."]</code></p>
-            <p>The demo runs client-side in the browser. It does not submit demo inputs to Sustainable Catalyst.</p>
+            <p>Add the interactive Catalyst Canvas demo to a page with:</p>
+            <pre><code>[catalyst_canvas_demo]</code></pre>
+            <p>The demo runs client-side in the browser and does not submit visitor inputs to Sustainable Catalyst.</p>
         </div>
         <?php
     }
 }
 
 new Catalyst_Canvas_Demo_Plugin();
-

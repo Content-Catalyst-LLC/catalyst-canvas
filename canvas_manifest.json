@@ -1,0 +1,22 @@
+{
+  "name": "Catalyst Canvas",
+  "status": "open-source design-thinking and problem-framing module",
+  "platform": "Sustainable Catalyst",
+  "shortcode": "[catalyst_canvas_demo]",
+  "layers": [
+    "Flask application",
+    "Python core generator",
+    "WordPress demo plugin",
+    "documentation",
+    "schemas",
+    "tests"
+  ],
+  "method_path": "challenge -> audience -> goal -> constraint -> persona -> POV -> HMW -> prototype -> test plan -> review",
+  "boundaries": [
+    "educational and research-oriented",
+    "not consulting advice",
+    "not outcome guarantee",
+    "not product-market fit validation",
+    "requires human review"
+  ]
+}
