@@ -1,0 +1,240 @@
+/* Catalyst Canvas Demo — scoped WordPress shortcode styles */
+.ccanvasdemo {
+  --ccanvas-black: #000000;
+  --ccanvas-red: #9b1111;
+  --ccanvas-white: #ffffff;
+  --ccanvas-cream: #f7f3ea;
+  --ccanvas-cream-soft: #fbfaf6;
+  --ccanvas-border: #d9d2c4;
+  --ccanvas-text: #171717;
+  --ccanvas-muted: #555555;
+  --ccanvas-shadow: 0 10px 26px rgba(0, 0, 0, 0.045);
+  max-width: 1180px;
+  margin: 32px auto;
+  color: var(--ccanvas-text);
+  font-family: Helvetica, Arial, sans-serif;
+}
+.ccanvasdemo, .ccanvasdemo * { box-sizing: border-box; }
+.ccanvasdemo-hero {
+  position: relative;
+  padding: 30px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(247,243,234,0.92));
+  border: 1px solid var(--ccanvas-border);
+  border-top: 7px solid var(--ccanvas-black);
+  box-shadow: var(--ccanvas-shadow);
+}
+.ccanvasdemo-hero::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 30px;
+  right: 30px;
+  height: 3px;
+  background: var(--ccanvas-red);
+}
+.ccanvasdemo-eyebrow,
+.ccanvasdemo-section-label {
+  margin: 0 0 10px;
+  color: var(--ccanvas-red);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.ccanvasdemo h2 {
+  margin: 0 0 14px;
+  color: var(--ccanvas-black);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1;
+  letter-spacing: -0.045em;
+  font-weight: 900;
+}
+.ccanvasdemo-lede {
+  max-width: 900px;
+  margin: 0 0 12px;
+  color: var(--ccanvas-black);
+  font-size: 1.15rem;
+  line-height: 1.48;
+  font-weight: 800;
+}
+.ccanvasdemo-note,
+.ccanvasdemo-boundary {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.76);
+  border-left: 4px solid var(--ccanvas-red);
+  color: var(--ccanvas-muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+.ccanvasdemo-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.35fr);
+  gap: 18px;
+  margin-top: 18px;
+}
+.ccanvasdemo-panel {
+  padding: 22px;
+  background: var(--ccanvas-white);
+  border: 1px solid var(--ccanvas-border);
+  box-shadow: var(--ccanvas-shadow);
+}
+.ccanvasdemo-inputs {
+  display: grid;
+  gap: 18px;
+  align-content: start;
+}
+.ccanvasdemo label {
+  display: block;
+  margin: 0 0 14px;
+}
+.ccanvasdemo label span {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--ccanvas-black);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ccanvasdemo input,
+.ccanvasdemo textarea,
+.ccanvasdemo select {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--ccanvas-border);
+  border-radius: 0;
+  background: var(--ccanvas-cream-soft);
+  color: var(--ccanvas-text);
+  font: inherit;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+.ccanvasdemo textarea { resize: vertical; }
+.ccanvasdemo input:focus,
+.ccanvasdemo textarea:focus,
+.ccanvasdemo select:focus {
+  outline: 2px solid rgba(155, 17, 17, 0.22);
+  border-color: var(--ccanvas-red);
+}
+.ccanvasdemo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 12px;
+}
+.ccanvasdemo-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 9px 13px;
+  background: var(--ccanvas-white);
+  border: 1px solid var(--ccanvas-black);
+  color: var(--ccanvas-black);
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  transition: transform 0.16s ease, background 0.16s ease, color 0.16s ease;
+}
+.ccanvasdemo-btn:hover,
+.ccanvasdemo-btn:focus-visible {
+  background: var(--ccanvas-black);
+  color: var(--ccanvas-white);
+  transform: translateY(-1px);
+}
+.ccanvasdemo-btn-primary {
+  background: var(--ccanvas-black);
+  color: var(--ccanvas-white);
+}
+.ccanvasdemo-btn-primary:hover,
+.ccanvasdemo-btn-primary:focus-visible {
+  background: var(--ccanvas-red);
+  border-color: var(--ccanvas-red);
+}
+.ccanvasdemo-output {
+  display: grid;
+  gap: 18px;
+}
+.ccanvasdemo-brief { background: var(--ccanvas-cream-soft); }
+.ccanvasdemo-brief h3,
+.ccanvasdemo-card h4,
+.ccanvasdemo-panel h3 {
+  margin: 0 0 10px;
+  color: var(--ccanvas-black);
+  font-size: 1.18rem;
+  line-height: 1.18;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+.ccanvasdemo-brief p,
+.ccanvasdemo-card p,
+.ccanvasdemo-review p,
+.ccanvasdemo-ideas li {
+  margin: 0;
+  color: var(--ccanvas-muted);
+  font-size: 0.93rem;
+  line-height: 1.58;
+}
+.ccanvasdemo-grid,
+.ccanvasdemo-review-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.ccanvasdemo-card,
+.ccanvasdemo-review-grid div {
+  min-width: 0;
+  padding: 18px;
+  background: var(--ccanvas-cream-soft);
+  border: 1px solid var(--ccanvas-border);
+  border-top: 4px solid var(--ccanvas-black);
+}
+.ccanvasdemo-card span {
+  display: block;
+  margin: 0 0 9px;
+  color: var(--ccanvas-red);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.ccanvasdemo-card ul,
+.ccanvasdemo-ideas {
+  margin: 0;
+  padding-left: 18px;
+}
+.ccanvasdemo-card li,
+.ccanvasdemo-ideas li { margin-bottom: 8px; }
+.ccanvasdemo-review-grid strong {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--ccanvas-black);
+  font-weight: 900;
+}
+.ccanvasdemo-actions-bottom { justify-content: flex-end; }
+@media print {
+  .ccanvasdemo-inputs,
+  .ccanvasdemo-actions,
+  .ccanvasdemo-hero .ccanvasdemo-note { display: none !important; }
+  .ccanvasdemo-layout { display: block; }
+  .ccanvasdemo-panel,
+  .ccanvasdemo-card,
+  .ccanvasdemo-review-grid div { box-shadow: none; break-inside: avoid; }
+}
+@media (max-width: 900px) {
+  .ccanvasdemo-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .ccanvasdemo { margin: 22px auto; }
+  .ccanvasdemo-hero,
+  .ccanvasdemo-panel { padding: 20px; }
+  .ccanvasdemo-hero::before { left: 20px; right: 20px; }
+  .ccanvasdemo-grid,
+  .ccanvasdemo-review-grid { grid-template-columns: 1fr; }
+  .ccanvasdemo-btn { width: 100%; }
+  .ccanvasdemo-actions-bottom { justify-content: stretch; }
+}
+

@@ -1,0 +1,30 @@
+name: Catalyst Canvas CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run Python tests
+        run: |
+          PYTHONPATH=python python -m unittest discover -s tests -v
+      - name: Check plugin PHP syntax when PHP is available
+        run: |
+          if command -v php >/dev/null 2>&1; then
+            php -l wordpress/catalyst-canvas-demo/catalyst-canvas-demo.php
+          else
+            echo "PHP not available; skipping syntax check."
+          fi
+      - name: Build WordPress plugin zip
+        run: |
+          mkdir -p outputs
+          cd wordpress
+          zip -qr ../outputs/catalyst-canvas-demo.zip catalyst-canvas-demo
+

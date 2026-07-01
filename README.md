@@ -78,3 +78,21 @@ http://127.0.0.1:5000/intro?title=Catalyst+Canvas&name=YOUR+NAME&github=YOURGH&e
 3. From your project directory, run:
  ```bash
  ```
+
+## WordPress Online Demo
+
+This repository includes a WordPress plugin that creates an interactive Catalyst Canvas demo for the public Catalyst Canvas page.
+
+```text
+[catalyst_canvas_demo]
+```
+
+The demo helps visitors move through challenge framing, audience definition, goal/constraint capture, persona generation, POV/HMW prompts, ideation frameworks, prototype framing, test planning, and JSON export.
+
+- Plugin source: `wordpress/catalyst-canvas-demo/`
+- Plugin package: `outputs/catalyst-canvas-demo.zip`
+- Installation notes: `docs/wordpress-plugin.md`
+- Demo workflow notes: `docs/demo-workflow.md`
+
+Boundary: the demo supports structured design thinking. It does not validate business models, certify impact, replace research, or make professional recommendations.
+
