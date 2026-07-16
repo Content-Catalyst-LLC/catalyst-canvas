@@ -1,21 +1,17 @@
 # Catalyst Canvas Export Specification
 
-A core Canvas export preserves:
+Catalyst Canvas v1.2.0 exports the same validated `catalyst-canvas/1.0` document through JSON, Markdown, and standalone print HTML.
 
-- canonical repository version;
-- generated timestamp;
-- challenge;
-- audience;
-- goal;
-- constraint;
-- selected framework;
-- persona;
-- point of view;
-- HMW prompts;
-- ideation prompts;
-- prototype concept;
-- test plan;
-- assumptions;
-- review questions.
+## JSON
 
-The v1.1.1 JSON format is validated against `schemas/catalyst_canvas_brief.schema.json`. The schema version constant is synchronized with the root `VERSION` file during release validation.
+JSON is the canonical machine-readable representation and must validate against `schemas/catalyst_canvas_contract_1_0.schema.json`.
+
+## Markdown
+
+Markdown preserves contract version, Canvas and revision IDs, status, updated timestamp, all core design sections, and provenance in a stable human-readable order.
+
+## Print HTML
+
+The HTML exporter is dependency-free, self-contained, and print-safe. It is intended for browser printing or Save as PDF without changing the underlying contract.
+
+All exporters validate before writing. Invalid contracts fail rather than producing partial artifacts.

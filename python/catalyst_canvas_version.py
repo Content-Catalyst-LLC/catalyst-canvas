@@ -1,18 +1,5 @@
-"""Canonical Catalyst Canvas repository version loader."""
+"""Compatibility version exports for legacy Python imports."""
 
-from __future__ import annotations
+from catalyst_canvas.version import CONTRACT_VERSION, __version__
 
-from pathlib import Path
-
-_VERSION_FILE = Path(__file__).resolve().parents[1] / "VERSION"
-
-
-def read_version() -> str:
-    """Return the canonical repository version."""
-    version = _VERSION_FILE.read_text(encoding="utf-8").strip()
-    if not version:
-        raise RuntimeError(f"Catalyst Canvas version file is empty: {_VERSION_FILE}")
-    return version
-
-
-__version__ = read_version()
+__all__ = ["CONTRACT_VERSION", "__version__"]

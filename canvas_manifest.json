@@ -1,17 +1,18 @@
 {
   "name": "Catalyst Canvas",
-  "status": "open-source design-thinking and problem-framing module",
+  "status": "open-source strategic design and problem-framing workspace",
   "platform": "Sustainable Catalyst",
   "shortcode": "[catalyst_canvas_demo]",
   "layers": [
-    "Flask application",
-    "Python core generator",
-    "WordPress demo plugin",
-    "documentation",
-    "schemas",
-    "tests"
+    "canonical catalyst_canvas domain package",
+    "Canvas Contract 1.0 JSON Schema",
+    "Flask adapter and validated SQLite persistence",
+    "Python and CLI adapters",
+    "WordPress shared browser engine",
+    "cross-surface fixtures and conformance tests",
+    "stable JSON, Markdown, and print-report exporters"
   ],
-  "method_path": "challenge -> audience -> goal -> constraint -> persona -> POV -> HMW -> prototype -> test plan -> review",
+  "method_path": "challenge -> audience -> goal -> constraints -> personas and stakeholders -> POV -> HMW -> framework prompts -> evidence and assumptions -> prototypes -> tests -> review",
   "boundaries": [
     "educational and research-oriented",
     "not consulting advice",
@@ -19,9 +20,18 @@
     "not product-market fit validation",
     "requires human review"
   ],
-  "version": "1.1.1",
-  "release": "Repository Integrity and CI Repair",
+  "version": "1.2.0",
+  "release": "Canonical Canvas Contract and Shared Engine",
   "released_at": "2026-07-16",
   "canonical_version_source": "VERSION",
-  "python_compatibility_note": "python/catalyst_canvas_brief.py is a deprecated v1.x adapter over catalyst_canvas_core.py"
+  "contract_version": "catalyst-canvas/1.0",
+  "canonical_schema": "schemas/catalyst_canvas_contract_1_0.schema.json",
+  "framework_registry": "contracts/frameworks.json",
+  "shared_fixture": "fixtures/canvas_contract_1_0.input.json",
+  "migration_support": [
+    "legacy Python core v1.0-v1.1 exports",
+    "legacy wrapper exports",
+    "legacy Flask flat records"
+  ],
+  "compatibility_note": "python/catalyst_canvas_core.py and python/catalyst_canvas_brief.py are deprecated adapters over the catalyst_canvas package"
 }

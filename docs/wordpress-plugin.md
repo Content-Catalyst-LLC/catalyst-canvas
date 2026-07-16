@@ -1,38 +1,28 @@
-# Catalyst Canvas WordPress Plugin
+# WordPress Plugin
 
-## Location
+The v1.2.0 shortcode plugin uses three scripts:
 
-```text
-wordpress/catalyst-canvas-demo/
-```
+1. generated contract/framework data;
+2. the shared browser Canvas engine;
+3. the presentation and interaction layer.
 
-## Versioning
-
-The repository `VERSION` file is canonical. The release validator confirms that the plugin header and internal asset version match it.
-
-## Build
+Build:
 
 ```bash
+python scripts/sync_contract_assets.py
 python scripts/build_plugin.py
 ```
 
-Expected package:
+Artifact:
 
 ```text
-dist/catalyst-canvas-demo-v1.1.1.zip
+dist/catalyst-canvas-demo-v1.2.0.zip
 ```
 
-## Install
+Shortcode:
 
-1. Open **Plugins → Add New → Upload Plugin**.
-2. Upload the versioned ZIP.
-3. Activate **Catalyst Canvas Demo**.
-4. Add `[catalyst_canvas_demo]` to the desired page.
-
-## Validation
-
-```bash
-python scripts/validate_release.py
+```text
+[catalyst_canvas_demo]
 ```
 
-When PHP and Node.js are available, the validator checks both the plugin PHP file and its JavaScript asset.
+Generated JSON declares `catalyst-canvas/1.0`. Visitor inputs remain in the browser.

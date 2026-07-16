@@ -1,24 +1,20 @@
 #!/usr/bin/env python3
-"""Deprecated v1.x compatibility adapter for Catalyst Canvas briefs.
+"""Deprecated v1.x compatibility adapter over Canvas Contract 1.0."""
 
-New code should use :mod:`catalyst_canvas_core`. This module remains available
-through the v1.x line so existing imports and command-line workflows continue
-to work, but it delegates generation to the maintained core engine rather than
-carrying a second independent implementation.
-"""
 from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import argparse
 import json
 from dataclasses import asdict, dataclass
 from typing import Dict, List
 
-try:
-    from .catalyst_canvas_core import generate_brief
-    from .catalyst_canvas_version import __version__
-except ImportError:  # Direct script execution.
-    from catalyst_canvas_core import generate_brief
-    from catalyst_canvas_version import __version__
+from catalyst_canvas import __version__, generate_canvas
 
 
 @dataclass(frozen=True)
@@ -46,48 +42,48 @@ class CanvasBrief:
 
 
 def build_canvas_brief(data: CanvasInput) -> CanvasBrief:
-    """Return the legacy brief shape using the maintained core generator."""
-    core = generate_brief(asdict(data))
+    contract = generate_canvas(asdict(data), source_surface="python")
+    persona = contract["personas"][0]
+    prototype = contract["prototypes"][0]
+    test = contract["tests"][0]
     return CanvasBrief(
-        title=f"Catalyst Canvas draft for {core.audience}",
+        title=f"Catalyst Canvas draft for {contract['audience']['primary']}",
         summary=(
-            f"This canvas frames a design challenge for {core.audience}: "
-            f"{core.challenge}. The working goal is to {core.goal.lower()} "
-            f"while accounting for {core.constraint.lower()}."
+            f"This canvas frames a design challenge for {contract['audience']['primary']}: "
+            f"{contract['challenge']}. The working goal is to {contract['goal'].lower()} "
+            f"while accounting for {contract['constraints'][0]['statement'].lower()}."
         ),
-        persona_name=core.persona["name"],
-        persona_body=core.persona["description"],
-        pov=core.point_of_view,
-        hmw=list(core.how_might_we),
-        ideas=list(core.ideation_prompts),
-        prototype_title=core.prototype["title"],
-        prototype_body=core.prototype["description"],
+        persona_name=persona["name"],
+        persona_body=persona["description"],
+        pov=contract["point_of_view"]["statement"],
+        hmw=[item["question"] for item in contract["how_might_we"]],
+        ideas=[f"{item['label']}: {item['question']}" for item in contract["framework"]["prompts"]],
+        prototype_title=prototype["title"],
+        prototype_body=prototype["description"],
         test_plan={
-            "what_to_test": core.test_plan["learning_goal"],
-            "signal_to_watch": core.test_plan["signal"],
+            "what_to_test": test["learning_goal"],
+            "signal_to_watch": test["signal"],
             "risk": "The prototype may overstate confidence if assumptions and evidence gaps are not explicit.",
-            "next_iteration": core.test_plan["method"],
+            "next_iteration": test["method"],
         },
         boundary="Structured design-thinking support only. Review before relying on this output.",
     )
 
 
 def export_payload(data: CanvasInput) -> Dict[str, object]:
-    """Export the legacy wrapper with the canonical repository version."""
-    core = generate_brief(asdict(data))
+    contract = generate_canvas(asdict(data), source_surface="python")
     return {
-        "generated_at": core.generated_at,
+        "generated_at": contract["updated_at"],
         "tool": "Catalyst Canvas Demo",
         "version": __version__,
         "inputs": asdict(data),
         "canvas": asdict(build_canvas_brief(data)),
+        "canonical_contract": contract,
     }
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Generate a legacy-compatible Catalyst Canvas JSON brief."
-    )
+    parser = argparse.ArgumentParser(description="Generate a legacy-compatible Canvas wrapper.")
     parser.add_argument("--challenge", required=True)
     parser.add_argument("--audience", required=True)
     parser.add_argument("--goal", required=True)
@@ -95,16 +91,7 @@ def main() -> int:
     parser.add_argument("--framework", default="AIDA", choices=("AIDA", "Hero", "JTBD", "Matrix"))
     parser.add_argument("--output", default="-")
     args = parser.parse_args()
-
-    payload = export_payload(
-        CanvasInput(
-            challenge=args.challenge,
-            audience=args.audience,
-            goal=args.goal,
-            constraint=args.constraint,
-            framework=args.framework,
-        )
-    )
+    payload = export_payload(CanvasInput(args.challenge, args.audience, args.goal, args.constraint, args.framework))
     text = json.dumps(payload, indent=2, ensure_ascii=False)
     if args.output == "-":
         print(text)

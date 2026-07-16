@@ -1,0 +1,178 @@
+{
+  "schema_version": "catalyst-canvas/1.0",
+  "canvas_id": "canvas-4c6d9563-d088-46d2-ac37-9c30620bf461",
+  "revision_id": "revision-5c3cf5dd-337c-4b2a-b49b-f99bec20b20f",
+  "title": "Catalyst Canvas Brief",
+  "status": "draft",
+  "owner_context": {
+    "owner_id": "",
+    "name": "",
+    "organization": "",
+    "role": ""
+  },
+  "created_at": "2026-07-16T14:07:29.173828+00:00",
+  "updated_at": "2026-07-16T14:07:29.173828+00:00",
+  "challenge": "A nonprofit needs a clearer way to explain program impact to funders without overstating certainty.",
+  "audience": {
+    "primary": "Program director at a community nonprofit",
+    "secondary": [],
+    "affected": [],
+    "excluded": []
+  },
+  "goal": "Build a defensible impact story with traceable indicators",
+  "constraints": [
+    {
+      "constraint_id": "constraint-001",
+      "statement": "Limited data, small team capacity, and stakeholder pressure for simple results",
+      "source": "input"
+    }
+  ],
+  "personas": [
+    {
+      "persona_id": "persona-001",
+      "name": "Program director at a community nonprofit",
+      "role": "",
+      "description": "Needs help addressing: A nonprofit needs a clearer way to explain program impact to funders without overstating certainty.. The user wants build a defensible impact story with traceable indicators while navigating limited data, small team capacity, and stakeholder pressure for simple results.",
+      "needs": [
+        "Build a defensible impact story with traceable indicators"
+      ],
+      "pains": [
+        "Limited data, small team capacity, and stakeholder pressure for simple results"
+      ],
+      "source_type": "assumption",
+      "confidence": "low"
+    }
+  ],
+  "stakeholders": [],
+  "point_of_view": {
+    "statement": "Program director at a community nonprofit needs a practical way to address 'A nonprofit needs a clearer way to explain program impact to funders without overstating certainty.' so they can build a defensible impact story with traceable indicators without ignoring the constraint: Limited data, small team capacity, and stakeholder pressure for simple results.",
+    "persona_id": "persona-001"
+  },
+  "how_might_we": [
+    {
+      "hmw_id": "hmw-001",
+      "question": "How might we help Program director at a community nonprofit make the challenge concrete enough to act on?",
+      "status": "candidate"
+    },
+    {
+      "hmw_id": "hmw-002",
+      "question": "How might we turn the goal — Build a defensible impact story with traceable indicators — into a small testable experiment?",
+      "status": "candidate"
+    },
+    {
+      "hmw_id": "hmw-003",
+      "question": "How might we make the constraint visible without letting it stop progress?",
+      "status": "candidate"
+    },
+    {
+      "hmw_id": "hmw-004",
+      "question": "How might we document assumptions so the next decision can be reviewed?",
+      "status": "candidate"
+    }
+  ],
+  "framework": {
+    "name": "Jobs To Be Done",
+    "prompts": [
+      {
+        "prompt_id": "prompt-001",
+        "label": "When",
+        "question": "What situation creates the need?"
+      },
+      {
+        "prompt_id": "prompt-002",
+        "label": "I want to",
+        "question": "What progress is the user trying to make?"
+      },
+      {
+        "prompt_id": "prompt-003",
+        "label": "So I can",
+        "question": "What outcome matters?"
+      },
+      {
+        "prompt_id": "prompt-004",
+        "label": "Constraint",
+        "question": "What prevents the user from making progress today?"
+      }
+    ],
+    "key": "JTBD"
+  },
+  "evidence": [],
+  "assumptions": [
+    {
+      "assumption_id": "assumption-001",
+      "statement": "The stated audience is the right primary user for the first iteration.",
+      "status": "untested",
+      "criticality": "medium"
+    },
+    {
+      "assumption_id": "assumption-002",
+      "statement": "The goal is specific enough to test with a small prototype.",
+      "status": "untested",
+      "criticality": "medium"
+    },
+    {
+      "assumption_id": "assumption-003",
+      "statement": "The constraint is material and should remain visible in the design process.",
+      "status": "untested",
+      "criticality": "medium"
+    },
+    {
+      "assumption_id": "assumption-004",
+      "statement": "A lightweight brief can reduce ambiguity before heavier implementation work begins.",
+      "status": "untested",
+      "criticality": "medium"
+    }
+  ],
+  "prototypes": [
+    {
+      "prototype_id": "prototype-001",
+      "title": "Reviewable Canvas Brief",
+      "description": "A one-page working artifact that captures the challenge, audience, goal, constraints, point of view, HMW prompts, prototype concept, assumptions, and test plan.",
+      "status": "concept"
+    }
+  ],
+  "tests": [
+    {
+      "test_id": "test-001",
+      "title": "Stakeholder clarity review",
+      "signal": "A stakeholder can explain the problem, proposed next step, and key assumption in their own words.",
+      "method": "Share the brief with 3–5 users or reviewers and capture confusion, objections, missing evidence, and next-step clarity.",
+      "learning_goal": "Determine whether the framing is clear enough to guide a real prototype or decision.",
+      "status": "planned"
+    }
+  ],
+  "review_notes": [
+    {
+      "review_note_id": "review-001",
+      "type": "review_question",
+      "note": "What claim in this brief needs stronger evidence?",
+      "status": "open"
+    },
+    {
+      "review_note_id": "review-002",
+      "type": "review_question",
+      "note": "What assumption would most change the next step if it proved false?",
+      "status": "open"
+    },
+    {
+      "review_note_id": "review-003",
+      "type": "review_question",
+      "note": "What user signal would show that the prototype is worth continuing?",
+      "status": "open"
+    },
+    {
+      "review_note_id": "review-004",
+      "type": "review_question",
+      "note": "What should be rewritten to avoid overpromising?",
+      "status": "open"
+    }
+  ],
+  "provenance": {
+    "generator": "catalyst-canvas",
+    "generator_version": "1.2.0",
+    "source_surface": "cli",
+    "source_version": "1.2.0",
+    "migrated_from": "",
+    "warnings": []
+  }
+}

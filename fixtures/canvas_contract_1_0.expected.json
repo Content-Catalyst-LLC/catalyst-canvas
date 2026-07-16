@@ -1,0 +1,164 @@
+{
+  "schema_version": "catalyst-canvas/1.0",
+  "canvas_id": "canvas-fixture-001",
+  "revision_id": "revision-fixture-001",
+  "title": "Community Heat Resilience Canvas",
+  "status": "active",
+  "owner_context": {
+    "owner_id": "owner-fixture-001",
+    "name": "Program Design Team",
+    "organization": "Sustainable Catalyst",
+    "role": "Facilitator"
+  },
+  "created_at": "2026-07-16T12:00:00+00:00",
+  "updated_at": "2026-07-16T12:00:00+00:00",
+  "challenge": "Neighborhood heat-response planning is fragmented across agencies and community organizations.",
+  "audience": {
+    "primary": "Municipal resilience coordinator",
+    "secondary": [
+      "Public-health program lead"
+    ],
+    "affected": [
+      "Residents in high-heat neighborhoods"
+    ],
+    "excluded": []
+  },
+  "goal": "Create a reviewable pilot that connects heat-risk evidence to neighborhood action.",
+  "constraints": [
+    {
+      "constraint_id": "constraint-001",
+      "statement": "Data coverage and community capacity vary by neighborhood.",
+      "source": "workshop"
+    }
+  ],
+  "personas": [
+    {
+      "persona_id": "persona-001",
+      "name": "Municipal Resilience Coordinator",
+      "role": "Coordinates heat preparedness across departments and partners.",
+      "description": "Needs a practical way to connect uneven evidence, community priorities, and operational decisions.",
+      "needs": [
+        "A shared evidence-to-action workflow"
+      ],
+      "pains": [
+        "Fragmented ownership and inconsistent data"
+      ],
+      "source_type": "mixed",
+      "confidence": "medium"
+    }
+  ],
+  "stakeholders": [
+    {
+      "stakeholder_id": "stakeholder-001",
+      "name": "Neighborhood partner coalition",
+      "relationship": "affected and implementing",
+      "influence": "medium",
+      "interest": "high",
+      "notes": "Must review intervention assumptions before pilot launch."
+    }
+  ],
+  "point_of_view": {
+    "statement": "Municipal Resilience Coordinator needs a practical way to address 'Neighborhood heat-response planning is fragmented across agencies and community organizations.' so they can create a reviewable pilot that connects heat-risk evidence to neighborhood action without ignoring the constraint: Data coverage and community capacity vary by neighborhood.",
+    "persona_id": "persona-001"
+  },
+  "how_might_we": [
+    {
+      "hmw_id": "hmw-001",
+      "question": "How might we help Municipal Resilience Coordinator make the challenge concrete enough to act on?",
+      "status": "candidate"
+    },
+    {
+      "hmw_id": "hmw-002",
+      "question": "How might we turn the goal — Create a reviewable pilot that connects heat-risk evidence to neighborhood action — into a small testable experiment?",
+      "status": "candidate"
+    },
+    {
+      "hmw_id": "hmw-003",
+      "question": "How might we make the constraint visible without letting it stop progress?",
+      "status": "candidate"
+    },
+    {
+      "hmw_id": "hmw-004",
+      "question": "How might we document assumptions so the next decision can be reviewed?",
+      "status": "candidate"
+    }
+  ],
+  "framework": {
+    "name": "Jobs To Be Done",
+    "prompts": [
+      {
+        "prompt_id": "prompt-001",
+        "label": "When",
+        "question": "What situation creates the need?"
+      },
+      {
+        "prompt_id": "prompt-002",
+        "label": "I want to",
+        "question": "What progress is the user trying to make?"
+      },
+      {
+        "prompt_id": "prompt-003",
+        "label": "So I can",
+        "question": "What outcome matters?"
+      },
+      {
+        "prompt_id": "prompt-004",
+        "label": "Constraint",
+        "question": "What prevents the user from making progress today?"
+      }
+    ],
+    "key": "JTBD"
+  },
+  "evidence": [
+    {
+      "evidence_id": "evidence-001",
+      "type": "dataset",
+      "title": "Neighborhood heat indicators",
+      "summary": "Available heat, vulnerability, and service-access indicators with known coverage gaps.",
+      "citation": "Internal pilot dataset",
+      "confidence": "medium"
+    }
+  ],
+  "assumptions": [
+    {
+      "assumption_id": "assumption-001",
+      "statement": "A shared one-page pilot brief will improve cross-agency decision clarity.",
+      "status": "untested",
+      "criticality": "high"
+    }
+  ],
+  "prototypes": [
+    {
+      "prototype_id": "prototype-001",
+      "title": "Neighborhood heat-action brief",
+      "description": "A printable brief linking one neighborhood risk signal to one operational response and one review checkpoint.",
+      "status": "planned"
+    }
+  ],
+  "tests": [
+    {
+      "test_id": "test-001",
+      "title": "Cross-agency clarity review",
+      "signal": "Reviewers independently identify the same next action and evidence gap.",
+      "method": "Run a 30-minute review with municipal and community partners.",
+      "learning_goal": "Determine whether the brief supports a shared pilot decision.",
+      "status": "planned"
+    }
+  ],
+  "review_notes": [
+    {
+      "review_note_id": "review-001",
+      "type": "risk",
+      "note": "Do not treat incomplete neighborhood indicators as proof of individual vulnerability.",
+      "status": "open"
+    }
+  ],
+  "provenance": {
+    "generator": "catalyst-canvas",
+    "generator_version": "1.2.0",
+    "source_surface": "fixture",
+    "source_version": "1.2.0",
+    "migrated_from": "",
+    "warnings": []
+  }
+}

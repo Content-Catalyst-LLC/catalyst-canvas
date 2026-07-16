@@ -1,27 +1,18 @@
-# Python Utilities
+# Python Adapters
 
-## Maintained core
+New development should import the canonical package:
 
-`catalyst_canvas_core.py` is the maintained v1.1.1 brief generator.
-
-Generate JSON:
-
-```bash
-python python/catalyst_canvas_core.py \
-  --input data/catalyst_canvas_sample_input.json \
-  --output outputs/sample_canvas_brief.json
+```python
+from catalyst_canvas import generate_canvas, validate_contract
+from catalyst_canvas.exporters import export_json, export_markdown, export_print_html
 ```
 
-Generate Markdown:
+The supported CLI is:
 
 ```bash
-python python/catalyst_canvas_core.py \
-  --input data/catalyst_canvas_sample_input.json \
-  --markdown outputs/sample_canvas_brief.md
+python -m catalyst_canvas.cli generate --input input.json --json canvas.json
+python -m catalyst_canvas.cli validate --input canvas.json
+python -m catalyst_canvas.cli migrate --input legacy.json --output canvas.json
 ```
 
-## Compatibility adapter
-
-`catalyst_canvas_brief.py` preserves the earlier v1.x import and CLI shape. It delegates to the maintained core and is formally deprecated for new development.
-
-The generators create structured drafts for review, not final strategy, assurance, certification, or professional advice.
+`python/catalyst_canvas_core.py` and `python/catalyst_canvas_brief.py` preserve older imports and command flags. Both delegate to the canonical package and are deprecated for new development.

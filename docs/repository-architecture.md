@@ -1,16 +1,16 @@
 # Repository Architecture
 
-Catalyst Canvas v1.1.1 is organized as a reproducible multi-surface repository.
+Catalyst Canvas v1.2.0 is organized around one canonical domain package and explicit surface adapters.
 
 - `VERSION` is the canonical release version.
-- `python/catalyst_canvas_core.py` is the maintained deterministic brief generator.
-- `python/catalyst_canvas_brief.py` is a deprecated v1.x compatibility adapter.
-- `app/` and `templates/` provide the local Flask workflow.
-- `demo/seed_demo.py` generates disposable local SQLite databases.
-- `schemas/` defines the validated core brief export.
-- `wordpress/catalyst-canvas-demo/` provides the public shortcode demo.
-- `scripts/validate_release.py` is the authoritative verification command.
-- `scripts/build_plugin.py` builds the versioned WordPress package.
-- `tests/` runs under both pytest and unittest from the repository root.
+- `catalyst_canvas/` owns Contract 1.0 generation, validation, migrations, exports, and adapters.
+- `contracts/frameworks.json` is the authoritative framework registry.
+- `schemas/catalyst_canvas_contract_1_0.schema.json` is the authoritative data contract.
+- `fixtures/` supplies deterministic cross-surface conformance records.
+- `app/` and `templates/` provide the Flask surface.
+- `python/` retains deprecated v1.x adapters.
+- `wordpress/catalyst-canvas-demo/` provides the browser surface.
+- `scripts/sync_contract_assets.py` derives browser framework data from the repository registry.
+- `scripts/validate_release.py` is the authoritative release gate.
 
-Runtime databases, generated output, and release ZIP files are intentionally excluded from source control.
+Runtime databases, generated outputs, and release ZIPs remain excluded from source control.

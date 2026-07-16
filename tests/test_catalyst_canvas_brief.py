@@ -18,7 +18,7 @@ class CatalystCanvasBriefCompatibilityTests(unittest.TestCase):
         self.assertEqual(len(brief.ideas), 4)
         self.assertIn("review", brief.boundary.lower())
 
-    def test_export_payload_uses_canonical_version(self):
+    def test_export_payload_embeds_canonical_contract(self):
         payload = export_payload(CanvasInput(
             challenge="A messy planning process",
             audience="Founder",
@@ -28,6 +28,7 @@ class CatalystCanvasBriefCompatibilityTests(unittest.TestCase):
         ))
         self.assertEqual(payload["tool"], "Catalyst Canvas Demo")
         self.assertEqual(payload["version"], __version__)
+        self.assertEqual(payload["canonical_contract"]["schema_version"], "catalyst-canvas/1.0")
         self.assertIn("inputs", payload)
         self.assertIn("canvas", payload)
 

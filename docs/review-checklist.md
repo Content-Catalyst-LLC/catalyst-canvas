@@ -1,14 +1,12 @@
-# Review Checklist
+# Canvas Review Checklist
 
-Before treating a Catalyst Canvas output as usable, check:
+Before a Canvas is used for a decision, prototype, or publication, confirm:
 
-- Is the audience specific enough?
-- Is the challenge concrete enough to act on?
-- Is the goal testable?
-- Is the main constraint visible?
-- Does the POV overclaim?
-- Do the HMW prompts open useful design space?
-- Is the prototype small enough to test?
-- What assumption would most change the recommendation?
-- What signal would show progress?
-- What should be rewritten before sharing externally?
+- the document declares `catalyst-canvas/1.0` and has Canvas/revision IDs;
+- the primary audience and affected stakeholders are explicit;
+- persona attributes distinguish research from assumptions;
+- constraints and evidence gaps remain visible;
+- critical assumptions have testable statements;
+- prototype and test records define a learning signal;
+- review notes identify overclaiming or interpretation risks;
+- provenance identifies the source surface and any migration warnings.

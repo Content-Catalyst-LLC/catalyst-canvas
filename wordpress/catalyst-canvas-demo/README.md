@@ -1,23 +1,13 @@
 # Catalyst Canvas Demo WordPress Plugin
 
-**Version:** 1.1.1
+Version 1.2.0 implements the public `[catalyst_canvas_demo]` shortcode through the shared Canvas Contract 1.0 browser engine.
 
-Shortcode:
+The plugin:
 
-```text
-[catalyst_canvas_demo]
-```
+- generates validated `catalyst-canvas/1.0` documents;
+- uses framework data generated from the repository's canonical registry;
+- exports canonical JSON and contract-aware Markdown;
+- keeps all visitor inputs in the browser;
+- has Node-based fixture conformance tests against the Python engine.
 
-Optional attributes:
-
-```text
-[catalyst_canvas_demo title="Catalyst Canvas" subtitle="Frame a problem before building."]
-```
-
-Build the installable package from the repository root:
-
-```bash
-python scripts/build_plugin.py
-```
-
-The demo is client-side and does not submit visitor form inputs to Sustainable Catalyst. Exported JSON includes the plugin version rendered by PHP.
+Upload `catalyst-canvas-demo-v1.2.0.zip`, activate the plugin, and place `[catalyst_canvas_demo]` on a WordPress page.

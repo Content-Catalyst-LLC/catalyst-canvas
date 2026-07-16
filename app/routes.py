@@ -1,11 +1,14 @@
-"""Routes for the local Catalyst Canvas Flask demo."""
+"""Routes for the local Catalyst Canvas Flask adapter."""
 
 from __future__ import annotations
 
 from flask import Blueprint, Response, current_app, jsonify, redirect, render_template, request, session, url_for
 
+from catalyst_canvas.contract import CanvasContractError, load_schema, strip_internal_fields
+from catalyst_canvas.migrations import migrate_payload
+
 from .models import SAMPLE_PERSONAS
-from .services.canvas_engine import normalize_form, to_markdown, to_pretty_json
+from .services.canvas_engine import new_canvas, normalize_form, to_form, to_markdown, to_pretty_json, to_print_html
 from .services.frameworks import all_frameworks, get_framework
 from .services.storage import get_canvas, latest_canvas, list_canvases, save_canvas
 
@@ -24,30 +27,24 @@ def current_canvas() -> dict:
             return canvas
     canvas = latest_canvas(db_path())
     if canvas:
-        session["canvas_id"] = canvas["id"]
+        session["canvas_id"] = canvas["_storage_id"]
         return canvas
-    return normalize_form({
-        "title": "Sample Catalyst Canvas Brief",
-        "challenge": "A sustainability team needs to turn broad impact goals into testable work.",
-        "audience": "sustainability managers and cross-functional project leads",
-        "goal": "create a reviewable experiment plan",
-        "constraint": "limited data quality and competing stakeholder expectations",
-        "persona_name": "Sustainability Manager",
-        "persona_needs": "a clearer way to connect goals, evidence, experiments, and reporting outputs",
-        "persona_pains": "fragmented data, unclear ownership, and pressure to communicate before evidence is ready",
-        "evidence": "Stakeholder interviews, current reporting artifacts, available indicators, and known data gaps.",
-        "assumption": "A lightweight Canvas workflow can reduce ambiguity before heavier analytics work begins.",
-        "prototype": "A one-page decision brief with claim, source, assumption, experiment, and review sections.",
-        "test_plan": "Run the Canvas with one project team and compare clarity before and after the workshop.",
-        "success_signal": "The team can identify one testable next step and one unsupported claim to revise.",
-        "risk_note": "Do not convert workshop confidence into proof of impact.",
-        "review_note": "Require evidence notes before moving from prototype to public claim.",
-    })
+    return new_canvas()
+
+
+def view_model(canvas: dict) -> dict:
+    return to_form(canvas, storage_id=canvas.get("_storage_id"))
+
+
+def save_from_form(canvas: dict) -> int:
+    updated = normalize_form(request.form, canvas)
+    return save_canvas(db_path(), updated, canvas.get("_storage_id"))
 
 
 @bp.route("/")
 def index():
-    return render_template("index.html", canvases=list_canvases(db_path()), canvas=current_canvas())
+    canvas = current_canvas()
+    return render_template("index.html", canvases=list_canvases(db_path()), canvas=view_model(canvas))
 
 
 @bp.route("/intro")
@@ -59,22 +56,18 @@ def intro():
 def define():
     canvas = current_canvas()
     if request.method == "POST":
-        updated = normalize_form(request.form, canvas)
-        canvas_id = save_canvas(db_path(), updated, canvas.get("id"))
-        session["canvas_id"] = canvas_id
+        session["canvas_id"] = save_from_form(canvas)
         return redirect(url_for("canvas.empathy"))
-    return render_template("define/define.html", canvas=canvas)
+    return render_template("define/define.html", canvas=view_model(canvas))
 
 
 @bp.route("/empathy", methods=["GET", "POST"])
 def empathy():
     canvas = current_canvas()
     if request.method == "POST":
-        updated = normalize_form(request.form, canvas)
-        canvas_id = save_canvas(db_path(), updated, canvas.get("id"))
-        session["canvas_id"] = canvas_id
+        session["canvas_id"] = save_from_form(canvas)
         return redirect(url_for("canvas.ideate"))
-    return render_template("empathize/empathy_map.html", canvas=canvas)
+    return render_template("empathize/empathy_map.html", canvas=view_model(canvas))
 
 
 @bp.route("/personas")
@@ -84,7 +77,7 @@ def personas():
 
 @bp.route("/personas/<slug>")
 def persona_view(slug: str):
-    persona = next((p for p in SAMPLE_PERSONAS if p["slug"] == slug), None)
+    persona = next((item for item in SAMPLE_PERSONAS if item["slug"] == slug), None)
     if not persona:
         return redirect(url_for("canvas.personas"))
     return render_template("personas/view.html", persona=persona)
@@ -94,11 +87,9 @@ def persona_view(slug: str):
 def persona_edit():
     canvas = current_canvas()
     if request.method == "POST":
-        updated = normalize_form(request.form, canvas)
-        canvas_id = save_canvas(db_path(), updated, canvas.get("id"))
-        session["canvas_id"] = canvas_id
+        session["canvas_id"] = save_from_form(canvas)
         return redirect(url_for("canvas.empathy"))
-    return render_template("personas/edit.html", canvas=canvas)
+    return render_template("personas/edit.html", canvas=view_model(canvas))
 
 
 @bp.route("/personas/ga4-import")
@@ -109,19 +100,23 @@ def ga4_import():
 @bp.route("/ideate", methods=["GET", "POST"])
 def ideate():
     canvas = current_canvas()
-    framework = request.values.get("framework", "HERO")
+    framework = request.values.get("framework", view_model(canvas).get("framework", "AIDA"))
     prompts = get_framework(framework)
     if request.method == "POST":
-        updated = normalize_form(request.form, canvas)
-        canvas_id = save_canvas(db_path(), updated, canvas.get("id"))
-        session["canvas_id"] = canvas_id
+        session["canvas_id"] = save_from_form(canvas)
         return redirect(url_for("canvas.prototype"))
-    return render_template("ideate/ideate.html", canvas=canvas, frameworks=all_frameworks(), framework=framework, prompts=prompts)
+    return render_template(
+        "ideate/ideate.html",
+        canvas=view_model(canvas),
+        frameworks=all_frameworks(),
+        framework=framework,
+        prompts=prompts,
+    )
 
 
 @bp.route("/ideate/heros")
 def heros():
-    return render_template("ideate/heros.html", prompts=get_framework("HERO"))
+    return render_template("ideate/heros.html", prompts=get_framework("Hero"))
 
 
 @bp.route("/ideate/jtbd")
@@ -131,45 +126,46 @@ def jtbd():
 
 @bp.route("/ideate/matrix")
 def matrix():
-    return render_template("ideate/matrix.html", prompts=get_framework("Assumption Matrix"))
+    return render_template("ideate/matrix.html", prompts=get_framework("Matrix"))
 
 
 @bp.route("/ideate/matrix-board")
 def matrix_board():
-    return render_template("ideate/matrix_board.html", prompts=get_framework("Assumption Matrix"))
+    return render_template("ideate/matrix_board.html", prompts=get_framework("Matrix"))
 
 
 @bp.route("/prototype", methods=["GET", "POST"])
 def prototype():
     canvas = current_canvas()
     if request.method == "POST":
-        updated = normalize_form(request.form, canvas)
-        canvas_id = save_canvas(db_path(), updated, canvas.get("id"))
-        session["canvas_id"] = canvas_id
+        session["canvas_id"] = save_from_form(canvas)
         return redirect(url_for("canvas.test_plan"))
-    return render_template("prototype/prototype.html", canvas=canvas)
+    return render_template("prototype/prototype.html", canvas=view_model(canvas))
 
 
 @bp.route("/prototype/storyboard")
 def storyboard():
-    return render_template("prototype/storyboard.html", canvas=current_canvas())
+    return render_template("prototype/storyboard.html", canvas=view_model(current_canvas()))
 
 
 @bp.route("/test", methods=["GET", "POST"])
 def test_plan():
     canvas = current_canvas()
     if request.method == "POST":
-        updated = normalize_form(request.form, canvas)
-        canvas_id = save_canvas(db_path(), updated, canvas.get("id"))
-        session["canvas_id"] = canvas_id
+        session["canvas_id"] = save_from_form(canvas)
         return redirect(url_for("canvas.report"))
-    return render_template("test/test.html", canvas=canvas)
+    return render_template("test/test.html", canvas=view_model(canvas))
 
 
 @bp.route("/report")
 def report():
     canvas = current_canvas()
-    return render_template("export/report.html", canvas=canvas, markdown=to_markdown(canvas), pretty_json=to_pretty_json(canvas))
+    return render_template(
+        "export/report.html",
+        canvas=view_model(canvas),
+        markdown=to_markdown(canvas),
+        pretty_json=to_pretty_json(canvas),
+    )
 
 
 @bp.route("/api/canvas/<int:canvas_id>.json")
@@ -177,7 +173,32 @@ def canvas_json(canvas_id: int):
     canvas = get_canvas(db_path(), canvas_id)
     if not canvas:
         return jsonify({"error": "not found"}), 404
-    return jsonify(canvas)
+    return jsonify(strip_internal_fields(canvas))
+
+
+@bp.route("/api/canvas/import", methods=["POST"])
+def canvas_import():
+    payload = request.get_json(silent=True)
+    if not isinstance(payload, dict):
+        return jsonify({"error": "Expected a JSON object."}), 400
+    try:
+        result = migrate_payload(payload, source_surface="import")
+        storage_id = save_canvas(db_path(), result.contract)
+    except CanvasContractError as exc:
+        return jsonify({"error": str(exc)}), 422
+    session["canvas_id"] = storage_id
+    return jsonify({
+        "storage_id": storage_id,
+        "schema_version": result.contract["schema_version"],
+        "canvas_id": result.contract["canvas_id"],
+        "migrated_from": result.migrated_from,
+        "warnings": result.warnings,
+    }), 201
+
+
+@bp.route("/api/contract/schema.json")
+def contract_schema():
+    return jsonify(load_schema())
 
 
 @bp.route("/export/<int:canvas_id>.md")
@@ -186,3 +207,11 @@ def canvas_markdown(canvas_id: int):
     if not canvas:
         return Response("Not found\n", status=404, mimetype="text/plain")
     return Response(to_markdown(canvas), mimetype="text/markdown")
+
+
+@bp.route("/export/<int:canvas_id>.html")
+def canvas_print_report(canvas_id: int):
+    canvas = get_canvas(db_path(), canvas_id)
+    if not canvas:
+        return Response("Not found\n", status=404, mimetype="text/plain")
+    return Response(to_print_html(canvas), mimetype="text/html")

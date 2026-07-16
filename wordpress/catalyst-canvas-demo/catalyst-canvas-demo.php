@@ -3,7 +3,7 @@
  * Plugin Name: Catalyst Canvas Demo
  * Plugin URI: https://sustainablecatalyst.com/catalyst-canvas/
  * Description: Adds a guided, client-side Catalyst Canvas demo via the [catalyst_canvas_demo] shortcode.
- * Version: 1.1.1
+ * Version: 1.2.0
  * Author: Content Catalyst LLC
  * License: MIT
  * Text Domain: catalyst-canvas-demo
@@ -14,7 +14,8 @@ if (!defined('ABSPATH')) {
 }
 
 final class Catalyst_Canvas_Demo_Plugin {
-    private const VERSION = '1.1.1';
+    private const VERSION = '1.2.0';
+    private const CONTRACT_VERSION = 'catalyst-canvas/1.0';
     private const SHORTCODE = 'catalyst_canvas_demo';
 
     public function __construct() {
@@ -34,9 +35,25 @@ final class Catalyst_Canvas_Demo_Plugin {
         );
 
         wp_register_script(
+            'catalyst-canvas-contract-data',
+            $base . 'assets/catalyst-canvas-contract-data.js',
+            array(),
+            self::VERSION,
+            true
+        );
+
+        wp_register_script(
+            'catalyst-canvas-engine',
+            $base . 'assets/catalyst-canvas-engine.js',
+            array('catalyst-canvas-contract-data'),
+            self::VERSION,
+            true
+        );
+
+        wp_register_script(
             'catalyst-canvas-demo',
             $base . 'assets/catalyst-canvas-demo.js',
-            array(),
+            array('catalyst-canvas-engine'),
             self::VERSION,
             true
         );
@@ -53,6 +70,8 @@ final class Catalyst_Canvas_Demo_Plugin {
         );
 
         wp_enqueue_style('catalyst-canvas-demo');
+        wp_enqueue_script('catalyst-canvas-contract-data');
+        wp_enqueue_script('catalyst-canvas-engine');
         wp_enqueue_script('catalyst-canvas-demo');
 
         $instance_id = function_exists('wp_unique_id') ? wp_unique_id('ccanvasdemo-') : 'ccanvasdemo-' . wp_rand(1000, 999999);
@@ -64,7 +83,7 @@ final class Catalyst_Canvas_Demo_Plugin {
                 <p class="ccanvasdemo-eyebrow">Interactive demo</p>
                 <h2><?php echo esc_html($atts['title']); ?></h2>
                 <p class="ccanvasdemo-lede"><?php echo esc_html($atts['subtitle']); ?></p>
-                <p class="ccanvasdemo-note">This demo runs in the browser. It does not submit form inputs to Sustainable Catalyst.</p>
+                <p class="ccanvasdemo-note">This demo runs in the browser. It does not submit form inputs to Sustainable Catalyst. Export contract: <strong data-output="contractVersion"><?php echo esc_html(self::CONTRACT_VERSION); ?></strong>.</p>
             </header>
 
             <div class="ccanvasdemo-layout">
@@ -157,6 +176,7 @@ final class Catalyst_Canvas_Demo_Plugin {
             <p>Add the interactive Catalyst Canvas demo to a page with:</p>
             <pre><code>[catalyst_canvas_demo]</code></pre>
             <p>The demo runs client-side in the browser and does not submit visitor inputs to Sustainable Catalyst.</p>
+            <p>All generated downloads use <code><?php echo esc_html(self::CONTRACT_VERSION); ?></code> and the shared browser engine.</p>
         </div>
         <?php
     }

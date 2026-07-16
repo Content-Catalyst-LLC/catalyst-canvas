@@ -1,27 +1,9 @@
-# WordPress Demo
+# WordPress Demo Workflow
 
-The public Catalyst Canvas demo lives in:
+1. Upload and activate `catalyst-canvas-demo-v1.2.0.zip`.
+2. Add `[catalyst_canvas_demo]` to the public Canvas page.
+3. Enter a challenge, audience, goal, constraint, and framework.
+4. Generate a canonical browser-side Canvas.
+5. Copy contract-aware Markdown, download Contract 1.0 JSON, or print the report.
 
-```text
-wordpress/catalyst-canvas-demo/
-```
-
-Build the versioned plugin package from the repository root:
-
-```bash
-python scripts/build_plugin.py
-```
-
-The generated artifact is:
-
-```text
-dist/catalyst-canvas-demo-v1.1.1.zip
-```
-
-Install it through **Plugins → Add New → Upload Plugin**, activate it, and add:
-
-```text
-[catalyst_canvas_demo]
-```
-
-The plugin runs client-side. Visitor form inputs are not submitted to Sustainable Catalyst. The generated JSON includes the plugin version supplied by the PHP render layer.
+The demo does not transmit visitor inputs or save browser drafts in v1.2.0.

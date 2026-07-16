@@ -19,7 +19,7 @@
       {% for item in canvases %}
       <article class="card">
         <h3>{{ item.title }}</h3>
-        <p>Updated {{ item.updated_at }}</p>
+        <p>{{ item.schema_version }} · {{ item.status }}</p><p>Updated {{ item.updated_at }}</p>
         <a class="small-link" href="/api/canvas/{{ item.id }}.json">JSON →</a>
         <a class="small-link" href="/export/{{ item.id }}.md">Markdown →</a>
       </article>
