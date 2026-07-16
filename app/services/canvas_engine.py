@@ -1,4 +1,4 @@
-"""Flask compatibility facade over the canonical Canvas Contract 1.6 package."""
+"""Flask compatibility facade over the canonical Canvas Contract 2.0 package."""
 
 from __future__ import annotations
 

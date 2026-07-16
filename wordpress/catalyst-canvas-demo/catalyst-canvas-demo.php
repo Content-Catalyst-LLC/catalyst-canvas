@@ -3,7 +3,7 @@
  * Plugin Name: Catalyst Canvas Demo
  * Plugin URI: https://sustainablecatalyst.com/catalyst-canvas/
  * Description: Adds a persistent, client-side Catalyst Canvas project workspace via the [catalyst_canvas_demo] shortcode.
- * Version: 1.9.0
+ * Version: 2.0.0
  * Author: Content Catalyst LLC
  * License: MIT
  * Text Domain: catalyst-canvas-demo
@@ -14,8 +14,8 @@ if (!defined('ABSPATH')) {
 }
 
 final class Catalyst_Canvas_Demo_Plugin {
-    private const VERSION = '1.9.0';
-    private const CONTRACT_VERSION = 'catalyst-canvas/1.6';
+    private const VERSION = '2.0.0';
+    private const CONTRACT_VERSION = 'catalyst-canvas/2.0';
     private const SHORTCODE = 'catalyst_canvas_demo';
 
     public function __construct() {
@@ -249,6 +249,16 @@ final class Catalyst_Canvas_Demo_Plugin {
                         <details><summary>Release history JSON</summary><textarea data-field="releaseHistoryJson" rows="12">[]</textarea></details>
                         <details><summary>Publication handoffs JSON</summary><textarea data-field="publicationHandoffsJson" rows="12">[]</textarea></details>
                     </div>
+
+                    <div class="ccanvasdemo-panel">
+                        <p class="ccanvasdemo-section-label">Connected platform exchange</p>
+                        <p class="ccanvasdemo-help">Record first-party product connections, interoperability profiles, workflow links, exchange status, and event envelopes. A configured record does not prove a remote service is available.</p>
+                        <details open><summary>Platform connections JSON</summary><textarea data-field="platformConnectionsJson" rows="14">[]</textarea></details>
+                        <details><summary>Interoperability profiles JSON</summary><textarea data-field="interoperabilityProfilesJson" rows="12">[]</textarea></details>
+                        <details><summary>Workflow links JSON</summary><textarea data-field="workflowLinksJson" rows="12">[]</textarea></details>
+                        <details><summary>Exchange records JSON</summary><textarea data-field="exchangeRecordsJson" rows="12">[]</textarea></details>
+                        <details><summary>Platform events JSON</summary><textarea data-field="platformEventsJson" rows="12">[]</textarea></details>
+                    </div>
                 </form>
 
                 <div class="ccanvasdemo-output" aria-live="polite">
@@ -338,6 +348,20 @@ final class Catalyst_Canvas_Demo_Plugin {
                     </div>
 
                     <div class="ccanvasdemo-panel">
+                        <p class="ccanvasdemo-section-label">Connected-platform readiness</p>
+                        <div class="ccanvasdemo-grid ccanvasdemo-grid-three">
+                            <article class="ccanvasdemo-mini"><strong>Readiness</strong><p data-output="platformReadiness">Platform draft</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Connections</strong><p data-output="platformConnectionCount">0 recorded</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Verified</strong><p data-output="platformVerifiedCount">0 verified</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Workflow links</strong><p data-output="workflowLinkCount">0 links</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Exchanges</strong><p data-output="exchangeCount">0 exchanges</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Events</strong><p data-output="platformEventCount">0 events</p></article>
+                        </div>
+                        <h4>Product connections</h4><ul data-output="platformConnectionSummary"></ul>
+                        <p class="ccanvasdemo-help">Readiness describes recorded contracts and verification state. It does not prove delivery, authorization, security, or institutional acceptance.</p>
+                    </div>
+
+                    <div class="ccanvasdemo-panel">
                         <p class="ccanvasdemo-section-label">Ideas</p>
                         <ul class="ccanvasdemo-ideas" data-output="ideas"></ul>
                     </div>
@@ -346,6 +370,7 @@ final class Catalyst_Canvas_Demo_Plugin {
                         <button type="button" class="ccanvasdemo-btn" data-action="copy">Copy brief</button>
                         <button type="button" class="ccanvasdemo-btn" data-action="download">Download full JSON</button>
                         <button type="button" class="ccanvasdemo-btn" data-action="download-public">Download public-safe JSON</button>
+                        <button type="button" class="ccanvasdemo-btn" data-action="download-exchange">Download exchange package</button>
                         <button type="button" class="ccanvasdemo-btn" data-action="print">Print / Save PDF</button>
                     </div>
                 </div>

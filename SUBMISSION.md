@@ -1,7 +1,9 @@
-# Release Submission
+# Release submission
 
-**Catalyst Canvas v1.9.0 — Collaboration, Review, and Publication**
+**Catalyst Canvas v2.0.0 — Connected Strategic Design Platform**
 
-This release adds Canvas Contract 1.6, capability-based workspace roles, review assignments, threaded comments, approval decisions, publication records, readiness gates, release history, SHA-256 integrity records, and public-safe WordPress, Knowledge Library, API, and download packages.
+This release introduces Canvas Contract 2.0, first-party product connections, institutional interoperability profiles, cross-product workflow links, deterministic exchange packages, optional HMAC-SHA256 signing, event envelopes, capability discovery, platform-record persistence, and unified readiness across the complete strategic-design lifecycle.
 
-The release preserves immutable project revisions and migrates Canvas Contracts 1.0 through 1.5. Publication readiness is a descriptive workflow state and does not establish legal, factual, ethical, accessibility, security, or institutional clearance.
+The release migrates Canvas Contracts 1.0 through 1.6 while preserving stable Canvas, revision, evidence, decision, experiment, collaboration, publication, and platform identities. Existing SQLite databases remain local runtime data and are not replaced by the release installer.
+
+Platform readiness is a descriptive workflow and interoperability state. It does not establish remote availability, authorization, transport security, legal interoperability, data-protection compliance, delivery, or institutional acceptance.

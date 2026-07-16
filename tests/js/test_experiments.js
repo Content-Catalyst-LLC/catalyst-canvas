@@ -1,10 +1,10 @@
 'use strict';
 const assert = require('assert');
 const Engine = require('../../wordpress/catalyst-canvas-demo/assets/catalyst-canvas-engine.js');
-const source = require('../../fixtures/canvas_contract_1_6.input.json');
+const source = require('../../fixtures/canvas_contract_2_0.input.json');
 
 const contract = Engine.buildContract(source, 'wordpress');
-assert.strictEqual(contract.schema_version, 'catalyst-canvas/1.6');
+assert.strictEqual(contract.schema_version, 'catalyst-canvas/2.0');
 assert.strictEqual(contract.prototypes[0].prototype_type, 'paper');
 assert.strictEqual(contract.hypotheses[0].status, 'partially_supported');
 assert.strictEqual(contract.experiment_plans[0].participant_plan.target_count, 5);
@@ -28,8 +28,8 @@ assert.ok(workbench.technical_validation.prototype_artifacts.includes('artifact:
 
 const migrated = Engine.migratePayload(require('../../fixtures/canvas_contract_1_4.expected.json'));
 assert.strictEqual(migrated.migrated_from, 'catalyst-canvas/1.4');
-assert.strictEqual(migrated.contract.schema_version, 'catalyst-canvas/1.6');
+assert.strictEqual(migrated.contract.schema_version, 'catalyst-canvas/2.0');
 assert.ok(migrated.contract.experiment_plans.length);
-assert.ok(migrated.warnings[0].includes('experiment, collaboration, review, and publication fields'));
+assert.ok(migrated.warnings[0].includes('experiment, collaboration, publication, interoperability, and platform exchange fields'));
 
 console.log('PASS: WordPress prototype and experiment engine.');

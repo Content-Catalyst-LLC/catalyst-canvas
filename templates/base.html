@@ -23,7 +23,7 @@
     <header class="hero">
       <p class="kicker">Sustainable Catalyst</p>
       <h1>Catalyst Canvas</h1>
-      <p class="lede">A persistent strategic-design workspace for turning messy problems into reviewable research, decisions, prototypes, experiments, governed reviews, public releases, and immutable project revisions.</p>
+      <p class="lede">A persistent strategic-design workspace for turning messy problems into reviewable research, decisions, prototypes, experiments, governed reviews, public releases, signed exchange packages, cross-product workflows, and immutable project revisions.</p>
       <div class="workspace-strip">
         <p><strong>{{ active_workspace.name if active_workspace else 'Local Workspace' }}</strong>{% if active_project %} · {{ active_project.title }}{% endif %}</p>
         <span id="autosave-status" class="save-status" data-state="idle">{% if active_project %}Autosave ready{% else %}Create or save a project to enable autosave{% endif %}</span>
@@ -38,6 +38,7 @@
         <a class="btn" href="{{ url_for('canvas.prioritize') }}">Prioritize</a>
         <a class="btn" href="{{ url_for('canvas.experiment_studio') }}">Experiment</a>
         <a class="btn" href="{{ url_for('canvas.collaboration_studio') }}">Collaborate</a>
+        <a class="btn" href="{{ url_for('canvas.platform_studio') }}">Platform</a>
         <a class="btn" href="{{ url_for('canvas.prototype') }}">Prototype</a>
         <a class="btn" href="{{ url_for('canvas.test_plan') }}">Legacy Test</a>
         <a class="btn" href="{{ url_for('canvas.report') }}">Report</a>

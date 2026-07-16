@@ -1,1 +1,1 @@
-"""Surface adapters for Canvas Contract 1.6."""
+"""Surface adapters for Canvas Contract 2.0."""

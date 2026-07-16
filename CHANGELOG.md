@@ -1,5 +1,29 @@
 # Changelog
 
+## 2.0.0 — 2026-07-16
+
+### Canvas Contract 2.0 and connected platform
+
+- Upgraded the canonical document contract to `catalyst-canvas/2.0` with explicit migration from Contracts 1.0 through 1.6.
+- Added first-party platform connection records for Knowledge Library, Research Librarian, Site Intelligence, Workbench, Decision Studio, Research Lab, Product Support and Feedback, Contact and Engagement, WordPress, and public API consumers.
+- Added institutional interoperability profiles covering supported contracts, formats, identity modes, event types, required fields, redaction rules, and retention boundaries.
+- Added cross-product workflow links with stable record identities, relationship types, status, and correlation IDs.
+- Added deterministic `catalyst-canvas-exchange/2.0` packages with payload-specific exports, SHA-256 integrity metadata, and optional HMAC-SHA256 signatures.
+- Added `catalyst-canvas-event/1.0` envelopes and `catalyst-canvas-capabilities/1.0` discovery manifests.
+- Added unified platform-readiness indicators that compose subsystem workflow states without asserting remote availability or institutional acceptance.
+
+### Persistent platform workspace
+
+- Added workspace-scoped platform-record indexing for connections, profiles, links, exchanges, and events.
+- Added the Flask Platform Studio, capability API, exchange-package download routes, and signature verification endpoint.
+- Added optional `CANVAS_EXCHANGE_SIGNING_KEY` configuration with no default production secret.
+- Added WordPress browser-local editing and export for platform records and deterministic exchange packages.
+
+### Validation and release engineering
+
+- Added signed-package verification, tamper detection, capability-manifest, platform-storage, route, migration, and exact browser-conformance tests.
+- Updated current samples, documentation, schemas, generated browser assets, release packaging, and installer validation for v2.0.0.
+
 All notable changes to Catalyst Canvas are documented here.
 
 ## 1.9.0 — 2026-07-16

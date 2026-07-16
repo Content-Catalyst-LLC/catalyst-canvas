@@ -114,6 +114,11 @@
       publication_records:parseJsonList(field(root,'publicationRecordsJson')),
       release_history:parseJsonList(field(root,'releaseHistoryJson')),
       publication_handoffs:parseJsonList(field(root,'publicationHandoffsJson')),
+      platform_connections:parseJsonList(field(root,'platformConnectionsJson')),
+      interoperability_profiles:parseJsonList(field(root,'interoperabilityProfilesJson')),
+      workflow_links:parseJsonList(field(root,'workflowLinksJson')),
+      exchange_records:parseJsonList(field(root,'exchangeRecordsJson')),
+      platform_events:parseJsonList(field(root,'platformEventsJson')),
       tests:existing.tests||[], review_notes:existing.review_notes||[],
       framework: field(root, 'framework'),
       provenance: { source_surface: 'wordpress', source_version: root.dataset.version || Engine.RELEASE_VERSION, warnings: [] }
@@ -216,6 +221,13 @@
     setText(root, 'pendingReviews', contract.collaboration_summary.required_review_open_count);
     setText(root, 'publishedCount', contract.collaboration_summary.published_count);
     setList(root, 'publicationSummary', (contract.publication_records || []).map(item => `${item.title} v${item.version} [${item.channel}/${item.state}]`));
+    setText(root, 'platformReadiness', (contract.platform_summary.readiness || 'platform_draft').replace(/_/g, ' '));
+    setText(root, 'platformConnectionCount', contract.platform_summary.connection_count + ' recorded');
+    setText(root, 'platformVerifiedCount', contract.platform_summary.verified_connection_count + ' verified');
+    setText(root, 'workflowLinkCount', contract.platform_summary.workflow_link_count + ' links');
+    setText(root, 'exchangeCount', contract.platform_summary.exchange_count + ' exchanges');
+    setText(root, 'platformEventCount', contract.platform_summary.event_count + ' events');
+    setList(root, 'platformConnectionSummary', (contract.platform_connections || []).map(item => `${item.display_name} [${item.direction}/${item.status}] — ${item.capabilities.join(', ') || 'no capabilities recorded'}`));
     setList(root, 'ideas', contract.ideas.length ? contract.ideas.map(item => `${item.title} [${item.status}; ${item.vote_count} votes] — ${item.rationale}`) : contract.framework.prompts.map(item => `${item.label}: ${item.question} — apply this to: ${contract.challenge}`));
   }
 
@@ -268,6 +280,11 @@
     setField(root,'publicationRecordsJson',JSON.stringify(contract.publication_records||[],null,2));
     setField(root,'releaseHistoryJson',JSON.stringify(contract.release_history||[],null,2));
     setField(root,'publicationHandoffsJson',JSON.stringify(contract.publication_handoffs||[],null,2));
+    setField(root,'platformConnectionsJson',JSON.stringify(contract.platform_connections||[],null,2));
+    setField(root,'interoperabilityProfilesJson',JSON.stringify(contract.interoperability_profiles||[],null,2));
+    setField(root,'workflowLinksJson',JSON.stringify(contract.workflow_links||[],null,2));
+    setField(root,'exchangeRecordsJson',JSON.stringify(contract.exchange_records||[],null,2));
+    setField(root,'platformEventsJson',JSON.stringify(contract.platform_events||[],null,2));
     const title = root.querySelector('[data-workspace-field="title"]');
     if (title) title.value = contract.title || 'Untitled Canvas Project';
     render(root, contract);
@@ -293,6 +310,20 @@
     const link = document.createElement('a');
     link.href = url;
     link.download = contract.canvas_id + '-public-safe.json';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function downloadExchangeJSON(contract) {
+    const target = (contract.platform_connections && contract.platform_connections[0] && contract.platform_connections[0].product) || 'public_api';
+    const payload = Engine.buildExchangePackage(contract, target, 'full_canvas', (contract.interoperability_profiles[0] || {}).profile_id || '');
+    const blob = new Blob([JSON.stringify(payload, null, 2) + '\n'], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = contract.canvas_id + '-exchange-' + target + '.json';
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -518,6 +549,7 @@
           }
           if (action === 'download') { downloadJSON(currentContract(root)); return; }
           if (action === 'download-public') { downloadPublicJSON(currentContract(root)); return; }
+          if (action === 'download-exchange') { downloadExchangeJSON(currentContract(root)); return; }
           if (action === 'print') window.print();
         } catch (error) {
           setWorkspaceStatus(root, error.message || 'Workspace action failed.', 'error');

@@ -1,4 +1,4 @@
-"""Canvas Contract 1.6 normalization and JSON Schema validation."""
+"""Canvas Contract 2.0 normalization and JSON Schema validation."""
 
 from __future__ import annotations
 
@@ -56,6 +56,14 @@ from .research import (
     normalize_stakeholders as normalize_research_stakeholders,
     research_summary,
 )
+from .platform import (
+    normalize_platform_connections,
+    normalize_interoperability_profiles,
+    normalize_workflow_links,
+    normalize_exchange_records,
+    normalize_platform_events,
+    platform_summary,
+)
 from .collaboration import (
     collaboration_summary,
     normalize_approvals,
@@ -68,7 +76,7 @@ from .collaboration import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA_PATH = ROOT / "schemas" / "catalyst_canvas_contract_1_6.schema.json"
+SCHEMA_PATH = ROOT / "schemas" / "catalyst_canvas_contract_2_0.schema.json"
 
 
 class CanvasContractError(ValueError):
@@ -343,7 +351,7 @@ def normalize_provenance(value: Any, *, source_surface: str, migrated_from: str 
 
 
 def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: str = "python") -> Dict[str, Any]:
-    """Normalize a compact or partially structured payload into Canvas Contract 1.6."""
+    """Normalize a compact or partially structured payload into Canvas Contract 2.0."""
     from .frameworks import framework_record
 
     source: Mapping[str, Any] = payload or {}
@@ -480,6 +488,19 @@ def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: 
     )
     release_history = normalize_release_history(source.get("release_history"), generated_at=updated_at)
     publication_handoffs = normalize_publication_handoffs(source.get("publication_handoffs"), generated_at=updated_at)
+    platform_connections = normalize_platform_connections(source.get("platform_connections"), generated_at=updated_at)
+    interoperability_profiles = normalize_interoperability_profiles(source.get("interoperability_profiles"), generated_at=updated_at)
+    workflow_links = normalize_workflow_links(source.get("workflow_links"), generated_at=updated_at)
+    exchange_records = normalize_exchange_records(source.get("exchange_records"), generated_at=updated_at)
+    platform_events = normalize_platform_events(source.get("platform_events"), generated_at=updated_at)
+    subsystem_readiness = {
+        "research": str(research_summary(personas, stakeholders, journeys, behavioral_signals, generated_at=updated_at).get("readiness", "")),
+        "evidence": str(ledger_summary(sources, evidence, claims, assumptions, research_questions, generated_at=updated_at).get("evidence_coverage", "")),
+        "ideation": str(ideation_summary(sessions, ideas, list(cluster_map.values()), generated_at=updated_at).get("readiness", "")),
+        "decision": str(prioritization_summary(decision_criteria, decision_options, sensitivity_views, generated_at=updated_at).get("readiness", "")),
+        "experiment": str(experiment_summary(prototypes, hypotheses, experiment_plans, experiment_runs, learning_decisions, iteration_history, generated_at=updated_at).get("readiness", "")),
+        "collaboration": str(collaboration_summary(workspace_members, review_assignments, comments, approvals, publication_records, release_history, generated_at=updated_at).get("readiness", "")),
+    }
 
     contract = {
         "schema_version": CONTRACT_VERSION,
@@ -544,6 +565,15 @@ def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: 
         "publication_handoffs": publication_handoffs,
         "collaboration_summary": collaboration_summary(
             workspace_members, review_assignments, comments, approvals, publication_records, release_history, generated_at=updated_at
+        ),
+        "platform_connections": platform_connections,
+        "interoperability_profiles": interoperability_profiles,
+        "workflow_links": workflow_links,
+        "exchange_records": exchange_records,
+        "platform_events": platform_events,
+        "platform_summary": platform_summary(
+            platform_connections, interoperability_profiles, workflow_links, exchange_records, platform_events,
+            subsystem_readiness=subsystem_readiness, generated_at=updated_at
         ),
         "tests": normalize_tests(source.get("tests", source.get("test_plan"))),
         "review_notes": normalize_review_notes(source.get("review_notes", source.get("review_note"))),

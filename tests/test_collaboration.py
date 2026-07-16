@@ -26,11 +26,11 @@ ROOT = Path(__file__).resolve().parents[1]
 class CollaborationContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.source = json.loads((ROOT / "fixtures/canvas_contract_1_6.input.json").read_text(encoding="utf-8"))
+        cls.source = json.loads((ROOT / "fixtures/canvas_contract_2_0.input.json").read_text(encoding="utf-8"))
         cls.contract = generate_canvas(cls.source, source_surface="python")
 
     def test_contract_1_6_preserves_collaboration_and_readiness(self):
-        self.assertEqual(self.contract["schema_version"], "catalyst-canvas/1.6")
+        self.assertEqual(self.contract["schema_version"], "catalyst-canvas/2.0")
         self.assertEqual(len(self.contract["workspace_members"]), 3)
         self.assertEqual(self.contract["collaboration_summary"]["readiness"], "ready_for_publication")
         self.assertEqual(self.contract["collaboration_summary"]["open_comment_count"], 1)
@@ -40,10 +40,10 @@ class CollaborationContractTests(unittest.TestCase):
         legacy = json.loads((ROOT / "fixtures/canvas_contract_1_5.expected.json").read_text(encoding="utf-8"))
         result = migrate_payload(legacy)
         self.assertEqual(result.migrated_from, "catalyst-canvas/1.5")
-        self.assertEqual(result.contract["schema_version"], "catalyst-canvas/1.6")
+        self.assertEqual(result.contract["schema_version"], "catalyst-canvas/2.0")
         self.assertIn("workspace_members", result.contract)
         self.assertIn("publication_records", result.contract)
-        self.assertIn("collaboration, review, and publication", result.warnings[0])
+        self.assertIn("collaboration, publication, interoperability, and platform exchange", result.warnings[0])
 
     def test_public_safe_package_excludes_private_working_records(self):
         package = build_publication_package(self.contract, "public_api", "publication-001")
@@ -88,7 +88,7 @@ class CollaborationStorageTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             db = str(Path(tmp) / "collaboration.sqlite3")
             init_db(db)
-            contract = json.loads((ROOT / "fixtures/canvas_contract_1_6.expected.json").read_text(encoding="utf-8"))
+            contract = json.loads((ROOT / "fixtures/canvas_contract_2_0.expected.json").read_text(encoding="utf-8"))
             project = create_project(db, contract, title="Collaboration project")
             members = list_workspace_members(db, project["workspace_id"])
             self.assertGreaterEqual(len(members), 3)
@@ -105,7 +105,7 @@ class CollaborationRouteTests(unittest.TestCase):
         self.db = str(Path(self.tmp.name) / "collaboration-routes.sqlite3")
         self.app = create_app({"TESTING": True, "SECRET_KEY": "test-secret", "CANVAS_DB": self.db})
         self.client = self.app.test_client()
-        contract = json.loads((ROOT / "fixtures/canvas_contract_1_6.expected.json").read_text(encoding="utf-8"))
+        contract = json.loads((ROOT / "fixtures/canvas_contract_2_0.expected.json").read_text(encoding="utf-8"))
         response = self.client.post("/api/canvas/import", json=contract)
         self.assertEqual(response.status_code, 201)
         self.project_id = response.get_json()["project_id"]

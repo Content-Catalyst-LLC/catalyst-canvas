@@ -1,6 +1,6 @@
 # Persona, Stakeholder, and Journey Studio
 
-The v1.9.0 research studio is the structured design-research layer inside each Catalyst Canvas workspace. It is designed to keep research findings, observations, and assumptions distinguishable throughout framing, journey design, and experimentation.
+The v2.0.0 research studio is the structured design-research layer inside each Catalyst Canvas workspace. It is designed to keep research findings, observations, and assumptions distinguishable throughout framing, journey design, and experimentation.
 
 ## Persona studio
 

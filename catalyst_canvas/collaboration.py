@@ -1,6 +1,6 @@
 """Collaboration, review, approval, and publication records for Catalyst Canvas.
 
-Canvas Contract 1.6 keeps collaboration metadata inside each immutable revision
+Canvas Contract 2.0 retains collaboration metadata inside each immutable revision
 while the Flask storage layer indexes the same records for workspace views.
 Publication helpers deliberately create a reduced public-safe package instead of
 publishing the complete working contract.

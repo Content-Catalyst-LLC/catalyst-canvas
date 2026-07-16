@@ -1,0 +1,3118 @@
+{
+  "schema_version": "catalyst-canvas/2.0",
+  "canvas_id": "canvas-fixture-001",
+  "challenge_id": "challenge-primary",
+  "revision_id": "revision-fixture-collaboration-001",
+  "title": "Community Heat Resilience Canvas",
+  "status": "active",
+  "owner_context": {
+    "owner_id": "owner-fixture-001",
+    "name": "Program Design Team",
+    "organization": "Sustainable Catalyst",
+    "role": "Facilitator"
+  },
+  "created_at": "2026-07-16T12:00:00+00:00",
+  "updated_at": "2026-07-16T23:30:00+00:00",
+  "challenge": "Neighborhood heat-response planning is fragmented across agencies and community organizations.",
+  "audience": {
+    "primary": "Municipal resilience coordinator",
+    "secondary": [
+      "Public-health program lead"
+    ],
+    "affected": [
+      "Residents in high-heat neighborhoods"
+    ],
+    "excluded": []
+  },
+  "goal": "Create a reviewable pilot that connects heat-risk evidence to neighborhood action.",
+  "constraints": [
+    {
+      "constraint_id": "constraint-001",
+      "statement": "Data coverage and community capacity vary by neighborhood.",
+      "source": "workshop"
+    }
+  ],
+  "personas": [
+    {
+      "persona_id": "persona-001",
+      "name": "Municipal Resilience Coordinator",
+      "role": "Coordinates heat preparedness across departments and partners.",
+      "description": "Needs a practical way to connect uneven evidence, community priorities, and operational decisions.",
+      "context": "Coordinates municipal departments, public-health teams, and neighborhood partners under time pressure.",
+      "jobs": [
+        "Connect heat-risk evidence to a clear neighborhood action",
+        "Coordinate decisions across agencies and community partners"
+      ],
+      "goals": [
+        "Connect risk evidence to a clear neighborhood action",
+        "Create shared ownership across agencies"
+      ],
+      "needs": [
+        "A shared evidence-to-action workflow"
+      ],
+      "pains": [
+        "Fragmented ownership and inconsistent data"
+      ],
+      "gains": [
+        "A shared decision trail that all partners can review",
+        "Faster alignment without hiding evidence gaps"
+      ],
+      "behaviors": [
+        "Reviews multiple dashboards before convening partners",
+        "Uses printable briefs during cross-agency meetings"
+      ],
+      "barriers": [
+        "Uneven neighborhood data coverage",
+        "Different evidence standards across partner organizations"
+      ],
+      "motivations": [
+        "Protect residents while using public resources responsibly",
+        "Build durable trust with neighborhood partners"
+      ],
+      "accessibility_needs": [
+        "Plain-language summaries for mixed technical audiences"
+      ],
+      "preferred_channels": [
+        "Working sessions",
+        "Printable briefs"
+      ],
+      "quotes": [
+        "I need everyone to see the same evidence gap before we commit resources."
+      ],
+      "empathy_map": {
+        "says": [
+          "We need a decision everyone can explain and defend."
+        ],
+        "thinks": [
+          "Which evidence gap could undermine this pilot later?"
+        ],
+        "does": [
+          "Compares dashboards, workshop notes, and operational constraints."
+        ],
+        "feels": [
+          "Responsible for moving quickly without overstating certainty."
+        ],
+        "sees": [
+          "Different teams using different definitions of priority."
+        ],
+        "hears": [
+          "Community partners asking how decisions will affect their neighborhoods."
+        ],
+        "pains": [
+          "Fragmented ownership and inconsistent data."
+        ],
+        "gains": [
+          "A shared decision trail that all partners can review."
+        ]
+      },
+      "attributes": [
+        {
+          "attribute_id": "attribute-001",
+          "category": "behavior",
+          "statement": "Uses printable briefs during cross-agency meetings.",
+          "basis": "observed",
+          "confidence": "medium",
+          "evidence_ids": [
+            "evidence-001"
+          ],
+          "notes": "Observed during pilot planning sessions."
+        },
+        {
+          "attribute_id": "attribute-002",
+          "category": "motivation",
+          "statement": "Values defensible decisions over rapid public claims.",
+          "basis": "assumed",
+          "confidence": "low",
+          "evidence_ids": [],
+          "notes": "Must be tested in interviews."
+        }
+      ],
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "tags": [
+        "municipal",
+        "resilience"
+      ],
+      "source_type": "mixed",
+      "source_notes": "Synthesized from workshop observations and the current pilot dataset.",
+      "confidence": "medium",
+      "confidence_notes": "Operational behaviors are better supported than motivational claims.",
+      "validation_status": "researching"
+    }
+  ],
+  "stakeholders": [
+    {
+      "stakeholder_id": "stakeholder-001",
+      "name": "Neighborhood partner coalition",
+      "stakeholder_type": "community",
+      "relationship": "affected and implementing",
+      "influence": 3,
+      "interest": 5,
+      "impact": 5,
+      "stance": "supportive",
+      "decision_role": "contributor",
+      "engagement_strategy": "Review assumptions and neighborhood feasibility before pilot approval.",
+      "responsibilities": [
+        "Review neighborhood feasibility",
+        "Surface implementation risks"
+      ],
+      "tensions": [
+        "Community urgency may conflict with municipal procurement timelines"
+      ],
+      "notes": "Must review intervention assumptions before pilot launch.",
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "dependencies": [
+        "Municipal data access"
+      ],
+      "tags": [
+        "community-partner"
+      ]
+    }
+  ],
+  "journeys": [
+    {
+      "journey_id": "journey-001",
+      "title": "Neighborhood heat-action planning journey",
+      "persona_id": "persona-001",
+      "scenario": "The resilience coordinator moves from detecting a neighborhood heat-risk signal to agreeing on an operational pilot with community partners.",
+      "desired_outcome": "A shared, evidence-aware pilot decision with explicit ownership and review checkpoints.",
+      "status": "research",
+      "stages": [
+        {
+          "stage_id": "stage-001",
+          "sequence": 1,
+          "name": "Detect",
+          "actions": [
+            "Review heat and vulnerability indicators"
+          ],
+          "questions": [
+            "Which signal is actionable?"
+          ],
+          "thoughts": [
+            "Which signal is actionable?"
+          ],
+          "emotion": -1,
+          "pain_points": [
+            "Coverage gaps obscure neighborhood differences"
+          ],
+          "frictions": [
+            "Coverage gaps obscure neighborhood differences"
+          ],
+          "opportunities": [
+            "Show confidence and missingness beside each signal"
+          ],
+          "touchpoints": [
+            "Risk dashboard"
+          ],
+          "channels": [
+            "Web dashboard"
+          ],
+          "evidence_ids": [
+            "evidence-001"
+          ],
+          "experiment_ids": [],
+          "owner": "Resilience coordinator",
+          "metrics": [
+            "Time to identify priority area"
+          ]
+        },
+        {
+          "stage_id": "stage-002",
+          "sequence": 2,
+          "name": "Align",
+          "actions": [
+            "Convene agency and community partners"
+          ],
+          "questions": [
+            "Do we agree on the problem and constraints?"
+          ],
+          "thoughts": [
+            "Do we agree on the problem and constraints?"
+          ],
+          "emotion": 0,
+          "pain_points": [
+            "Different organizations use different evidence standards"
+          ],
+          "frictions": [
+            "Different organizations use different evidence standards"
+          ],
+          "opportunities": [
+            "Use one shared evidence-to-action brief"
+          ],
+          "touchpoints": [
+            "Partner workshop"
+          ],
+          "channels": [
+            "Facilitated meeting"
+          ],
+          "evidence_ids": [
+            "evidence-001"
+          ],
+          "experiment_ids": [],
+          "owner": "Program design team",
+          "metrics": [
+            "Shared problem statement accepted"
+          ]
+        },
+        {
+          "stage_id": "stage-003",
+          "sequence": 3,
+          "name": "Commit",
+          "actions": [
+            "Select a pilot action and accountable owner"
+          ],
+          "questions": [
+            "Can we test this without overstating impact?"
+          ],
+          "thoughts": [
+            "Can we test this without overstating impact?"
+          ],
+          "emotion": 1,
+          "pain_points": [
+            "Pressure to communicate before evidence is complete"
+          ],
+          "frictions": [
+            "Pressure to communicate before evidence is complete"
+          ],
+          "opportunities": [
+            "Add explicit claims, assumptions, and review dates"
+          ],
+          "touchpoints": [
+            "Decision review"
+          ],
+          "channels": [
+            "Printable brief"
+          ],
+          "evidence_ids": [
+            "evidence-001"
+          ],
+          "experiment_ids": [
+            "test-003"
+          ],
+          "owner": "Pilot sponsor",
+          "metrics": [
+            "Decision cycle time"
+          ]
+        }
+      ],
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "tags": [
+        "heat",
+        "pilot"
+      ]
+    }
+  ],
+  "behavioral_signals": [
+    {
+      "signal_id": "signal-001",
+      "source_type": "ga4_export",
+      "metric": "brief_downloads",
+      "segment": "all visitors",
+      "value": "42",
+      "period": "2026-06",
+      "interpretation": "Printable briefs receive repeated use and may warrant further qualitative study.",
+      "evidence_status": "hint",
+      "limitation": "Download activity indicates engagement but does not prove user intent, identity, motivation, or demographic attributes.",
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "tags": [
+        "behavioral-hint",
+        "brief-format"
+      ]
+    }
+  ],
+  "research_summary": {
+    "persona_count": 1,
+    "stakeholder_count": 1,
+    "journey_count": 1,
+    "behavioral_signal_count": 1,
+    "evidence_link_count": 1,
+    "assumption_link_count": 1,
+    "readiness": "review_ready",
+    "generated_at": "2026-07-16T23:30:00+00:00"
+  },
+  "point_of_view": {
+    "statement": "Municipal Resilience Coordinator needs a practical way to address 'Neighborhood heat-response planning is fragmented across agencies and community organizations.' so they can create a reviewable pilot that connects heat-risk evidence to neighborhood action without ignoring the constraint: Data coverage and community capacity vary by neighborhood.",
+    "persona_id": "persona-001"
+  },
+  "how_might_we": [
+    {
+      "hmw_id": "hmw-001",
+      "question": "How might we help Municipal Resilience Coordinator make the challenge concrete enough to act on?",
+      "status": "candidate"
+    },
+    {
+      "hmw_id": "hmw-002",
+      "question": "How might we turn the goal \u2014 Create a reviewable pilot that connects heat-risk evidence to neighborhood action \u2014 into a small testable experiment?",
+      "status": "candidate"
+    },
+    {
+      "hmw_id": "hmw-003",
+      "question": "How might we make the constraint visible without letting it stop progress?",
+      "status": "candidate"
+    },
+    {
+      "hmw_id": "hmw-004",
+      "question": "How might we document assumptions so the next decision can be reviewed?",
+      "status": "candidate"
+    }
+  ],
+  "framework": {
+    "name": "Jobs To Be Done",
+    "category": "user_research",
+    "description": "Frame the progress a person is trying to make in a specific situation.",
+    "intended_uses": [
+      "Opportunity framing",
+      "Persona refinement",
+      "Service concept generation"
+    ],
+    "limitations": [
+      "Can underrepresent institutional and collective dynamics",
+      "Requires validation with real users"
+    ],
+    "required_inputs": [
+      "Situation",
+      "Desired progress",
+      "Outcome",
+      "Constraint"
+    ],
+    "output_types": [
+      "job_statement",
+      "opportunity_prompts"
+    ],
+    "mode_support": [
+      "divergent",
+      "convergent"
+    ],
+    "prompts": [
+      {
+        "prompt_id": "prompt-001",
+        "label": "When",
+        "question": "What situation creates the need?",
+        "purpose": "Identify the triggering context.",
+        "output_type": "context"
+      },
+      {
+        "prompt_id": "prompt-002",
+        "label": "I want to",
+        "question": "What progress is the user trying to make?",
+        "purpose": "Describe the job without prescribing a solution.",
+        "output_type": "job_statement"
+      },
+      {
+        "prompt_id": "prompt-003",
+        "label": "So I can",
+        "question": "What outcome matters?",
+        "purpose": "Clarify the desired result.",
+        "output_type": "outcome"
+      },
+      {
+        "prompt_id": "prompt-004",
+        "label": "Constraint",
+        "question": "What prevents the user from making progress today?",
+        "purpose": "Expose barriers and tradeoffs.",
+        "output_type": "constraint"
+      }
+    ],
+    "key": "JTBD",
+    "origin": "builtin",
+    "organization": "",
+    "created_by": "",
+    "version": "1.0",
+    "tags": []
+  },
+  "custom_frameworks": [
+    {
+      "key": "EquityLens",
+      "name": "Equity Lens",
+      "category": "organizational",
+      "description": "Review who benefits, who bears cost, and who participates in decisions.",
+      "intended_uses": [
+        "Equity review",
+        "Affected-group analysis"
+      ],
+      "limitations": [
+        "Does not replace engagement with affected groups"
+      ],
+      "required_inputs": [
+        "Affected groups",
+        "Decision scope"
+      ],
+      "output_types": [
+        "review_questions"
+      ],
+      "mode_support": [
+        "divergent",
+        "convergent"
+      ],
+      "prompts": [
+        {
+          "prompt_id": "prompt-001",
+          "label": "Benefits",
+          "question": "Who is expected to benefit, and what evidence supports that expectation?",
+          "purpose": "Make expected benefits reviewable.",
+          "output_type": "review_question"
+        }
+      ],
+      "origin": "custom",
+      "organization": "Sustainable Catalyst",
+      "created_by": "Program Design Team",
+      "version": "1.0",
+      "tags": [
+        "equity"
+      ]
+    }
+  ],
+  "prompt_packs": [
+    {
+      "prompt_pack_id": "prompt-pack-001",
+      "name": "Heat pilot prompts",
+      "description": "Reusable prompts for neighborhood heat-response ideation.",
+      "organization": "Sustainable Catalyst",
+      "created_by": "Program Design Team",
+      "prompts": [
+        {
+          "prompt_id": "pack-001-prompt-001",
+          "label": "Smallest test",
+          "question": "What is the smallest neighborhood action that can produce useful learning?",
+          "purpose": "Generate bounded experiments.",
+          "output_type": "experiment_seed"
+        }
+      ],
+      "tags": [
+        "heat",
+        "pilot"
+      ]
+    }
+  ],
+  "ideation_sessions": [
+    {
+      "session_id": "ideation-session-001",
+      "title": "Heat-response concept workshop",
+      "mode": "divergent",
+      "framework_key": "JTBD",
+      "prompt_pack_ids": [
+        "prompt-pack-001"
+      ],
+      "challenge_ids": [
+        "challenge-primary"
+      ],
+      "hmw_ids": [
+        "hmw-001"
+      ],
+      "facilitator": "Program Design Team",
+      "participants": [
+        "Municipal resilience coordinator",
+        "Neighborhood partner coalition"
+      ],
+      "status": "complete",
+      "notes": "Generated concepts before convergence.",
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
+    }
+  ],
+  "ideas": [
+    {
+      "idea_id": "idea-001",
+      "title": "Evidence-gap action card",
+      "description": "Pair one heat signal with its confidence, missing data, proposed action, and review owner.",
+      "session_id": "ideation-session-001",
+      "challenge_id": "challenge-primary",
+      "hmw_id": "hmw-001",
+      "prompt_id": "prompt-002",
+      "author": "Program Design Team",
+      "rationale": "Makes the key evidence limitation visible at the point of action.",
+      "tags": [
+        "brief",
+        "evidence"
+      ],
+      "cluster_id": "idea-cluster-001",
+      "status": "selected",
+      "vote_count": 3,
+      "voter_ids": [
+        "participant-001",
+        "participant-002",
+        "participant-003"
+      ],
+      "parent_idea_ids": [],
+      "merged_into_id": "",
+      "prototype_ids": [
+        "prototype-001"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
+    },
+    {
+      "idea_id": "idea-002",
+      "title": "Neighborhood confidence legend",
+      "description": "Add a plain-language confidence and missingness legend to every neighborhood view.",
+      "session_id": "ideation-session-001",
+      "challenge_id": "challenge-primary",
+      "hmw_id": "hmw-001",
+      "prompt_id": "prompt-001",
+      "author": "Neighborhood partner coalition",
+      "rationale": "Partners need a shared way to interpret uneven data quality.",
+      "tags": [
+        "accessibility",
+        "data-quality"
+      ],
+      "cluster_id": "idea-cluster-001",
+      "status": "clustered",
+      "vote_count": 2,
+      "voter_ids": [
+        "participant-001",
+        "participant-003"
+      ],
+      "parent_idea_ids": [],
+      "merged_into_id": "",
+      "prototype_ids": [],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "evidence_ids": [
+        "evidence-002"
+      ],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
+    },
+    {
+      "idea_id": "idea-003",
+      "title": "Merged evidence note",
+      "description": "Earlier wording folded into the action-card concept.",
+      "session_id": "ideation-session-001",
+      "challenge_id": "challenge-primary",
+      "hmw_id": "hmw-001",
+      "prompt_id": "prompt-002",
+      "author": "Municipal resilience coordinator",
+      "rationale": "Preserve the originating concept and merge decision.",
+      "tags": [
+        "lineage"
+      ],
+      "cluster_id": "",
+      "status": "merged",
+      "vote_count": 0,
+      "voter_ids": [],
+      "parent_idea_ids": [],
+      "merged_into_id": "idea-001",
+      "prototype_ids": [],
+      "assumption_ids": [],
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
+    }
+  ],
+  "idea_clusters": [
+    {
+      "cluster_id": "idea-cluster-001",
+      "name": "Visible evidence gaps",
+      "description": "Concepts that keep missingness and confidence visible.",
+      "idea_ids": [
+        "idea-001",
+        "idea-002"
+      ],
+      "tags": [
+        "evidence",
+        "transparency"
+      ],
+      "rationale": "Both concepts reduce false certainty during pilot selection.",
+      "sequence": 1
+    }
+  ],
+  "ideation_summary": {
+    "session_count": 1,
+    "idea_count": 3,
+    "cluster_count": 1,
+    "vote_count": 5,
+    "selected_count": 1,
+    "merged_count": 1,
+    "prototype_link_count": 1,
+    "orphaned_lineage_count": 0,
+    "modes_used": [
+      "divergent"
+    ],
+    "indicator_note": "Ideation indicators describe recorded activity and lineage. Votes and selections represent participant judgment, not objective quality.",
+    "generated_at": "2026-07-16T23:30:00+00:00"
+  },
+  "decision_criteria": [
+    {
+      "criterion_id": "criterion-impact",
+      "name": "Expected impact",
+      "category": "outcome",
+      "description": "Expected contribution to the stated goal and affected groups.",
+      "weight": 20.0,
+      "direction": "higher_better",
+      "is_gate": false,
+      "gate_requirement": "",
+      "limitations": [
+        "Expected impact is not observed impact.",
+        "Distributional effects should be recorded separately."
+      ],
+      "notes": ""
+    },
+    {
+      "criterion_id": "criterion-evidence-confidence",
+      "name": "Evidence confidence",
+      "category": "evidence",
+      "description": "Strength and relevance of evidence supporting the option and its assumptions.",
+      "weight": 15.0,
+      "direction": "higher_better",
+      "is_gate": false,
+      "gate_requirement": "",
+      "limitations": [
+        "High confidence does not guarantee a desirable outcome."
+      ],
+      "notes": ""
+    },
+    {
+      "criterion_id": "criterion-feasibility",
+      "name": "Feasibility",
+      "category": "delivery",
+      "description": "Practical ability to deliver the option with available capabilities, time, and dependencies.",
+      "weight": 15.0,
+      "direction": "higher_better",
+      "is_gate": false,
+      "gate_requirement": "",
+      "limitations": [
+        "Current feasibility can change as resources and constraints change."
+      ],
+      "notes": ""
+    },
+    {
+      "criterion_id": "criterion-urgency",
+      "name": "Urgency",
+      "category": "timing",
+      "description": "Time sensitivity, consequence of delay, and relevance of the decision deadline.",
+      "weight": 10.0,
+      "direction": "higher_better",
+      "is_gate": false,
+      "gate_requirement": "",
+      "limitations": [
+        "Urgency should not automatically override importance or safety."
+      ],
+      "notes": ""
+    },
+    {
+      "criterion_id": "criterion-strategic-alignment",
+      "name": "Strategic alignment",
+      "category": "strategy",
+      "description": "Fit with the declared goal, scope, institutional commitments, and decision context.",
+      "weight": 15.0,
+      "direction": "higher_better",
+      "is_gate": false,
+      "gate_requirement": "",
+      "limitations": [
+        "Alignment can reinforce a flawed strategy and should remain reviewable."
+      ],
+      "notes": ""
+    },
+    {
+      "criterion_id": "criterion-equity-and-harm",
+      "name": "Equity and harm review",
+      "category": "ethical_constraint",
+      "description": "Distribution of benefits, burdens, exclusion risks, foreseeable harms, and mitigation readiness.",
+      "weight": 15.0,
+      "direction": "higher_better",
+      "is_gate": true,
+      "gate_requirement": "No unresolved severe harm or exclusion risk may be hidden by an aggregate score.",
+      "limitations": [
+        "A numeric value cannot replace affected-group review or formal safeguards."
+      ],
+      "notes": ""
+    },
+    {
+      "criterion_id": "criterion-resource-efficiency",
+      "name": "Resource efficiency",
+      "category": "resources",
+      "description": "Expected value relative to financial, staffing, time, and operational requirements.",
+      "weight": 5.0,
+      "direction": "higher_better",
+      "is_gate": false,
+      "gate_requirement": "",
+      "limitations": [
+        "Efficiency should not erase absolute resource constraints or externalized costs."
+      ],
+      "notes": ""
+    },
+    {
+      "criterion_id": "criterion-reversibility",
+      "name": "Reversibility",
+      "category": "risk",
+      "description": "Ability to stop, revise, or recover from the decision without disproportionate cost or harm.",
+      "weight": 5.0,
+      "direction": "higher_better",
+      "is_gate": false,
+      "gate_requirement": "",
+      "limitations": [
+        "Some effects may remain irreversible even when implementation is technically reversible."
+      ],
+      "notes": ""
+    }
+  ],
+  "decision_options": [
+    {
+      "option_id": "option-001",
+      "title": "Evidence-gap action card",
+      "description": "Add a compact evidence-gap and owner card to each neighborhood pilot brief.",
+      "idea_ids": [
+        "idea-001"
+      ],
+      "prototype_ids": [
+        "prototype-001"
+      ],
+      "owner": "Program Design Team",
+      "recommendation_state": "ready_for_decision_review",
+      "decision_deadline": "2026-08-01",
+      "dependencies": [
+        "Neighborhood indicator registry"
+      ],
+      "blockers": [],
+      "resource_needs": [
+        "One design sprint",
+        "Municipal data reviewer"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "research_question_ids": [
+        "research-question-001"
+      ],
+      "ice": {
+        "model": "ICE",
+        "definition": "ICE = impact \u00d7 confidence \u00d7 ease. Definitions and scales remain editable and must be interpreted with the recorded rationale.",
+        "inputs": [
+          {
+            "input_id": "ice-impact",
+            "key": "impact",
+            "label": "Impact",
+            "value": 8.0,
+            "unit": "1-10",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Impact estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          },
+          {
+            "input_id": "ice-confidence",
+            "key": "confidence",
+            "label": "Confidence",
+            "value": 6.0,
+            "unit": "1-10",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Confidence estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          },
+          {
+            "input_id": "ice-ease",
+            "key": "ease",
+            "label": "Ease",
+            "value": 7.0,
+            "unit": "1-10",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Ease estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          }
+        ],
+        "score": 336.0,
+        "rationale": "High practical value with manageable implementation effort.",
+        "confidence": "medium",
+        "basis": "estimate"
+      },
+      "rice": {
+        "model": "RICE",
+        "definition": "RICE = reach \u00d7 impact \u00d7 confidence \u00f7 effort. Reach, confidence, and effort units must be stated for meaningful comparison.",
+        "inputs": [
+          {
+            "input_id": "rice-reach",
+            "key": "reach",
+            "label": "Reach",
+            "value": 12.0,
+            "unit": "neighborhoods",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Reach estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          },
+          {
+            "input_id": "rice-impact",
+            "key": "impact",
+            "label": "Impact",
+            "value": 2.0,
+            "unit": "1-10",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Impact estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          },
+          {
+            "input_id": "rice-confidence",
+            "key": "confidence",
+            "label": "Confidence",
+            "value": 0.6,
+            "unit": "1-10",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Confidence estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          },
+          {
+            "input_id": "rice-effort",
+            "key": "effort",
+            "label": "Effort",
+            "value": 2.0,
+            "unit": "person-weeks",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Effort estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          }
+        ],
+        "score": 7.2,
+        "rationale": "Could be used across twelve neighborhood briefs in the pilot period.",
+        "confidence": "medium",
+        "basis": "estimate"
+      },
+      "criterion_scores": [
+        {
+          "criterion_id": "criterion-impact",
+          "raw_value": 5.0,
+          "normalized_value": 1.0,
+          "weight": 20.0,
+          "weighted_value": 20.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for impact.",
+          "evidence_ids": [
+            "evidence-001"
+          ],
+          "assumption_ids": []
+        },
+        {
+          "criterion_id": "criterion-evidence-confidence",
+          "raw_value": 4.0,
+          "normalized_value": 0.8,
+          "weight": 15.0,
+          "weighted_value": 12.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for evidence confidence.",
+          "evidence_ids": [
+            "evidence-001"
+          ],
+          "assumption_ids": []
+        },
+        {
+          "criterion_id": "criterion-feasibility",
+          "raw_value": 4.0,
+          "normalized_value": 0.8,
+          "weight": 15.0,
+          "weighted_value": 12.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for feasibility.",
+          "evidence_ids": [],
+          "assumption_ids": [
+            "assumption-001"
+          ]
+        },
+        {
+          "criterion_id": "criterion-urgency",
+          "raw_value": 5.0,
+          "normalized_value": 1.0,
+          "weight": 10.0,
+          "weighted_value": 10.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for urgency.",
+          "evidence_ids": [],
+          "assumption_ids": []
+        },
+        {
+          "criterion_id": "criterion-strategic-alignment",
+          "raw_value": 5.0,
+          "normalized_value": 1.0,
+          "weight": 15.0,
+          "weighted_value": 15.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for strategic alignment.",
+          "evidence_ids": [],
+          "assumption_ids": []
+        },
+        {
+          "criterion_id": "criterion-equity-and-harm",
+          "raw_value": 4.0,
+          "normalized_value": 0.8,
+          "weight": 15.0,
+          "weighted_value": 12.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for equity and harm.",
+          "evidence_ids": [],
+          "assumption_ids": []
+        },
+        {
+          "criterion_id": "criterion-resource-efficiency",
+          "raw_value": 4.0,
+          "normalized_value": 0.8,
+          "weight": 5.0,
+          "weighted_value": 4.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for resource efficiency.",
+          "evidence_ids": [],
+          "assumption_ids": [
+            "assumption-001"
+          ]
+        },
+        {
+          "criterion_id": "criterion-reversibility",
+          "raw_value": 5.0,
+          "normalized_value": 1.0,
+          "weight": 5.0,
+          "weighted_value": 5.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for reversibility.",
+          "evidence_ids": [],
+          "assumption_ids": []
+        }
+      ],
+      "weighted_score": 90.0,
+      "matrices": {
+        "impact_effort": {
+          "matrix": "impact_effort",
+          "x_axis": "effort",
+          "y_axis": "impact",
+          "x_value": 2.0,
+          "y_value": 5.0,
+          "quadrant": "high_impact_low_effort",
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Small interface addition with high planning value."
+        },
+        "confidence_risk": {
+          "matrix": "confidence_risk",
+          "x_axis": "risk",
+          "y_axis": "confidence",
+          "x_value": 2.0,
+          "y_value": 3.0,
+          "quadrant": "high_confidence_low_risk",
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Evidence and scope are bounded."
+        },
+        "urgency_importance": {
+          "matrix": "urgency_importance",
+          "x_axis": "urgency",
+          "y_axis": "importance",
+          "x_value": 5.0,
+          "y_value": 5.0,
+          "quadrant": "urgent_and_important",
+          "basis": "opinion",
+          "confidence": "medium",
+          "rationale": "Needed before pilot selection."
+        },
+        "reversibility": {
+          "matrix": "reversibility",
+          "x_axis": "commitment",
+          "y_axis": "reversibility",
+          "x_value": 2.0,
+          "y_value": 5.0,
+          "quadrant": "highly_reversible_low_commitment",
+          "basis": "estimate",
+          "confidence": "high",
+          "rationale": "The card can be revised or removed without changing core data."
+        }
+      },
+      "gate_results": [
+        {
+          "criterion_id": "criterion-equity-and-harm",
+          "result": "pass",
+          "rationale": "The option keeps neighborhood uncertainty visible and does not infer individual vulnerability.",
+          "evidence_ids": [
+            "evidence-001"
+          ],
+          "assumption_ids": [],
+          "reviewed_by": "Community review lead",
+          "reviewed_at": "2026-07-16T12:00:00+00:00"
+        }
+      ],
+      "decision_rationale": "Advance to formal decision review because the option is reversible, time-sensitive, and evidence-aware.",
+      "confidence": "medium",
+      "value_basis": "estimate",
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
+    },
+    {
+      "option_id": "option-002",
+      "title": "Neighborhood confidence legend",
+      "description": "Show a common confidence and missingness legend beside each neighborhood signal.",
+      "idea_ids": [
+        "idea-002"
+      ],
+      "prototype_ids": [],
+      "owner": "Municipal analytics team",
+      "recommendation_state": "test",
+      "decision_deadline": "2026-08-10",
+      "dependencies": [
+        "Shared confidence definitions"
+      ],
+      "blockers": [
+        "Current dashboards use incompatible confidence labels"
+      ],
+      "resource_needs": [
+        "Analytics taxonomy workshop"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "research_question_ids": [
+        "research-question-001"
+      ],
+      "ice": {
+        "model": "ICE",
+        "definition": "ICE = impact \u00d7 confidence \u00d7 ease. Definitions and scales remain editable and must be interpreted with the recorded rationale.",
+        "inputs": [
+          {
+            "input_id": "ice-impact",
+            "key": "impact",
+            "label": "Impact",
+            "value": 7.0,
+            "unit": "1-10",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Impact estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          },
+          {
+            "input_id": "ice-confidence",
+            "key": "confidence",
+            "label": "Confidence",
+            "value": 5.0,
+            "unit": "1-10",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Confidence estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          },
+          {
+            "input_id": "ice-ease",
+            "key": "ease",
+            "label": "Ease",
+            "value": 5.0,
+            "unit": "1-10",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Ease estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          }
+        ],
+        "score": 175.0,
+        "rationale": "Useful but requires shared definitions across systems.",
+        "confidence": "medium",
+        "basis": "estimate"
+      },
+      "rice": {
+        "model": "RICE",
+        "definition": "RICE = reach \u00d7 impact \u00d7 confidence \u00f7 effort. Reach, confidence, and effort units must be stated for meaningful comparison.",
+        "inputs": [
+          {
+            "input_id": "rice-reach",
+            "key": "reach",
+            "label": "Reach",
+            "value": 8.0,
+            "unit": "neighborhoods",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Reach estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          },
+          {
+            "input_id": "rice-impact",
+            "key": "impact",
+            "label": "Impact",
+            "value": 2.0,
+            "unit": "1-10",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Impact estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          },
+          {
+            "input_id": "rice-confidence",
+            "key": "confidence",
+            "label": "Confidence",
+            "value": 0.5,
+            "unit": "1-10",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Confidence estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          },
+          {
+            "input_id": "rice-effort",
+            "key": "effort",
+            "label": "Effort",
+            "value": 4.0,
+            "unit": "person-weeks",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Effort estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          }
+        ],
+        "score": 2.0,
+        "rationale": "Reach is narrower until dashboard definitions are harmonized.",
+        "confidence": "low",
+        "basis": "estimate"
+      },
+      "criterion_scores": [
+        {
+          "criterion_id": "criterion-impact",
+          "raw_value": 4.0,
+          "normalized_value": 0.8,
+          "weight": 20.0,
+          "weighted_value": 16.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for impact.",
+          "evidence_ids": [
+            "evidence-001"
+          ],
+          "assumption_ids": []
+        },
+        {
+          "criterion_id": "criterion-evidence-confidence",
+          "raw_value": 3.0,
+          "normalized_value": 0.6,
+          "weight": 15.0,
+          "weighted_value": 9.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for evidence confidence.",
+          "evidence_ids": [
+            "evidence-001"
+          ],
+          "assumption_ids": []
+        },
+        {
+          "criterion_id": "criterion-feasibility",
+          "raw_value": 3.0,
+          "normalized_value": 0.6,
+          "weight": 15.0,
+          "weighted_value": 9.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for feasibility.",
+          "evidence_ids": [],
+          "assumption_ids": [
+            "assumption-001"
+          ]
+        },
+        {
+          "criterion_id": "criterion-urgency",
+          "raw_value": 4.0,
+          "normalized_value": 0.8,
+          "weight": 10.0,
+          "weighted_value": 8.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for urgency.",
+          "evidence_ids": [],
+          "assumption_ids": []
+        },
+        {
+          "criterion_id": "criterion-strategic-alignment",
+          "raw_value": 4.0,
+          "normalized_value": 0.8,
+          "weight": 15.0,
+          "weighted_value": 12.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for strategic alignment.",
+          "evidence_ids": [],
+          "assumption_ids": []
+        },
+        {
+          "criterion_id": "criterion-equity-and-harm",
+          "raw_value": 4.0,
+          "normalized_value": 0.8,
+          "weight": 15.0,
+          "weighted_value": 12.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for equity and harm.",
+          "evidence_ids": [],
+          "assumption_ids": []
+        },
+        {
+          "criterion_id": "criterion-resource-efficiency",
+          "raw_value": 3.0,
+          "normalized_value": 0.6,
+          "weight": 5.0,
+          "weighted_value": 3.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for resource efficiency.",
+          "evidence_ids": [],
+          "assumption_ids": [
+            "assumption-001"
+          ]
+        },
+        {
+          "criterion_id": "criterion-reversibility",
+          "raw_value": 4.0,
+          "normalized_value": 0.8,
+          "weight": 5.0,
+          "weighted_value": 4.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for reversibility.",
+          "evidence_ids": [],
+          "assumption_ids": []
+        }
+      ],
+      "weighted_score": 73.0,
+      "matrices": {
+        "impact_effort": {
+          "matrix": "impact_effort",
+          "x_axis": "effort",
+          "y_axis": "impact",
+          "x_value": 4.0,
+          "y_value": 4.0,
+          "quadrant": "high_impact_high_effort",
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Cross-system agreement increases effort."
+        },
+        "confidence_risk": {
+          "matrix": "confidence_risk",
+          "x_axis": "risk",
+          "y_axis": "confidence",
+          "x_value": 3.0,
+          "y_value": 3.0,
+          "quadrant": "high_confidence_high_risk",
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Definitions are not yet harmonized."
+        },
+        "urgency_importance": {
+          "matrix": "urgency_importance",
+          "x_axis": "urgency",
+          "y_axis": "importance",
+          "x_value": 4.0,
+          "y_value": 4.0,
+          "quadrant": "urgent_and_important",
+          "basis": "opinion",
+          "confidence": "medium",
+          "rationale": "Important for comparability but can follow the pilot brief."
+        },
+        "reversibility": {
+          "matrix": "reversibility",
+          "x_axis": "commitment",
+          "y_axis": "reversibility",
+          "x_value": 3.0,
+          "y_value": 4.0,
+          "quadrant": "highly_reversible_high_commitment",
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Labels can be revised but system changes create coordination cost."
+        }
+      },
+      "gate_results": [
+        {
+          "criterion_id": "criterion-equity-and-harm",
+          "result": "unknown",
+          "rationale": "Community interpretation of confidence labels has not been tested.",
+          "evidence_ids": [],
+          "assumption_ids": [
+            "assumption-001"
+          ],
+          "reviewed_by": "",
+          "reviewed_at": ""
+        }
+      ],
+      "decision_rationale": "Run a terminology test before committing to system-wide adoption.",
+      "confidence": "medium",
+      "value_basis": "estimate",
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
+    },
+    {
+      "option_id": "option-003",
+      "title": "Merged evidence note",
+      "description": "Combine partner and data caveats into a single long-form evidence note.",
+      "idea_ids": [
+        "idea-003"
+      ],
+      "prototype_ids": [],
+      "owner": "Program Design Team",
+      "recommendation_state": "defer",
+      "decision_deadline": "",
+      "dependencies": [],
+      "blockers": [
+        "Long notes may reduce scanability"
+      ],
+      "resource_needs": [
+        "Editorial review"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "research_question_ids": [
+        "research-question-001"
+      ],
+      "ice": {
+        "model": "ICE",
+        "definition": "ICE = impact \u00d7 confidence \u00d7 ease. Definitions and scales remain editable and must be interpreted with the recorded rationale.",
+        "inputs": [
+          {
+            "input_id": "ice-impact",
+            "key": "impact",
+            "label": "Impact",
+            "value": 4.0,
+            "unit": "1-10",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Impact estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          },
+          {
+            "input_id": "ice-confidence",
+            "key": "confidence",
+            "label": "Confidence",
+            "value": 6.0,
+            "unit": "1-10",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Confidence estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          },
+          {
+            "input_id": "ice-ease",
+            "key": "ease",
+            "label": "Ease",
+            "value": 8.0,
+            "unit": "1-10",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Ease estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          }
+        ],
+        "score": 192.0,
+        "rationale": "Easy to produce but may not improve decision clarity.",
+        "confidence": "low",
+        "basis": "opinion"
+      },
+      "rice": {
+        "model": "RICE",
+        "definition": "RICE = reach \u00d7 impact \u00d7 confidence \u00f7 effort. Reach, confidence, and effort units must be stated for meaningful comparison.",
+        "inputs": [
+          {
+            "input_id": "rice-reach",
+            "key": "reach",
+            "label": "Reach",
+            "value": 12.0,
+            "unit": "neighborhoods",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Reach estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          },
+          {
+            "input_id": "rice-impact",
+            "key": "impact",
+            "label": "Impact",
+            "value": 1.0,
+            "unit": "1-10",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Impact estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          },
+          {
+            "input_id": "rice-confidence",
+            "key": "confidence",
+            "label": "Confidence",
+            "value": 0.5,
+            "unit": "1-10",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Confidence estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          },
+          {
+            "input_id": "rice-effort",
+            "key": "effort",
+            "label": "Effort",
+            "value": 1.0,
+            "unit": "person-weeks",
+            "basis": "estimate",
+            "confidence": "medium",
+            "rationale": "Effort estimated from pilot planning records.",
+            "evidence_ids": [
+              "evidence-001"
+            ],
+            "assumption_ids": [
+              "assumption-001"
+            ]
+          }
+        ],
+        "score": 6.0,
+        "rationale": "Broad distribution but uncertain practical effect.",
+        "confidence": "low",
+        "basis": "opinion"
+      },
+      "criterion_scores": [
+        {
+          "criterion_id": "criterion-impact",
+          "raw_value": 2.0,
+          "normalized_value": 0.4,
+          "weight": 20.0,
+          "weighted_value": 8.0,
+          "basis": "opinion",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for impact.",
+          "evidence_ids": [
+            "evidence-001"
+          ],
+          "assumption_ids": []
+        },
+        {
+          "criterion_id": "criterion-evidence-confidence",
+          "raw_value": 4.0,
+          "normalized_value": 0.8,
+          "weight": 15.0,
+          "weighted_value": 12.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for evidence confidence.",
+          "evidence_ids": [
+            "evidence-001"
+          ],
+          "assumption_ids": []
+        },
+        {
+          "criterion_id": "criterion-feasibility",
+          "raw_value": 5.0,
+          "normalized_value": 1.0,
+          "weight": 15.0,
+          "weighted_value": 15.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for feasibility.",
+          "evidence_ids": [],
+          "assumption_ids": [
+            "assumption-001"
+          ]
+        },
+        {
+          "criterion_id": "criterion-urgency",
+          "raw_value": 2.0,
+          "normalized_value": 0.4,
+          "weight": 10.0,
+          "weighted_value": 4.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for urgency.",
+          "evidence_ids": [],
+          "assumption_ids": []
+        },
+        {
+          "criterion_id": "criterion-strategic-alignment",
+          "raw_value": 3.0,
+          "normalized_value": 0.6,
+          "weight": 15.0,
+          "weighted_value": 9.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for strategic alignment.",
+          "evidence_ids": [],
+          "assumption_ids": []
+        },
+        {
+          "criterion_id": "criterion-equity-and-harm",
+          "raw_value": 3.0,
+          "normalized_value": 0.6,
+          "weight": 15.0,
+          "weighted_value": 9.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for equity and harm.",
+          "evidence_ids": [],
+          "assumption_ids": []
+        },
+        {
+          "criterion_id": "criterion-resource-efficiency",
+          "raw_value": 4.0,
+          "normalized_value": 0.8,
+          "weight": 5.0,
+          "weighted_value": 4.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for resource efficiency.",
+          "evidence_ids": [],
+          "assumption_ids": [
+            "assumption-001"
+          ]
+        },
+        {
+          "criterion_id": "criterion-reversibility",
+          "raw_value": 5.0,
+          "normalized_value": 1.0,
+          "weight": 5.0,
+          "weighted_value": 5.0,
+          "basis": "estimate",
+          "confidence": "medium",
+          "rationale": "Recorded review rationale for reversibility.",
+          "evidence_ids": [],
+          "assumption_ids": []
+        }
+      ],
+      "weighted_score": 66.0,
+      "matrices": {
+        "impact_effort": {
+          "matrix": "impact_effort",
+          "x_axis": "effort",
+          "y_axis": "impact",
+          "x_value": 1.0,
+          "y_value": 2.0,
+          "quadrant": "low_impact_low_effort",
+          "basis": "opinion",
+          "confidence": "low",
+          "rationale": "Low effort with uncertain impact."
+        },
+        "confidence_risk": {
+          "matrix": "confidence_risk",
+          "x_axis": "risk",
+          "y_axis": "confidence",
+          "x_value": 2.0,
+          "y_value": 3.0,
+          "quadrant": "high_confidence_low_risk",
+          "basis": "opinion",
+          "confidence": "low",
+          "rationale": "Low implementation risk but unclear usefulness."
+        },
+        "urgency_importance": {
+          "matrix": "urgency_importance",
+          "x_axis": "urgency",
+          "y_axis": "importance",
+          "x_value": 2.0,
+          "y_value": 3.0,
+          "quadrant": "important_not_urgent",
+          "basis": "opinion",
+          "confidence": "low",
+          "rationale": "Not needed for the immediate pilot decision."
+        },
+        "reversibility": {
+          "matrix": "reversibility",
+          "x_axis": "commitment",
+          "y_axis": "reversibility",
+          "x_value": 1.0,
+          "y_value": 5.0,
+          "quadrant": "highly_reversible_low_commitment",
+          "basis": "estimate",
+          "confidence": "high",
+          "rationale": "Editorial format is easy to change."
+        }
+      },
+      "gate_results": [
+        {
+          "criterion_id": "criterion-equity-and-harm",
+          "result": "unknown",
+          "rationale": "Scanability and accessibility effects need review.",
+          "evidence_ids": [],
+          "assumption_ids": [
+            "assumption-001"
+          ],
+          "reviewed_by": "",
+          "reviewed_at": ""
+        }
+      ],
+      "decision_rationale": "Defer until a clearer user need is demonstrated.",
+      "confidence": "low",
+      "value_basis": "opinion",
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
+    }
+  ],
+  "sensitivity_views": [
+    {
+      "scenario_id": "sensitivity-baseline",
+      "name": "Baseline weights",
+      "description": "Ranking generated from the recorded criterion weights.",
+      "weight_overrides": [],
+      "rankings": [
+        {
+          "option_id": "option-001",
+          "score": 90.0,
+          "rank": 1,
+          "delta_from_baseline": 0
+        },
+        {
+          "option_id": "option-002",
+          "score": 73.0,
+          "rank": 2,
+          "delta_from_baseline": 0
+        },
+        {
+          "option_id": "option-003",
+          "score": 66.0,
+          "rank": 3,
+          "delta_from_baseline": 0
+        }
+      ],
+      "generated_at": "2026-07-16T23:30:00+00:00"
+    },
+    {
+      "scenario_id": "sensitivity-equity",
+      "name": "Equity emphasis",
+      "description": "Increase the equity and harm criterion to test whether rankings depend on stronger distributional weighting.",
+      "weight_overrides": [
+        {
+          "criterion_id": "criterion-equity-and-harm",
+          "weight": 35.0
+        },
+        {
+          "criterion_id": "criterion-impact",
+          "weight": 10.0
+        }
+      ],
+      "rankings": [
+        {
+          "option_id": "option-001",
+          "score": 87.272727,
+          "rank": 1,
+          "delta_from_baseline": 0
+        },
+        {
+          "option_id": "option-002",
+          "score": 73.636364,
+          "rank": 2,
+          "delta_from_baseline": 0
+        },
+        {
+          "option_id": "option-003",
+          "score": 67.272727,
+          "rank": 3,
+          "delta_from_baseline": 0
+        }
+      ],
+      "generated_at": "2026-07-16T12:00:00+00:00"
+    },
+    {
+      "scenario_id": "sensitivity-feasibility",
+      "name": "Delivery constraint",
+      "description": "Increase feasibility and resource efficiency weights for a constrained delivery scenario.",
+      "weight_overrides": [
+        {
+          "criterion_id": "criterion-feasibility",
+          "weight": 30.0
+        },
+        {
+          "criterion_id": "criterion-resource-efficiency",
+          "weight": 20.0
+        }
+      ],
+      "rankings": [
+        {
+          "option_id": "option-001",
+          "score": 87.692308,
+          "rank": 1,
+          "delta_from_baseline": 0
+        },
+        {
+          "option_id": "option-003",
+          "score": 71.538462,
+          "rank": 2,
+          "delta_from_baseline": 1
+        },
+        {
+          "option_id": "option-002",
+          "score": 70.0,
+          "rank": 3,
+          "delta_from_baseline": -1
+        }
+      ],
+      "generated_at": "2026-07-16T12:00:00+00:00"
+    }
+  ],
+  "decision_notes": [
+    {
+      "decision_note_id": "decision-note-001",
+      "note_type": "comparison",
+      "note": "Option 1 remains top-ranked across the baseline and both sensitivity scenarios.",
+      "option_ids": [
+        "option-001",
+        "option-002",
+        "option-003"
+      ],
+      "criterion_ids": [
+        "criterion-impact",
+        "criterion-equity-and-harm",
+        "criterion-feasibility"
+      ],
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "author": "Program Design Team",
+      "status": "open",
+      "created_at": "2026-07-16T12:00:00+00:00"
+    },
+    {
+      "decision_note_id": "decision-note-002",
+      "note_type": "governance",
+      "note": "Formal approval must preserve the prohibition against individual vulnerability claims.",
+      "option_ids": [
+        "option-001"
+      ],
+      "criterion_ids": [
+        "criterion-equity-and-harm"
+      ],
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "assumption_ids": [],
+      "author": "Community review lead",
+      "status": "accepted",
+      "created_at": "2026-07-16T12:00:00+00:00"
+    }
+  ],
+  "decision_handoffs": [
+    {
+      "handoff_id": "decision-handoff-001",
+      "target": "decision_studio",
+      "status": "ready",
+      "purpose": "Compare the three alternatives and record formal pilot approval.",
+      "option_ids": [
+        "option-001",
+        "option-002",
+        "option-003"
+      ],
+      "criterion_ids": [
+        "criterion-impact",
+        "criterion-evidence-confidence",
+        "criterion-feasibility",
+        "criterion-urgency",
+        "criterion-strategic-alignment",
+        "criterion-equity-and-harm",
+        "criterion-resource-efficiency",
+        "criterion-reversibility"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "research_question_ids": [
+        "research-question-001"
+      ],
+      "calculation_requirements": [],
+      "modeling_questions": [],
+      "governance_questions": [
+        "Does the proposed approval preserve neighborhood-level uncertainty?",
+        "Which stakeholder must sign off before pilot launch?"
+      ],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "created_by": "Program Design Team"
+    },
+    {
+      "handoff_id": "decision-handoff-002",
+      "target": "workbench",
+      "status": "draft",
+      "purpose": "Validate the sensitivity calculations and compare alternative weighting assumptions.",
+      "option_ids": [
+        "option-001",
+        "option-002",
+        "option-003"
+      ],
+      "criterion_ids": [
+        "criterion-impact",
+        "criterion-evidence-confidence",
+        "criterion-feasibility",
+        "criterion-urgency",
+        "criterion-strategic-alignment",
+        "criterion-equity-and-harm",
+        "criterion-resource-efficiency",
+        "criterion-reversibility"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "research_question_ids": [
+        "research-question-001"
+      ],
+      "calculation_requirements": [
+        "Recalculate rankings under normalized weights",
+        "Compare ICE and RICE scale sensitivity"
+      ],
+      "modeling_questions": [
+        "How stable is the top option under plausible weight ranges?"
+      ],
+      "governance_questions": [],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "created_by": "Program Design Team"
+    }
+  ],
+  "prioritization_summary": {
+    "criterion_count": 8,
+    "option_count": 3,
+    "sensitivity_view_count": 3,
+    "ready_option_count": 1,
+    "decision_deadline_count": 2,
+    "incomplete_score_count": 0,
+    "unknown_value_count": 0,
+    "failed_gate_count": 0,
+    "unresolved_gate_count": 2,
+    "top_option_id": "option-001",
+    "readiness": "needs_review",
+    "indicator_note": "Scores and rankings summarize recorded inputs and weights. They do not remove judgment, resolve ethical constraints, or establish certainty.",
+    "generated_at": "2026-07-16T23:30:00+00:00"
+  },
+  "sources": [
+    {
+      "source_id": "source-001",
+      "source_type": "dataset",
+      "title": "Neighborhood heat indicators",
+      "creator": "Municipal analytics team",
+      "publisher": "City resilience office",
+      "source_date": "2026-06-30",
+      "accessed_at": "2026-07-16T12:00:00+00:00",
+      "url": "https://example.org/heat-indicators",
+      "owner": "Program Design Team",
+      "description": "Available heat, vulnerability, and service-access indicators with known coverage gaps.",
+      "rights": "Internal pilot use",
+      "limitations": [
+        "Coverage varies by neighborhood"
+      ],
+      "tags": [
+        "heat",
+        "pilot"
+      ],
+      "knowledge_library_record_id": "",
+      "provenance_note": "Registered from the pilot evidence inventory."
+    },
+    {
+      "source_id": "source-002",
+      "source_type": "interview",
+      "title": "Neighborhood partner planning interview",
+      "creator": "Program Design Team",
+      "publisher": "",
+      "source_date": "2026-07-10",
+      "accessed_at": "",
+      "url": "",
+      "owner": "Program Design Team",
+      "description": "Interview about evidence gaps and implementation constraints.",
+      "rights": "Internal research",
+      "limitations": [
+        "One coalition representative"
+      ],
+      "tags": [
+        "community",
+        "interview"
+      ],
+      "knowledge_library_record_id": "",
+      "provenance_note": "Consent and use restrictions must be reviewed before publication."
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "evidence-001",
+      "source_id": "source-001",
+      "evidence_type": "data_point",
+      "title": "Neighborhood heat indicators",
+      "summary": "Available heat, vulnerability, and service-access indicators with known coverage gaps.",
+      "quote": "",
+      "locator": "dataset overview",
+      "citation": "Internal pilot dataset",
+      "url": "https://example.org/heat-indicators",
+      "captured_at": "2026-07-16T12:00:00+00:00",
+      "captured_by": "Program Design Team",
+      "confidence": "medium",
+      "limitations": [
+        "Coverage varies by neighborhood"
+      ],
+      "contradiction_ids": [],
+      "tags": [
+        "heat",
+        "coverage-gap"
+      ]
+    },
+    {
+      "evidence_id": "evidence-002",
+      "source_id": "source-002",
+      "evidence_type": "quote",
+      "title": "Partner statement about shared evidence",
+      "summary": "Partners need evidence gaps to remain visible during pilot selection.",
+      "quote": "We need everyone to see the same evidence gap before we commit resources.",
+      "locator": "interview note 4",
+      "citation": "Neighborhood partner planning interview",
+      "url": "",
+      "captured_at": "2026-07-10T16:00:00+00:00",
+      "captured_by": "Program Design Team",
+      "confidence": "medium",
+      "limitations": [
+        "Single interview"
+      ],
+      "contradiction_ids": [],
+      "tags": [
+        "partner",
+        "decision-clarity"
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "claim-001",
+      "statement": "A shared one-page pilot brief can improve cross-agency decision clarity.",
+      "state": "partially_supported",
+      "owner": "Program Design Team",
+      "confidence": "low",
+      "evidence_ids": [
+        "evidence-002"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "source_ids": [
+        "source-002"
+      ],
+      "uncertainty": "No before-and-after comparison has been completed.",
+      "limitations": [
+        "Evidence is based on a single interview and workshop observations."
+      ],
+      "contradictions": [],
+      "missing_data": [
+        "Baseline decision-clarity measure"
+      ],
+      "review_status": "review",
+      "reviewed_by": "",
+      "reviewed_at": "",
+      "updated_at": "2026-07-16T12:00:00+00:00",
+      "tags": [
+        "decision-clarity"
+      ]
+    },
+    {
+      "claim_id": "claim-002",
+      "statement": "The available indicators identify individual vulnerability.",
+      "state": "unsupported",
+      "owner": "Program Design Team",
+      "confidence": "low",
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "assumption_ids": [],
+      "source_ids": [
+        "source-001"
+      ],
+      "uncertainty": "Indicators are neighborhood-level and incomplete.",
+      "limitations": [
+        "Ecological data cannot establish individual conditions."
+      ],
+      "contradictions": [
+        "The review note prohibits individual-level interpretation."
+      ],
+      "missing_data": [
+        "Individual-level validated measures"
+      ],
+      "review_status": "draft",
+      "reviewed_by": "",
+      "reviewed_at": "",
+      "updated_at": "2026-07-16T12:00:00+00:00",
+      "tags": [
+        "overclaim-risk"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "assumption_id": "assumption-001",
+      "statement": "A shared one-page pilot brief will improve cross-agency decision clarity.",
+      "owner": "Program Design Team",
+      "confidence": "low",
+      "criticality": "high",
+      "consequence": "If false, the format may add work without improving alignment.",
+      "test_method": "Compare reviewer interpretation before and after using the brief.",
+      "status": "planned",
+      "experiment_ids": [
+        "experiment-001"
+      ],
+      "evidence_ids": [
+        "evidence-002"
+      ],
+      "due_date": "2026-08-15",
+      "limitations": [
+        "Small pilot sample"
+      ],
+      "tags": [
+        "decision-clarity"
+      ]
+    }
+  ],
+  "research_questions": [
+    {
+      "research_question_id": "research-question-001",
+      "question": "Which evidence gaps most often block a shared pilot decision?",
+      "owner": "Program Design Team",
+      "status": "investigating",
+      "priority": "high",
+      "source_ids": [
+        "source-001",
+        "source-002"
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "notes": "Use interviews and workshop observations.",
+      "tags": [
+        "evidence-gap"
+      ]
+    }
+  ],
+  "interview_guides": [
+    {
+      "interview_guide_id": "interview-guide-001",
+      "title": "Cross-agency decision clarity interview",
+      "purpose": "Understand where evidence and ownership become unclear.",
+      "audience": "Municipal and community partners",
+      "questions": [
+        "What evidence do you trust?",
+        "Where does ownership become unclear?",
+        "What would make the next action reviewable?"
+      ],
+      "owner": "Program Design Team",
+      "status": "ready",
+      "source_ids": [
+        "source-002"
+      ],
+      "tags": [
+        "decision-clarity"
+      ]
+    }
+  ],
+  "observation_notes": [
+    {
+      "observation_note_id": "observation-001",
+      "title": "Pilot planning workshop",
+      "note": "Participants used different definitions of neighborhood priority and asked for visible confidence notes.",
+      "observed_at": "2026-07-09T15:00:00+00:00",
+      "observer": "Program Design Team",
+      "context": "Cross-agency pilot workshop",
+      "source_id": "source-002",
+      "evidence_ids": [
+        "evidence-002"
+      ],
+      "limitations": [
+        "Facilitator observation"
+      ],
+      "tags": [
+        "workshop",
+        "definitions"
+      ]
+    }
+  ],
+  "synthesis_tags": [
+    "heat-resilience",
+    "evidence-gap",
+    "cross-agency-alignment"
+  ],
+  "ledger_summary": {
+    "source_count": 2,
+    "evidence_count": 2,
+    "claim_count": 2,
+    "assumption_count": 1,
+    "research_question_count": 1,
+    "claim_states": {
+      "supported": 0,
+      "partially_supported": 1,
+      "unsupported": 1,
+      "disputed": 0,
+      "outdated": 0
+    },
+    "unsupported_or_disputed_count": 1,
+    "open_high_criticality_assumption_count": 1,
+    "unowned_assumption_count": 0,
+    "untestable_assumption_count": 0,
+    "evidence_coverage": "all_material_claims_linked",
+    "assumption_exposure": "high_criticality_open",
+    "indicator_note": "Coverage indicators describe recorded links and workflow gaps; they do not measure truth or research quality.",
+    "generated_at": "2026-07-16T23:30:00+00:00"
+  },
+  "handoffs": [
+    {
+      "handoff_id": "handoff-001",
+      "target": "knowledge_library",
+      "status": "ready",
+      "purpose": "Register the pilot dataset and interview record.",
+      "context_note": "Preserve Canvas challenge, claim, and limitation context.",
+      "source_ids": [
+        "source-001",
+        "source-002"
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "claim_ids": [
+        "claim-001",
+        "claim-002"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "created_by": "Program Design Team"
+    }
+  ],
+  "prototypes": [
+    {
+      "prototype_id": "prototype-001",
+      "title": "Neighborhood heat-action brief",
+      "description": "A printable brief linking one neighborhood risk signal to one operational response, one confidence statement, and one review checkpoint.",
+      "prototype_type": "paper",
+      "fidelity": "medium",
+      "status": "iterating",
+      "version": "0.2",
+      "owner": "Program Design Team",
+      "idea_ids": [
+        "idea-001"
+      ],
+      "option_ids": [
+        "option-001"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "artifact_refs": [
+        "artifact://heat-action-brief/v0.2"
+      ],
+      "success_definition": "Partners independently identify the intended action, evidence limitation, and accountable owner.",
+      "known_limitations": [
+        "The prototype does not validate the underlying heat indicators."
+      ],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
+    }
+  ],
+  "hypotheses": [
+    {
+      "hypothesis_id": "hypothesis-001",
+      "statement": "A one-page evidence-gap action card enables municipal and neighborhood partners to identify the same next action and material evidence limitation.",
+      "hypothesis_type": "usability",
+      "status": "partially_supported",
+      "confidence": "medium",
+      "owner": "Program Design Team",
+      "prototype_ids": [
+        "prototype-001"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "evidence_ids": [
+        "evidence-002"
+      ],
+      "falsification_condition": "Fewer than four of five reviewers identify both the intended action and the evidence limitation without facilitator interpretation.",
+      "limitations": [
+        "The first run uses a small purposive sample."
+      ],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
+    }
+  ],
+  "experiment_plans": [
+    {
+      "experiment_id": "experiment-001",
+      "title": "Cross-agency clarity experiment",
+      "objective": "Determine whether the brief supports a shared pilot interpretation without hiding evidence gaps.",
+      "method": "Run a 30-minute task-based review with municipal and neighborhood partners, followed by independent recall and a facilitated debrief.",
+      "status": "complete",
+      "owner": "Program Design Team",
+      "prototype_ids": [
+        "prototype-001"
+      ],
+      "hypothesis_ids": [
+        "hypothesis-001"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "research_question_ids": [
+        "research-question-001"
+      ],
+      "participant_plan": {
+        "target_count": 5,
+        "segments": [
+          "municipal resilience staff",
+          "neighborhood partner representatives"
+        ],
+        "recruitment_method": "Purposive invitation through the pilot working group",
+        "inclusion_criteria": [
+          "Direct involvement in pilot selection"
+        ],
+        "exclusion_criteria": [
+          "No direct role in the pilot decision"
+        ],
+        "consent_required": true,
+        "compensation": "No compensation for staff; community participants follow institutional policy.",
+        "accessibility_accommodations": [
+          "Large-print brief",
+          "Remote participation option"
+        ]
+      },
+      "metrics": [
+        {
+          "metric_id": "metric-001",
+          "name": "Shared next-action identification",
+          "metric_type": "quantitative",
+          "success_threshold": "At least 4 of 5 participants identify the same next action",
+          "unit": "participants",
+          "collection_method": "Independent post-task response",
+          "baseline": "2 of 5 in the unstructured review",
+          "target": "4 of 5",
+          "basis": "estimate",
+          "confidence": "medium",
+          "evidence_ids": [
+            "evidence-002"
+          ]
+        },
+        {
+          "metric_id": "metric-002",
+          "name": "Evidence-gap visibility",
+          "metric_type": "guardrail",
+          "success_threshold": "All participants can identify the primary evidence limitation",
+          "unit": "participants",
+          "collection_method": "Post-task question",
+          "baseline": "Not recorded",
+          "target": "5 of 5",
+          "basis": "estimate",
+          "confidence": "low",
+          "evidence_ids": [
+            "evidence-001"
+          ]
+        }
+      ],
+      "safeguards": {
+        "risks": [
+          "Participants may interpret the prototype as a final funding commitment",
+          "Discussion may expose sensitive neighborhood information"
+        ],
+        "mitigations": [
+          "Label the brief as provisional",
+          "Use only aggregated or de-identified examples"
+        ],
+        "stop_conditions": [
+          "Stop if personally identifiable or sensitive service data are introduced"
+        ],
+        "data_handling": "Store de-identified notes and aggregate counts only.",
+        "ethics_review_status": "not_required"
+      },
+      "start_date": "2026-07-14",
+      "end_date": "2026-07-16",
+      "dependencies": [
+        "Pilot working-group availability"
+      ],
+      "blockers": [],
+      "artifact_refs": [
+        "artifact://experiment-guide/cross-agency-clarity-v1"
+      ],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
+    }
+  ],
+  "experiment_runs": [
+    {
+      "run_id": "experiment-run-001",
+      "experiment_id": "experiment-001",
+      "prototype_ids": [
+        "prototype-001"
+      ],
+      "status": "complete",
+      "started_at": "2026-07-16T14:00:00+00:00",
+      "completed_at": "2026-07-16T14:30:00+00:00",
+      "participant_count": 5,
+      "result_state": "partially_supported",
+      "summary": "Four participants identified the intended next action, but only three independently named the primary evidence limitation.",
+      "metric_results": [
+        {
+          "metric_id": "metric-001",
+          "observed_value": "4 of 5",
+          "met_threshold": true,
+          "sample_size": 5,
+          "analysis_note": "The intended next action was consistently interpreted.",
+          "confidence": "medium",
+          "evidence_ids": [
+            "evidence-002"
+          ]
+        },
+        {
+          "metric_id": "metric-002",
+          "observed_value": "3 of 5",
+          "met_threshold": false,
+          "sample_size": 5,
+          "analysis_note": "The evidence limitation needs stronger visual prominence and plain-language wording.",
+          "confidence": "medium",
+          "evidence_ids": [
+            "evidence-001"
+          ]
+        }
+      ],
+      "observations": [
+        "Participants understood ownership faster when the owner appeared beside the action.",
+        "The confidence legend was overlooked by two participants."
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "limitations": [
+        "Small purposive sample",
+        "Facilitator was also part of the design team"
+      ],
+      "incidents": [],
+      "artifact_refs": [
+        "artifact://deidentified-notes/experiment-run-001"
+      ],
+      "recorded_by": "Research facilitator",
+      "recorded_at": "2026-07-16T15:00:00+00:00"
+    }
+  ],
+  "learning_decisions": [
+    {
+      "learning_decision_id": "learning-decision-001",
+      "experiment_id": "experiment-001",
+      "run_ids": [
+        "experiment-run-001"
+      ],
+      "outcome": "iterate",
+      "rationale": "The action structure is usable, but evidence limitations need stronger placement and wording before a larger pilot.",
+      "hypothesis_ids": [
+        "hypothesis-001"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "next_actions": [
+        "Move the confidence statement beside the proposed action",
+        "Retest the revised brief with at least five additional reviewers"
+      ],
+      "owner": "Program Design Team",
+      "decided_at": "2026-07-16T16:00:00+00:00"
+    }
+  ],
+  "iteration_history": [
+    {
+      "iteration_id": "iteration-001",
+      "prototype_id": "prototype-001",
+      "from_version": "0.1",
+      "to_version": "0.2",
+      "change_summary": "Moved the confidence statement next to the action and simplified the evidence-gap language.",
+      "reason": "The first run showed that two participants overlooked the evidence limitation.",
+      "experiment_run_ids": [
+        "experiment-run-001"
+      ],
+      "learning_decision_id": "learning-decision-001",
+      "author": "Program Design Team",
+      "created_at": "2026-07-16T16:00:00+00:00"
+    }
+  ],
+  "experiment_handoffs": [
+    {
+      "experiment_handoff_id": "experiment-handoff-001",
+      "target": "research_lab",
+      "status": "ready",
+      "purpose": "Run a larger controlled clarity study and preserve de-identified result data.",
+      "prototype_ids": [
+        "prototype-001"
+      ],
+      "experiment_ids": [
+        "experiment-001"
+      ],
+      "run_ids": [
+        "experiment-run-001"
+      ],
+      "dataset_refs": [
+        "dataset://heat-brief-clarity-pilot"
+      ],
+      "calculation_requirements": [
+        "Estimate confidence intervals for task-completion proportions"
+      ],
+      "modeling_questions": [],
+      "compute_requirements": [
+        "Reproducible notebook",
+        "Versioned de-identified dataset"
+      ],
+      "created_by": "Program Design Team",
+      "created_at": "2026-07-16T16:00:00+00:00"
+    },
+    {
+      "experiment_handoff_id": "experiment-handoff-002",
+      "target": "workbench",
+      "status": "draft",
+      "purpose": "Validate metric definitions and prepare a reusable experiment scorecard.",
+      "prototype_ids": [
+        "prototype-001"
+      ],
+      "experiment_ids": [
+        "experiment-001"
+      ],
+      "run_ids": [
+        "experiment-run-001"
+      ],
+      "dataset_refs": [
+        "dataset://heat-brief-clarity-pilot"
+      ],
+      "calculation_requirements": [
+        "Calculate threshold attainment and uncertainty by participant segment"
+      ],
+      "modeling_questions": [
+        "How sensitive is the conclusion to a one-participant change in this small sample?"
+      ],
+      "compute_requirements": [
+        "Unit-aware metric calculations"
+      ],
+      "created_by": "Program Design Team",
+      "created_at": "2026-07-16T16:00:00+00:00"
+    }
+  ],
+  "experiment_summary": {
+    "prototype_count": 1,
+    "hypothesis_count": 1,
+    "experiment_count": 1,
+    "active_experiment_count": 0,
+    "completed_run_count": 1,
+    "learning_decision_count": 1,
+    "iteration_count": 1,
+    "untested_hypothesis_count": 0,
+    "missing_metric_count": 0,
+    "missing_safeguard_count": 0,
+    "blocked_experiment_count": 0,
+    "readiness": "learning_recorded",
+    "indicator_note": "Experiment readiness is a workflow coverage indicator. It does not establish safety, causal validity, statistical power, desirability, feasibility, or impact.",
+    "generated_at": "2026-07-16T23:30:00+00:00"
+  },
+  "workspace_members": [
+    {
+      "member_id": "member-owner",
+      "name": "Tariq Ahmad",
+      "organization": "Content Catalyst LLC",
+      "role": "owner",
+      "status": "active",
+      "capabilities": [
+        "view",
+        "comment",
+        "edit",
+        "assign_review",
+        "approve",
+        "publish",
+        "manage_members"
+      ],
+      "joined_at": "2026-07-16T20:00:00+00:00",
+      "last_active_at": ""
+    },
+    {
+      "member_id": "member-editor",
+      "name": "Editorial lead",
+      "organization": "Content Catalyst LLC",
+      "role": "editor",
+      "status": "active",
+      "capabilities": [
+        "view",
+        "comment",
+        "edit",
+        "assign_review",
+        "approve",
+        "publish"
+      ],
+      "joined_at": "2026-07-16T20:05:00+00:00",
+      "last_active_at": ""
+    },
+    {
+      "member_id": "member-reviewer",
+      "name": "Independent reviewer",
+      "organization": "",
+      "role": "reviewer",
+      "status": "active",
+      "capabilities": [
+        "view",
+        "comment",
+        "approve"
+      ],
+      "joined_at": "2026-07-16T20:10:00+00:00",
+      "last_active_at": ""
+    }
+  ],
+  "review_assignments": [
+    {
+      "assignment_id": "review-assignment-001",
+      "title": "Public evidence and accessibility review",
+      "review_type": "publication",
+      "status": "complete",
+      "required": true,
+      "requested_by": "member-owner",
+      "assignee_ids": [
+        "member-reviewer"
+      ],
+      "scope": "Public Heat Resilience brief",
+      "target_ids": [
+        "publication-001"
+      ],
+      "instructions": "Verify claim states, source visibility, plain language, and public redactions.",
+      "due_at": "2026-07-18T17:00:00-05:00",
+      "created_at": "2026-07-16T21:00:00+00:00",
+      "completed_at": "2026-07-16T23:00:00+00:00"
+    }
+  ],
+  "comments": [
+    {
+      "comment_id": "comment-001",
+      "thread_id": "thread-evidence",
+      "parent_comment_id": "",
+      "target_type": "claim",
+      "target_id": "claim-001",
+      "section_path": "claims[0]",
+      "author_id": "member-reviewer",
+      "body": "Keep the confidence qualifier in the public brief.",
+      "visibility": "reviewers",
+      "status": "resolved",
+      "mentions": [
+        "member-editor"
+      ],
+      "tags": [
+        "evidence"
+      ],
+      "created_at": "2026-07-16T21:20:00+00:00",
+      "updated_at": "2026-07-16T22:00:00+00:00",
+      "resolved_by": "member-editor",
+      "resolved_at": "2026-07-16T22:00:00+00:00"
+    },
+    {
+      "comment_id": "comment-002",
+      "thread_id": "thread-release",
+      "parent_comment_id": "",
+      "target_type": "publication",
+      "target_id": "publication-001",
+      "section_path": "publication.release_notes",
+      "author_id": "member-editor",
+      "body": "Add the source revision to the release note.",
+      "visibility": "internal",
+      "status": "open",
+      "mentions": [
+        "member-owner"
+      ],
+      "tags": [
+        "release"
+      ],
+      "created_at": "2026-07-16T23:05:00+00:00",
+      "updated_at": "2026-07-16T23:05:00+00:00",
+      "resolved_by": "",
+      "resolved_at": ""
+    }
+  ],
+  "approvals": [
+    {
+      "approval_id": "approval-001",
+      "stage": "publication",
+      "reviewer_id": "member-reviewer",
+      "decision": "approved",
+      "scope": "Publication public-safe package",
+      "target_ids": [
+        "publication-001"
+      ],
+      "rationale": "Required review is complete and unsupported claims remain visibly qualified.",
+      "conditions": [
+        "Publish only the selected public sections."
+      ],
+      "created_at": "2026-07-16T22:30:00+00:00",
+      "decided_at": "2026-07-16T23:00:00+00:00",
+      "expires_at": ""
+    }
+  ],
+  "publication_records": [
+    {
+      "publication_id": "publication-001",
+      "title": "Community Heat Resilience: Reviewable Action Brief",
+      "publication_type": "public_brief",
+      "channel": "wordpress",
+      "audience": "Community leaders, residents, and public-interest partners",
+      "state": "approved",
+      "version": "1.0",
+      "slug": "community-heat-resilience-action-brief",
+      "owner_id": "member-owner",
+      "source_revision_id": "revision-fixture-collaboration-001",
+      "selected_sections": [
+        "challenge",
+        "audience",
+        "goal",
+        "constraints",
+        "personas",
+        "stakeholders",
+        "journeys",
+        "point_of_view",
+        "how_might_we",
+        "ideas",
+        "decision_options",
+        "prototypes",
+        "claims",
+        "sources",
+        "evidence",
+        "experiment_summary"
+      ],
+      "redaction_notes": [
+        "Participant recruitment details, internal comments, member records, and private observation notes are excluded."
+      ],
+      "release_notes": "Initial public action brief derived from the reviewed Canvas revision.",
+      "review_assignment_ids": [
+        "review-assignment-001"
+      ],
+      "approval_ids": [
+        "approval-001"
+      ],
+      "url": "https://sustainablecatalyst.com/publications/community-heat-resilience-action-brief/",
+      "scheduled_at": "",
+      "published_at": "",
+      "withdrawn_at": "",
+      "created_at": "2026-07-16T21:00:00+00:00",
+      "updated_at": "2026-07-16T23:30:00+00:00"
+    }
+  ],
+  "release_history": [],
+  "publication_handoffs": [
+    {
+      "handoff_id": "publication-handoff-001",
+      "target": "wordpress",
+      "status": "ready",
+      "publication_ids": [
+        "publication-001"
+      ],
+      "purpose": "Publish the reviewed public-safe brief.",
+      "instructions": [
+        "Preserve the public-safe checksum and source revision identifier."
+      ],
+      "created_by": "member-owner",
+      "created_at": "2026-07-16T23:30:00+00:00"
+    }
+  ],
+  "collaboration_summary": {
+    "member_count": 3,
+    "active_member_count": 3,
+    "review_assignment_count": 1,
+    "required_review_open_count": 0,
+    "comment_count": 2,
+    "open_comment_count": 1,
+    "approval_count": 1,
+    "approved_count": 1,
+    "pending_approval_count": 0,
+    "changes_requested_count": 0,
+    "rejected_count": 0,
+    "publication_count": 1,
+    "approved_publication_count": 1,
+    "published_count": 0,
+    "release_count": 0,
+    "redaction_review_open_count": 0,
+    "readiness": "ready_for_publication",
+    "indicator_note": "Collaboration readiness describes recorded assignments, comments, approvals, redaction notes, and publication state. It does not establish legal clearance, factual accuracy, accessibility, security, ethical acceptability, or institutional authorization.",
+    "generated_at": "2026-07-16T23:30:00+00:00"
+  },
+  "platform_connections": [
+    {
+      "connection_id": "connection-knowledge-library",
+      "product": "knowledge_library",
+      "display_name": "Knowledge Library",
+      "direction": "bidirectional",
+      "status": "verified",
+      "endpoint": "https://sustainablecatalyst.com/wp-json/sc-knowledge/v1",
+      "auth_mode": "api_key",
+      "capabilities": [
+        "source_import",
+        "publication_handoff"
+      ],
+      "data_classes": [
+        "sources",
+        "evidence",
+        "publications"
+      ],
+      "accepted_contracts": [
+        "catalyst-canvas-research-handoff/1.0",
+        "catalyst-canvas-public-safe/1.0",
+        "catalyst-canvas-exchange/2.0"
+      ],
+      "retention_policy": "Institutional retention policy applies.",
+      "owner": "Research operations",
+      "last_verified_at": "2026-07-16T23:50:00+00:00",
+      "verification_note": "Contract compatibility verified in release fixture.",
+      "created_at": "2026-07-16T23:30:00+00:00",
+      "updated_at": "2026-07-16T23:30:00+00:00"
+    },
+    {
+      "connection_id": "connection-decision-studio",
+      "product": "decision_studio",
+      "display_name": "Decision Studio",
+      "direction": "outbound",
+      "status": "verified",
+      "endpoint": "https://sustainablecatalyst.com/wp-json/sc-decision/v1",
+      "auth_mode": "hmac",
+      "capabilities": [
+        "decision_packet_import"
+      ],
+      "data_classes": [
+        "decision_options",
+        "criteria",
+        "evidence"
+      ],
+      "accepted_contracts": [
+        "catalyst-canvas-decision-handoff/1.0",
+        "catalyst-canvas-exchange/2.0"
+      ],
+      "retention_policy": "",
+      "owner": "Decision operations",
+      "last_verified_at": "2026-07-16T23:50:00+00:00",
+      "verification_note": "Schema and signature workflow verified.",
+      "created_at": "2026-07-16T23:30:00+00:00",
+      "updated_at": "2026-07-16T23:30:00+00:00"
+    },
+    {
+      "connection_id": "connection-research-lab",
+      "product": "research_lab",
+      "display_name": "Research Lab",
+      "direction": "bidirectional",
+      "status": "configured",
+      "endpoint": "https://sustainable-catalyst-lab.onrender.com/api/canvas",
+      "auth_mode": "hmac",
+      "capabilities": [
+        "experiment_dispatch",
+        "result_return"
+      ],
+      "data_classes": [
+        "experiments",
+        "runs",
+        "datasets"
+      ],
+      "accepted_contracts": [
+        "catalyst-canvas-experiment-handoff/1.0",
+        "catalyst-canvas-exchange/2.0"
+      ],
+      "retention_policy": "",
+      "owner": "Lab operations",
+      "last_verified_at": "",
+      "verification_note": "Configured; live delivery is not asserted.",
+      "created_at": "2026-07-16T23:30:00+00:00",
+      "updated_at": "2026-07-16T23:30:00+00:00"
+    }
+  ],
+  "interoperability_profiles": [
+    {
+      "profile_id": "profile-institutional-v1",
+      "name": "Sustainable Catalyst Institutional Exchange",
+      "version": "1.0",
+      "status": "active",
+      "supported_contracts": [
+        "catalyst-canvas/2.0",
+        "catalyst-canvas-exchange/2.0",
+        "catalyst-canvas-event/1.0"
+      ],
+      "export_formats": [
+        "json",
+        "markdown",
+        "html"
+      ],
+      "identity_modes": [
+        "stable_ids",
+        "correlation_ids"
+      ],
+      "event_types": [
+        "canvas.updated",
+        "decision.ready",
+        "experiment.completed",
+        "publication.released"
+      ],
+      "required_fields": [
+        "canvas_id",
+        "revision_id",
+        "provenance"
+      ],
+      "redaction_rules": [
+        "Omit internal comments and participant details from public packages."
+      ],
+      "retention_policy": "Receiving product retention rules apply.",
+      "notes": "Default first-party institutional profile.",
+      "created_at": "2026-07-16T23:30:00+00:00",
+      "updated_at": "2026-07-16T23:30:00+00:00"
+    }
+  ],
+  "workflow_links": [
+    {
+      "link_id": "workflow-link-research",
+      "from_product": "knowledge_library",
+      "from_record_id": "source-001",
+      "to_product": "research_librarian",
+      "to_record_id": "research-question-001",
+      "relation": "validates",
+      "status": "active",
+      "correlation_id": "corr-canvas-001",
+      "notes": "Source discovery informs the open research question.",
+      "created_at": "2026-07-16T23:30:00+00:00",
+      "updated_at": "2026-07-16T23:30:00+00:00"
+    },
+    {
+      "link_id": "workflow-link-decision",
+      "from_product": "decision_studio",
+      "from_record_id": "decision-option-001",
+      "to_product": "research_lab",
+      "to_record_id": "experiment-001",
+      "relation": "requests",
+      "status": "planned",
+      "correlation_id": "corr-canvas-001",
+      "notes": "Decision review requests experiment execution.",
+      "created_at": "2026-07-16T23:30:00+00:00",
+      "updated_at": "2026-07-16T23:30:00+00:00"
+    }
+  ],
+  "exchange_records": [
+    {
+      "exchange_id": "exchange-decision-001",
+      "exchange_contract": "catalyst-canvas-exchange/2.0",
+      "target_product": "decision_studio",
+      "payload_type": "decision",
+      "status": "ready",
+      "source_revision_id": "revision-fixture-collaboration-001",
+      "related_record_ids": [
+        "decision-option-001"
+      ],
+      "profile_id": "profile-institutional-v1",
+      "checksum": "fixture-checksum",
+      "signature_algorithm": "hmac-sha256",
+      "signature": "fixture-signature",
+      "created_by": "member-owner",
+      "created_at": "2026-07-16T23:55:00+00:00",
+      "expires_at": "",
+      "acknowledged_at": "",
+      "notes": "Release fixture exchange record."
+    }
+  ],
+  "platform_events": [
+    {
+      "event_contract": "catalyst-canvas-event/1.0",
+      "event_id": "platform-event-001",
+      "event_type": "canvas.updated",
+      "producer": "catalyst_canvas",
+      "subject_id": "canvas-fixture-001",
+      "correlation_id": "corr-canvas-001",
+      "occurred_at": "2026-07-16T23:55:00+00:00",
+      "payload_checksum": "4639e496496fd246be88f90071a31c7fe7d50c731bb8f85692b7af2f6c827a76",
+      "metadata": {
+        "revision_id": "revision-fixture-collaboration-001",
+        "reason": "v2.0 fixture"
+      }
+    }
+  ],
+  "platform_summary": {
+    "connection_count": 3,
+    "verified_connection_count": 2,
+    "degraded_connection_count": 0,
+    "profile_count": 1,
+    "workflow_link_count": 2,
+    "broken_link_count": 0,
+    "exchange_count": 1,
+    "ready_exchange_count": 1,
+    "rejected_exchange_count": 0,
+    "unsigned_ready_exchange_count": 0,
+    "event_count": 1,
+    "blocked_subsystems": [
+      "decision"
+    ],
+    "subsystem_readiness": {
+      "research": "review_ready",
+      "evidence": "all_material_claims_linked",
+      "ideation": "",
+      "decision": "needs_review",
+      "experiment": "learning_recorded",
+      "collaboration": "ready_for_publication"
+    },
+    "readiness": "connected_but_not_ready",
+    "indicator_note": "Platform readiness describes recorded contracts, connection verification, workflow links, exchange status, and subsystem workflow states. It does not prove remote availability, authorization, security, delivery, legal interoperability, or institutional acceptance.",
+    "generated_at": "2026-07-16T23:30:00+00:00"
+  },
+  "tests": [
+    {
+      "test_id": "test-001",
+      "title": "Cross-agency clarity review",
+      "signal": "Reviewers independently identify the same next action and evidence gap.",
+      "method": "Run a 30-minute review with municipal and community partners.",
+      "learning_goal": "Determine whether the brief supports a shared pilot decision.",
+      "status": "planned"
+    }
+  ],
+  "review_notes": [
+    {
+      "review_note_id": "review-001",
+      "type": "risk",
+      "note": "Do not treat incomplete neighborhood indicators as proof of individual vulnerability.",
+      "status": "open"
+    }
+  ],
+  "provenance": {
+    "generator": "catalyst-canvas",
+    "generator_version": "2.0.0",
+    "source_surface": "fixture",
+    "source_version": "1.9.0",
+    "migrated_from": "",
+    "warnings": []
+  }
+}

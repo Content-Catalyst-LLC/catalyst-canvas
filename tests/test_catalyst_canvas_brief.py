@@ -28,7 +28,7 @@ class CatalystCanvasBriefCompatibilityTests(unittest.TestCase):
         ))
         self.assertEqual(payload["tool"], "Catalyst Canvas Demo")
         self.assertEqual(payload["version"], __version__)
-        self.assertEqual(payload["canonical_contract"]["schema_version"], "catalyst-canvas/1.6")
+        self.assertEqual(payload["canonical_contract"]["schema_version"], "catalyst-canvas/2.0")
         self.assertIn("inputs", payload)
         self.assertIn("canvas", payload)
 

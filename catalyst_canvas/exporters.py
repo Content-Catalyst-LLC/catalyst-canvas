@@ -1,4 +1,4 @@
-"""Stable Canvas Contract 1.6 JSON, Markdown, and print-report exporters."""
+"""Stable Canvas Contract 2.0 JSON, Markdown, print, publication, and exchange-ready exporters."""
 
 from __future__ import annotations
 
@@ -114,6 +114,11 @@ def export_markdown(contract: Mapping[str, Any]) -> str:
     publications = _bullets([f"{item['publication_id']} — {item['title']} [{item['state']}/{item['channel']}] — type: {item['publication_type']}; reviews: {', '.join(item['review_assignment_ids']) or 'none'}; approvals: {', '.join(item['approval_ids']) or 'none'}; redactions: {'; '.join(item['redaction_notes']) or 'none'}" for item in data["publication_records"]])
     releases = _bullets([f"{item['release_id']} — {item['publication_id']} v{item['version']} [{item['state']}] — published: {item['published_at'] or 'not published'}; checksum: {item['checksum'] or 'not recorded'}" for item in data["release_history"]])
     publication_handoffs = _bullets([f"{item['target']} [{item['status']}] — publication: {', '.join(item['publication_ids']) or 'not selected'}; purpose: {item['purpose'] or 'not recorded'}" for item in data["publication_handoffs"]])
+    platform_connections = _bullets([f"{item['display_name']} [{item['direction']}/{item['status']}] — auth: {item['auth_mode']}; capabilities: {', '.join(item['capabilities']) or 'none'}; verified: {item['last_verified_at'] or 'not verified'}" for item in data["platform_connections"]])
+    interoperability_profiles = _bullets([f"{item['profile_id']} — {item['name']} v{item['version']} [{item['status']}] — contracts: {', '.join(item['supported_contracts']) or 'none'}" for item in data["interoperability_profiles"]])
+    workflow_links = _bullets([f"{item['link_id']} — {item['from_product']}:{item['from_record_id'] or '?'} → {item['to_product']}:{item['to_record_id'] or '?'} [{item['relation']}/{item['status']}]" for item in data["workflow_links"]])
+    exchange_records = _bullets([f"{item['exchange_id']} — {item['target_product']} [{item['payload_type']}/{item['status']}] — signature: {item['signature_algorithm']}; source revision: {item['source_revision_id'] or 'not recorded'}" for item in data["exchange_records"]])
+    platform_events = _bullets([f"{item['event_id']} — {item['event_type']} by {item['producer']} at {item['occurred_at']} — correlation: {item['correlation_id'] or 'none'}" for item in data["platform_events"]])
     return f"""# {data['title']}
 
 Contract: {data['schema_version']}  
@@ -127,7 +132,8 @@ Assumption exposure: {data['ledger_summary']['assumption_exposure']}
 Ideas: {data['ideation_summary']['idea_count']} · Clusters: {data['ideation_summary']['cluster_count']} · Votes: {data['ideation_summary']['vote_count']}  
 Decision readiness: {data['prioritization_summary']['readiness']} · Options: {data['prioritization_summary']['option_count']} · Incomplete scores: {data['prioritization_summary']['incomplete_score_count']}  
 Experiment readiness: {data['experiment_summary']['readiness']} · Experiments: {data['experiment_summary']['experiment_count']} · Completed runs: {data['experiment_summary']['completed_run_count']}  
-Collaboration readiness: {data['collaboration_summary']['readiness']} · Open comments: {data['collaboration_summary']['open_comment_count']} · Pending reviews: {data['collaboration_summary']['required_review_open_count']} · Published releases: {data['collaboration_summary']['published_count']}
+Collaboration readiness: {data['collaboration_summary']['readiness']} · Open comments: {data['collaboration_summary']['open_comment_count']} · Pending reviews: {data['collaboration_summary']['required_review_open_count']} · Published releases: {data['collaboration_summary']['published_count']}  
+Platform readiness: {data['platform_summary']['readiness']} · Connections: {data['platform_summary']['connection_count']} · Verified: {data['platform_summary']['verified_connection_count']} · Exchanges: {data['platform_summary']['exchange_count']}
 
 ## Publication and Review Warning
 
@@ -360,6 +366,28 @@ Analytics remain evidence hints and do not establish intent, identity, motivatio
 ## Publication Handoffs
 
 {publication_handoffs}
+
+## Connected Product Registry
+
+{platform_connections}
+
+## Interoperability Profiles
+
+{interoperability_profiles}
+
+## Cross-Product Workflow Links
+
+{workflow_links}
+
+## Exchange Records
+
+{exchange_records}
+
+## Platform Events
+
+{platform_events}
+
+{data['platform_summary']['indicator_note']}
 
 ## Provenance
 

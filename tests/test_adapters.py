@@ -9,8 +9,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class CanvasAdapterTests(unittest.TestCase):
     def test_flask_adapter_matches_shared_fixture(self):
-        source = json.loads((ROOT / "fixtures" / "canvas_contract_1_6.input.json").read_text(encoding="utf-8"))
-        expected = json.loads((ROOT / "fixtures" / "canvas_contract_1_6.expected.json").read_text(encoding="utf-8"))
+        source = json.loads((ROOT / "fixtures" / "canvas_contract_2_0.input.json").read_text(encoding="utf-8"))
+        expected = json.loads((ROOT / "fixtures" / "canvas_contract_2_0.expected.json").read_text(encoding="utf-8"))
         self.assertEqual(compact_to_contract(source), expected)
 
     def test_form_update_preserves_canvas_and_changes_revision(self):
@@ -42,7 +42,7 @@ class CanvasAdapterTests(unittest.TestCase):
         self.assertEqual(form["id"], 8)
         self.assertEqual(form["challenge"], "Template challenge")
         self.assertEqual(form["audience"], "Reviewer")
-        self.assertEqual(form["schema_version"], "catalyst-canvas/1.6")
+        self.assertEqual(form["schema_version"], "catalyst-canvas/2.0")
 
 
 if __name__ == "__main__":

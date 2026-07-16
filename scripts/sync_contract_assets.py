@@ -18,7 +18,7 @@ def render() -> str:
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
     payload = {
         "releaseVersion": version,
-        "contractVersion": "catalyst-canvas/1.6",
+        "contractVersion": "catalyst-canvas/2.0",
         "frameworks": frameworks,
         "personaTemplates": persona_templates,
         "decisionCriteria": decision_criteria,

@@ -16,14 +16,14 @@ ROOT = Path(__file__).resolve().parents[1]
 class ExperimentContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.source = json.loads((ROOT / "fixtures" / "canvas_contract_1_6.input.json").read_text(encoding="utf-8"))
+        cls.source = json.loads((ROOT / "fixtures" / "canvas_contract_2_0.input.json").read_text(encoding="utf-8"))
         cls.contract = generate_canvas(cls.source, source_surface="python")
 
     def test_contract_normalizes_prototypes_hypotheses_and_experiment_plans(self):
         prototype = self.contract["prototypes"][0]
         hypothesis = self.contract["hypotheses"][0]
         plan = self.contract["experiment_plans"][0]
-        self.assertEqual(self.contract["schema_version"], "catalyst-canvas/1.6")
+        self.assertEqual(self.contract["schema_version"], "catalyst-canvas/2.0")
         self.assertEqual(prototype["prototype_type"], "paper")
         self.assertEqual(prototype["version"], "0.2")
         self.assertEqual(hypothesis["status"], "partially_supported")
@@ -59,10 +59,10 @@ class ExperimentContractTests(unittest.TestCase):
         legacy = json.loads((ROOT / "fixtures" / "canvas_contract_1_4.expected.json").read_text(encoding="utf-8"))
         result = migrate_payload(legacy)
         self.assertEqual(result.migrated_from, "catalyst-canvas/1.4")
-        self.assertEqual(result.contract["schema_version"], "catalyst-canvas/1.6")
+        self.assertEqual(result.contract["schema_version"], "catalyst-canvas/2.0")
         self.assertIn("experiment_plans", result.contract)
         self.assertIn("experiment_summary", result.contract)
-        self.assertIn("experiment, collaboration, review, and publication fields", result.warnings[0])
+        self.assertIn("experiment, collaboration, publication, interoperability, and platform exchange fields", result.warnings[0])
 
     def test_research_lab_and_workbench_handoffs_preserve_execution_context(self):
         lab = build_experiment_handoff_package(self.contract, "research_lab")
@@ -83,7 +83,7 @@ class ExperimentStorageTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             db = str(Path(tmp) / "experiments.sqlite3")
             init_db(db)
-            contract = json.loads((ROOT / "fixtures" / "canvas_contract_1_6.expected.json").read_text(encoding="utf-8"))
+            contract = json.loads((ROOT / "fixtures" / "canvas_contract_2_0.expected.json").read_text(encoding="utf-8"))
             create_project(db, contract, title="Experiment project")
             counts = research_asset_counts(db)
             for asset_type in ("prototype", "hypothesis", "experiment_plan", "experiment_run", "learning_decision", "iteration"):
@@ -98,7 +98,7 @@ class ExperimentRouteTests(unittest.TestCase):
         self.db = str(Path(self.tmp.name) / "experiment-routes.sqlite3")
         self.app = create_app({"TESTING": True, "SECRET_KEY": "test-secret", "CANVAS_DB": self.db})
         self.client = self.app.test_client()
-        contract = json.loads((ROOT / "fixtures" / "canvas_contract_1_6.expected.json").read_text(encoding="utf-8"))
+        contract = json.loads((ROOT / "fixtures" / "canvas_contract_2_0.expected.json").read_text(encoding="utf-8"))
         response = self.client.post("/api/canvas/import", json=contract)
         self.assertEqual(response.status_code, 201)
         self.project_id = response.get_json()["project_id"]

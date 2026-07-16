@@ -1,6 +1,6 @@
 """Workspace-aware SQLite persistence for Catalyst Canvas.
 
-Version 1.9.0 stores immutable Canvas revisions beneath durable workspace
+Version 2.0.0 stores immutable Canvas revisions beneath durable workspace
 projects. The legacy ``canvas_briefs`` table remains readable and is migrated
 into the default workspace during initialization.
 """
@@ -171,6 +171,30 @@ def init_db(db_path: str) -> None:
               FOREIGN KEY(workspace_id) REFERENCES workspaces(workspace_id) ON DELETE CASCADE,
               FOREIGN KEY(project_id) REFERENCES projects(project_id) ON DELETE CASCADE
             )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS platform_records (
+              record_key TEXT PRIMARY KEY,
+              workspace_id TEXT NOT NULL,
+              project_id TEXT NOT NULL,
+              record_type TEXT NOT NULL,
+              record_id TEXT NOT NULL,
+              product TEXT NOT NULL DEFAULT '',
+              status TEXT NOT NULL DEFAULT '',
+              payload TEXT NOT NULL,
+              created_at TEXT NOT NULL,
+              updated_at TEXT NOT NULL,
+              FOREIGN KEY(workspace_id) REFERENCES workspaces(workspace_id) ON DELETE CASCADE,
+              FOREIGN KEY(project_id) REFERENCES projects(project_id) ON DELETE CASCADE
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE INDEX IF NOT EXISTS idx_platform_workspace_type_updated
+            ON platform_records(workspace_id, record_type, updated_at DESC)
             """
         )
         conn.execute(
@@ -545,6 +569,73 @@ def collaboration_record_counts(db_path: str, workspace_id: str, project_id: str
     return {str(row['record_type']):int(row['total']) for row in rows}
 
 
+def _sync_platform_records_conn(conn: sqlite3.Connection, project_id: str, payload: Mapping[str, Any]) -> None:
+    project = _project_row(conn, project_id)
+    if not project:
+        return
+    workspace_id = str(project["workspace_id"])
+    now = str(payload.get("updated_at") or utc_now())
+    collections = {
+        "connection": (payload.get("platform_connections", []), "connection_id", "product", "status"),
+        "interoperability_profile": (payload.get("interoperability_profiles", []), "profile_id", "name", "status"),
+        "workflow_link": (payload.get("workflow_links", []), "link_id", "to_product", "status"),
+        "exchange": (payload.get("exchange_records", []), "exchange_id", "target_product", "status"),
+        "platform_event": (payload.get("platform_events", []), "event_id", "producer", "event_type"),
+    }
+    active: set[str] = set()
+    for record_type, (records, id_key, product_key, status_key) in collections.items():
+        for record in records if isinstance(records, list) else []:
+            if not isinstance(record, Mapping):
+                continue
+            record_id = str(record.get(id_key) or "").strip()
+            if not record_id:
+                continue
+            key = f"{project_id}:{record_type}:{record_id}"
+            active.add(key)
+            created = str(record.get("created_at") or record.get("occurred_at") or now)
+            conn.execute(
+                """INSERT INTO platform_records
+                (record_key,workspace_id,project_id,record_type,record_id,product,status,payload,created_at,updated_at)
+                VALUES (?,?,?,?,?,?,?,?,?,?)
+                ON CONFLICT(record_key) DO UPDATE SET product=excluded.product, status=excluded.status, payload=excluded.payload, updated_at=excluded.updated_at""",
+                (key, workspace_id, project_id, record_type, record_id, str(record.get(product_key) or ""), str(record.get(status_key) or ""), json.dumps(record, ensure_ascii=False), created, now),
+            )
+    rows = conn.execute("SELECT record_key FROM platform_records WHERE project_id=?", (project_id,)).fetchall()
+    stale = [str(row["record_key"]) for row in rows if str(row["record_key"]) not in active]
+    if stale:
+        conn.executemany("DELETE FROM platform_records WHERE record_key=?", [(key,) for key in stale])
+
+
+def list_platform_records(db_path: str, workspace_id: str, *, project_id: str = "", record_type: str = "all") -> List[Dict[str, Any]]:
+    clauses = ["workspace_id=?"]
+    params: List[Any] = [workspace_id]
+    if project_id:
+        clauses.append("project_id=?")
+        params.append(project_id)
+    if record_type != "all":
+        clauses.append("record_type=?")
+        params.append(record_type)
+    with closing(connect(db_path)) as conn:
+        rows = conn.execute(f"SELECT * FROM platform_records WHERE {' AND '.join(clauses)} ORDER BY updated_at DESC", params).fetchall()
+    result: List[Dict[str, Any]] = []
+    for row in rows:
+        item = dict(row)
+        item["payload"] = json.loads(item["payload"])
+        result.append(item)
+    return result
+
+
+def platform_record_counts(db_path: str, workspace_id: str, project_id: str = "") -> Dict[str, int]:
+    clauses = ["workspace_id=?"]
+    params: List[Any] = [workspace_id]
+    if project_id:
+        clauses.append("project_id=?")
+        params.append(project_id)
+    with closing(connect(db_path)) as conn:
+        rows = conn.execute(f"SELECT record_type, COUNT(*) AS total FROM platform_records WHERE {' AND '.join(clauses)} GROUP BY record_type", params).fetchall()
+    return {str(row["record_type"]): int(row["total"]) for row in rows}
+
+
 def _insert_revision_conn(
     conn: sqlite3.Connection,
     project_id: str,
@@ -583,6 +674,7 @@ def _insert_revision_conn(
     )
     _sync_research_assets_conn(conn, project_id, payload)
     _sync_collaboration_records_conn(conn, project_id, payload)
+    _sync_platform_records_conn(conn, project_id, payload)
     if autosave:
         _prune_autosaves_conn(conn, project_id)
     return revision_storage_id

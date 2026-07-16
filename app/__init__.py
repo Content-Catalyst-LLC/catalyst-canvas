@@ -35,6 +35,7 @@ def create_app(test_config: dict | None = None) -> Flask:
         SECRET_KEY=configured_secret or "dev-only-change-me",
         CANVAS_DB=os.environ.get("CATALYST_CANVAS_DB") or str(repo_root / "catalyst.sqlite3"),
         CANVAS_WORKSPACE_ID=os.environ.get("CATALYST_CANVAS_WORKSPACE_ID", "workspace-local-default"),
+        CANVAS_EXCHANGE_SIGNING_KEY=os.environ.get("CATALYST_CANVAS_EXCHANGE_SIGNING_KEY", ""),
         JSON_SORT_KEYS=False,
     )
 

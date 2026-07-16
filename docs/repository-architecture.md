@@ -1,8 +1,8 @@
 # Repository Architecture
 
-Catalyst Canvas v1.9.0 is organized around one canonical domain package, explicit surface adapters, and workspace-scoped persistence.
+Catalyst Canvas v2.0.0 is organized around one canonical domain package, explicit surface adapters, and workspace-scoped persistence.
 
-- `catalyst_canvas/contract.py` owns Contract 1.6 normalization and validation.
+- `catalyst_canvas/contract.py` owns Contract 2.0 normalization and validation.
 - `catalyst_canvas/experiments.py` owns prototype and experiment records and handoffs.
 - `catalyst_canvas/migrations.py` owns recognized historical migrations.
 - `app/` adapts the contract to Flask routes and SQLite workspaces.

@@ -1,10 +1,10 @@
 'use strict';
 const assert = require('assert');
 const Engine = require('../../wordpress/catalyst-canvas-demo/assets/catalyst-canvas-engine.js');
-const source = require('../../fixtures/canvas_contract_1_6.input.json');
+const source = require('../../fixtures/canvas_contract_2_0.input.json');
 
 const contract = Engine.buildContract(source, 'wordpress');
-assert.strictEqual(contract.schema_version, 'catalyst-canvas/1.6');
+assert.strictEqual(contract.schema_version, 'catalyst-canvas/2.0');
 assert.strictEqual(contract.collaboration_summary.readiness, 'ready_for_publication');
 assert.strictEqual(contract.collaboration_summary.open_comment_count, 1);
 assert.strictEqual(contract.workspace_members[0].role, 'owner');
@@ -15,6 +15,6 @@ assert.strictEqual(packagePayload.content.review_assignments, undefined);
 assert.strictEqual(packagePayload.content.comments, undefined);
 assert.strictEqual(packagePayload.content.approvals, undefined);
 const migrated = Engine.migratePayload(require('../../fixtures/canvas_contract_1_5.expected.json'));
-assert.strictEqual(migrated.contract.schema_version, 'catalyst-canvas/1.6');
+assert.strictEqual(migrated.contract.schema_version, 'catalyst-canvas/2.0');
 assert.strictEqual(migrated.migrated_from, 'catalyst-canvas/1.5');
 console.log('PASS: collaboration, review, and publication browser contract.');

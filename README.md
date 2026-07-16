@@ -1,10 +1,10 @@
 # Catalyst Canvas
 
-**Current release: v1.9.0 — Collaboration, Review, and Publication**
+**Current release: v2.0.0 — Connected Strategic Design Platform**
 
-Catalyst Canvas is the strategic-design workspace for Sustainable Catalyst. It turns ambiguous challenges into persistent, reviewable projects spanning research, evidence, personas, journeys, ideation, prioritization, prototypes, experiments, collaboration, approvals, and governed publication.
+Catalyst Canvas is the strategic-design workspace for Sustainable Catalyst. It turns ambiguous challenges into persistent, reviewable projects spanning research, evidence, personas, journeys, ideation, prioritization, prototypes, experiments, collaboration, approval, publication, and cross-product execution.
 
-Version 1.9.0 adds the operational layer required to move a Canvas from an internal working record to a reviewed public artifact without losing revision provenance or exposing private collaboration data.
+Version 2.0.0 establishes Catalyst Canvas as a connected platform rather than an isolated planning tool. It adds explicit product connections, institutional interoperability profiles, cross-product workflow links, deterministic exchange packages, event envelopes, capability discovery, and unified platform readiness while preserving every v1.x project and revision.
 
 ## Canonical contracts
 
@@ -12,7 +12,7 @@ Every current Canvas declares:
 
 ```json
 {
-  "schema_version": "catalyst-canvas/1.6",
+  "schema_version": "catalyst-canvas/2.0",
   "canvas_id": "canvas-...",
   "revision_id": "revision-..."
 }
@@ -27,47 +27,51 @@ Related contracts:
 - Experiment handoffs: `catalyst-canvas-experiment-handoff/1.0`
 - Publication records: `catalyst-canvas-publication/1.0`
 - Public-safe packages: `catalyst-canvas-public-safe/1.0`
+- Platform exchange packages: `catalyst-canvas-exchange/2.0`
+- Platform events: `catalyst-canvas-event/1.0`
+- Capability manifests: `catalyst-canvas-capabilities/1.0`
 
 Authoritative schemas and registries:
 
-- `schemas/catalyst_canvas_contract_1_6.schema.json`
+- `schemas/catalyst_canvas_contract_2_0.schema.json`
 - `schemas/catalyst_canvas_workspace_1_0.schema.json`
 - `contracts/frameworks.json`
 - `contracts/persona_templates.json`
 - `contracts/decision_criteria.json`
 
-Canvas Contracts 1.0 through 1.5 remain supported migration sources. Unknown future versions are rejected rather than silently reshaped.
+Canvas Contracts 1.0 through 1.6 remain supported migration sources. Unknown future versions are rejected rather than silently reshaped.
 
-## Collaboration and review
+## Connected platform
 
-Contract 1.6 adds:
+Contract 2.0 adds:
 
-- capability-based workspace roles: owner, editor, contributor, reviewer, and viewer;
-- review assignments with scope, assignees, due dates, status, and required/optional designation;
-- threaded comments linked to sections, claims, assumptions, ideas, decisions, prototypes, experiments, or publications;
-- approval decisions: pending, approved, changes requested, rejected, or abstained;
-- immutable revisions for every comment, review, approval, and publication change;
-- workspace-scoped collaboration indexes for search and operational views.
+- first-party product connection records with direction, status, endpoint, authentication mode, capabilities, accepted contracts, ownership, and verification notes;
+- interoperability profiles defining supported contracts, formats, identity modes, events, required fields, redaction rules, and retention boundaries;
+- cross-product workflow links with stable record IDs, relationship types, status, and correlation IDs;
+- deterministic exchange packages with payload-specific boundaries and SHA-256 integrity checks;
+- optional HMAC-SHA256 signatures for institutional transport;
+- event envelopes with producer, subject, correlation, occurrence time, checksum, and metadata;
+- a machine-readable capability manifest for API and connector discovery;
+- unified platform readiness that composes research, evidence, ideation, decision, experiment, collaboration, connection, link, and exchange states.
 
-Role capabilities are explicit records. They are workflow controls, not identity verification or institutional authorization.
+A configured or verified connection record does not prove a remote service is currently reachable, authorized, secure, or institutionally accepted. Receiving products must independently authenticate, validate, authorize, redact, retain, and acknowledge each exchange.
 
-## Governed publication
+## Supported product relationships
 
-Publication records preserve:
+The shared platform registry supports structured relationships with:
 
-- publication type, channel, audience, version, slug, and owner;
-- source revision identity;
-- selected public sections;
-- required reviews and approvals;
-- redaction notes and release notes;
-- scheduled, published, withdrawn, and archived states;
-- release checksums, publisher identity, URL, and publication history.
+- Knowledge Library
+- Research Librarian
+- Site Intelligence
+- Workbench
+- Decision Studio
+- Research Lab
+- Product Support and Feedback
+- Contact and Engagement
+- WordPress
+- Public API consumers
 
-A public publication is blocked when required reviews are incomplete, linked approvals are missing or not approved, a blocking decision exists, or public redaction review is not recorded.
-
-Public-safe packages omit workspace members, internal comments, review assignments, approvals, participant details, private notes, and other working records. They preserve a SHA-256 content checksum and source Canvas/revision identity.
-
-## Existing capabilities
+## Existing strategic-design capabilities
 
 Catalyst Canvas also includes:
 
@@ -77,26 +81,26 @@ Catalyst Canvas also includes:
 - divergent and convergent ideation, clustering, votes, merges, and lineage;
 - ICE, RICE, weighted criteria, decision matrices, gates, sensitivity scenarios, and recommendations;
 - versioned prototypes, hypotheses, participant plans, safeguards, experiment runs, learning decisions, and iterations;
-- Knowledge Library, Research Librarian, Decision Studio, Workbench, and Research Lab handoffs.
+- capability-based workspace roles, comments, reviews, approvals, publication gates, release history, and public-safe packages.
 
-Readiness indicators describe recorded workflow coverage. They do not establish factual accuracy, legal clearance, accessibility, security, ethical acceptability, causal validity, or institutional approval.
+Readiness indicators describe recorded workflow coverage. They do not establish factual accuracy, legal clearance, accessibility, security, ethical acceptability, causal validity, remote availability, or institutional approval.
 
 ## Shared surfaces
 
-1. **Canonical Python package** — Contract 1.6 normalization, validation, migrations, collaboration rules, public-safe packaging, and exporters.
+1. **Canonical Python package** — Contract 2.0 normalization, validation, migrations, platform exchange, collaboration, publication, and exporters.
 2. **CLI and compatibility adapters** — generation, validation, migration, framework exchange, JSON, Markdown, and print HTML.
-3. **Flask workspace** — persistent projects, immutable revisions, autosave, research, ideation, decisions, experiments, collaboration, review, and publication APIs.
-4. **WordPress browser workspace** — localStorage-backed projects with Contract 1.6 editing, review records, publication records, full JSON, and public-safe JSON exports.
+3. **Flask workspace** — persistent projects, immutable revisions, research, ideation, decisions, experiments, collaboration, publication, platform registry, exchange, and capability APIs.
+4. **WordPress browser workspace** — localStorage-backed projects with Contract 2.0 editing, platform records, full JSON, public-safe JSON, and exchange-package downloads.
 
 ## Repository structure
 
 ```text
 VERSION                            Canonical release version
-catalyst_canvas/                   Contracts, engines, collaboration, publication
+catalyst_canvas/                   Contracts, engines, platform exchange, workflow layers
 contracts/                         Framework, persona, and decision registries
 schemas/                           Current and historical schemas
 app/                               Flask routes and SQLite persistence
-fixtures/                          Cross-surface Contract 1.6 fixtures
+fixtures/                          Cross-surface Contract 2.0 fixtures
 wordpress/catalyst-canvas-demo/    Browser engine and local workspace
 scripts/                           Asset sync, validation, and packaging
 tests/                             Python, Flask, storage, route, and Node tests
@@ -118,7 +122,9 @@ python demo/seed_demo.py
 python app.py
 ```
 
-Open `http://127.0.0.1:5000`. Main studios include `/research`, `/ledger`, `/ideate`, `/prioritize`, `/experiment`, and `/collaborate`.
+Open `http://127.0.0.1:5000`. Main studios include `/research`, `/ledger`, `/ideate`, `/prioritize`, `/experiment`, `/collaborate`, and `/platform`.
+
+Set `CANVAS_EXCHANGE_SIGNING_KEY` in `.env` only when HMAC-signed institutional exchange packages are required. Keep the key outside source control and rotate it under the receiving institution's security policy.
 
 ## CLI
 
@@ -133,23 +139,17 @@ python -m catalyst_canvas.cli validate --input outputs/sample_canvas.json
 python -m catalyst_canvas.cli migrate --input legacy-canvas.json --output canonical-canvas.json
 ```
 
-## Collaboration and publication APIs
+## Platform APIs
 
 ```text
-GET  /collaborate
-GET  /api/collaboration
-GET  /api/workspaces/members
-POST /api/workspaces/members
-POST /api/comments
-POST /api/comments/<comment_id>/resolve
-POST /api/reviews
-POST /api/approvals
-POST /api/publications/<publication_id>/publish
-GET  /projects/<project_id>/publication/<target>.json
-GET  /projects/<project_id>/public.json
+GET  /platform
+GET  /api/platform
+GET  /api/capabilities
+GET  /projects/<project_id>/exchange/<target>.json
+POST /api/exchange/verify
 ```
 
-All project and publication routes enforce the active workspace boundary.
+Existing research, decision, experiment, collaboration, publication, and project APIs remain available. All project and platform routes enforce the active workspace boundary.
 
 ## WordPress plugin
 
@@ -158,7 +158,7 @@ python scripts/sync_contract_assets.py
 python scripts/build_plugin.py
 ```
 
-Install `dist/catalyst-canvas-demo-v1.9.0.zip`, activate it, and place `[catalyst_canvas_demo]` on a page. Browser projects and revisions remain in localStorage. Clearing site data removes them.
+Install `dist/catalyst-canvas-demo-v2.0.0.zip`, activate it, and place `[catalyst_canvas_demo]` on a page. Browser projects and revisions remain in localStorage. Clearing site data removes them.
 
 ## Validation
 
@@ -166,7 +166,7 @@ Install `dist/catalyst-canvas-demo-v1.9.0.zip`, activate it, and place `[catalys
 python scripts/validate_release.py
 ```
 
-The release gate runs pytest and unittest, schema checks, Contract 1.0–1.5 migrations, SQLite persistence, exact Python/Flask/browser fixture conformance, collaboration permissions, review and approval workflows, publication blocking, public-safe redaction, release checksums, PHP and JavaScript syntax, sample exports, and plugin inspection.
+The release gate runs pytest and unittest, current and historical schema checks, Contract 1.0–1.6 migrations, SQLite persistence, exact Python/Flask/browser fixture conformance, exchange signing and tamper detection, capability-manifest verification, platform-record indexing, collaboration and publication controls, PHP and JavaScript syntax, sample exports, and WordPress package inspection.
 
 ## License
 

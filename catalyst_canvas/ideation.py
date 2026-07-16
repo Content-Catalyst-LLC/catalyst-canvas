@@ -1,4 +1,4 @@
-"""Framework and ideation normalization for Canvas Contract 1.6."""
+"""Framework and ideation normalization for Canvas Contract 2.0."""
 
 from __future__ import annotations
 

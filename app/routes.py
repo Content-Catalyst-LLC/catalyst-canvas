@@ -25,6 +25,7 @@ from catalyst_canvas.ideation import merge_idea_records
 from catalyst_canvas.prioritization import build_decision_handoff_package, normalize_sensitivity_views
 from catalyst_canvas.experiments import build_experiment_handoff_package
 from catalyst_canvas.collaboration import build_publication_package, member_can, publication_release_record
+from catalyst_canvas.platform import build_exchange_package, verify_exchange_package, capability_manifest
 from catalyst_canvas.workspaces import DEFAULT_WORKSPACE_ID, load_workspace_schema
 
 from .models import SAMPLE_PERSONAS
@@ -50,6 +51,8 @@ from .services.storage import (
     ensure_workspace_member,
     list_collaboration_records,
     collaboration_record_counts,
+    list_platform_records,
+    platform_record_counts,
     reuse_research_asset,
     project_counts,
     restore_project,
@@ -883,6 +886,68 @@ def public_safe_export(project_id: str):
     if not _project_in_workspace(project_id): return jsonify({"error":"not found"}),404
     canvas=get_project_canvas(db_path(),project_id)
     return jsonify(build_publication_package(strip_internal_fields(canvas),"public_api",request.args.get("publication_id", "")))
+
+
+@bp.route("/platform")
+def platform_studio():
+    canvas = current_canvas()
+    project_id = str(canvas.get("_project_id") or session.get("project_id") or "")
+    return render_template(
+        "platform/studio.html",
+        canvas=view_model(canvas),
+        contract=strip_internal_fields(canvas),
+        project_id=project_id,
+        records=list_platform_records(db_path(), workspace_id(), project_id=project_id),
+        counts=platform_record_counts(db_path(), workspace_id(), project_id),
+    )
+
+
+@bp.route("/api/platform")
+def platform_api():
+    canvas = current_canvas()
+    project_id = str(canvas.get("_project_id") or session.get("project_id") or "")
+    return jsonify({
+        "project_id": project_id,
+        "platform_connections": canvas.get("platform_connections", []),
+        "interoperability_profiles": canvas.get("interoperability_profiles", []),
+        "workflow_links": canvas.get("workflow_links", []),
+        "exchange_records": canvas.get("exchange_records", []),
+        "platform_events": canvas.get("platform_events", []),
+        "platform_summary": canvas.get("platform_summary", {}),
+        "record_counts": platform_record_counts(db_path(), workspace_id(), project_id),
+    })
+
+
+@bp.route("/api/capabilities")
+def capabilities_api():
+    return jsonify(capability_manifest(strip_internal_fields(current_canvas())))
+
+
+@bp.route("/projects/<project_id>/exchange/<target>.json")
+def platform_exchange_export(project_id: str, target: str):
+    if not _project_in_workspace(project_id):
+        return jsonify({"error": "not found"}), 404
+    canvas = get_project_canvas(db_path(), project_id)
+    signing_key = current_app.config.get("CANVAS_EXCHANGE_SIGNING_KEY", "")
+    package = build_exchange_package(
+        strip_internal_fields(canvas),
+        target,
+        payload_type=request.args.get("payload_type", "full_canvas"),
+        profile_id=request.args.get("profile_id", ""),
+        signing_key=signing_key or None,
+        created_by=acting_user_id(),
+    )
+    return jsonify(package)
+
+
+@bp.route("/api/exchange/verify", methods=["POST"])
+def platform_exchange_verify():
+    payload = request.get_json(silent=True)
+    if not isinstance(payload, dict):
+        return jsonify({"error": "Expected a JSON exchange package."}), 400
+    signing_key = current_app.config.get("CANVAS_EXCHANGE_SIGNING_KEY", "")
+    result = verify_exchange_package(payload, signing_key or None)
+    return jsonify(result), (200 if result["valid"] else 422)
 
 
 @bp.route("/ideate/heros")

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create fresh Catalyst Canvas demo databases using Canvas Contract 1.6."""
+"""Create fresh Catalyst Canvas demo databases using Canvas Contract 2.0."""
 
 from __future__ import annotations
 

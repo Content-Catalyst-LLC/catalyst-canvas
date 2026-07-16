@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <p class="eyebrow">Catalyst Canvas v2.0.0</p>
+  <h1>Connected Strategic Design Platform</h1>
+  <p>Review product connections, interoperability profiles, workflow links, exchange records, event envelopes, and the unified platform readiness state for the active project.</p>
+</section>
+<section class="grid two">
+  <article class="panel"><h2>Platform readiness</h2><p><strong>{{ contract.platform_summary.readiness|replace('_',' ') }}</strong></p><p>{{ contract.platform_summary.indicator_note }}</p></article>
+  <article class="panel"><h2>Recorded coverage</h2><ul><li>{{ contract.platform_summary.connection_count }} connections</li><li>{{ contract.platform_summary.verified_connection_count }} verified</li><li>{{ contract.platform_summary.workflow_link_count }} workflow links</li><li>{{ contract.platform_summary.exchange_count }} exchanges</li><li>{{ contract.platform_summary.event_count }} events</li></ul></article>
+</section>
+<section class="panel"><h2>Connections</h2><table><thead><tr><th>Product</th><th>Direction</th><th>Status</th><th>Authentication</th><th>Verified</th></tr></thead><tbody>{% for item in contract.platform_connections %}<tr><td>{{ item.display_name }}</td><td>{{ item.direction }}</td><td>{{ item.status }}</td><td>{{ item.auth_mode }}</td><td>{{ item.last_verified_at or 'Not verified' }}</td></tr>{% else %}<tr><td colspan="5">No connections recorded.</td></tr>{% endfor %}</tbody></table></section>
+<section class="grid two"><article class="panel"><h2>Interoperability profiles</h2><ul>{% for item in contract.interoperability_profiles %}<li><strong>{{ item.name }}</strong> v{{ item.version }} — {{ item.status }}</li>{% else %}<li>None recorded.</li>{% endfor %}</ul></article><article class="panel"><h2>Workflow links</h2><ul>{% for item in contract.workflow_links %}<li>{{ item.from_product }} → {{ item.to_product }} [{{ item.relation }}/{{ item.status }}]</li>{% else %}<li>None recorded.</li>{% endfor %}</ul></article></section>
+<section class="panel"><h2>Exchange API</h2><p><code>/projects/{{ project_id }}/exchange/decision_studio.json?payload_type=decision</code></p><p><code>/api/exchange/verify</code></p><p><code>/api/capabilities</code></p></section>
+{% endblock %}

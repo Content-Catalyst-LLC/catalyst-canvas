@@ -1,4 +1,4 @@
-"""Flask form and view adapters for Canvas Contract 1.6."""
+"""Flask form and view adapters for Canvas Contract 2.0."""
 
 from __future__ import annotations
 

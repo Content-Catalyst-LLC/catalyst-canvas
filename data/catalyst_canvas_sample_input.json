@@ -1,5 +1,5 @@
 {
-  "schema_version": "catalyst-canvas/1.6",
+  "schema_version": "catalyst-canvas/2.0",
   "canvas_id": "canvas-fixture-001",
   "revision_id": "revision-fixture-collaboration-001",
   "title": "Community Heat Resilience Canvas",
@@ -300,9 +300,9 @@
   ],
   "provenance": {
     "generator": "catalyst-canvas",
-    "generator_version": "1.9.0",
+    "generator_version": "2.0.0",
     "source_surface": "fixture",
-    "source_version": "1.9.0",
+    "source_version": "2.0.0",
     "migrated_from": "",
     "warnings": []
   },
