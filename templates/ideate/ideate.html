@@ -1,22 +1,135 @@
-{% extends "base.html" %}
-{% block title %}Ideate — Catalyst Canvas{% endblock %}
+{% extends 'base.html' %}
 {% block content %}
 <section class="panel">
-  <p class="label">Ideate</p>
-  <h2>Generate a testable direction</h2>
-  <form method="get" class="actions">
-    <select name="framework">
-      {% for name in frameworks.keys() %}<option value="{{ name }}" {% if name == framework %}selected{% endif %}>{{ name }}</option>{% endfor %}
-    </select>
-    <button class="btn" type="submit">Load framework</button>
-  </form>
-  <div class="grid two">
-    {% for prompt in prompts %}<article class="card"><h3>Prompt</h3><p>{{ prompt }}</p></article>{% endfor %}
+  <p class="label">Framework and Ideation Studio</p>
+  <div class="split-heading">
+    <div>
+      <h2>Move from challenge to traceable concepts</h2>
+      <p class="muted">Frameworks are reusable data records. Every idea keeps its source challenge, HMW prompt, framework prompt, author, rationale, and prototype links.</p>
+    </div>
+    <div class="stats">
+      <span><strong>{{ contract.ideation_summary.idea_count }}</strong><br>ideas</span>
+      <span><strong>{{ contract.ideation_summary.cluster_count }}</strong><br>clusters</span>
+      <span><strong>{{ contract.ideation_summary.vote_count }}</strong><br>votes</span>
+    </div>
   </div>
-  <form method="post" data-autosave-project="{{ canvas.get('project_id','') }}">
-    <label>How might we statement</label><textarea name="how_might_we">{{ canvas.get('how_might_we','') }}</textarea>
-    <label>Prototype concept</label><textarea name="prototype">{{ canvas.get('prototype','') }}</textarea>
-    <div class="actions"><button class="btn" type="submit">Save and prototype →</button></div>
-  </form>
 </section>
+
+<section class="panel">
+  <p class="label">Framework registry</p>
+  <form method="get" class="search-row">
+    <label class="sr-only" for="framework">Framework</label>
+    <select id="framework" name="framework">
+      {% for key, item in frameworks.items() %}<option value="{{ key }}" {% if key == framework %}selected{% endif %}>{{ item.name }}</option>{% endfor %}
+    </select>
+    <button class="btn" type="submit">Review framework</button>
+  </form>
+  <div class="comparison-grid">
+    {% for key, item in frameworks.items() %}
+    <article class="comparison-card">
+      <p class="project-meta">{{ item.category|replace('_',' ') }} · {{ item.origin }}</p>
+      <h3>{{ item.name }}</h3>
+      <p>{{ item.description }}</p>
+      <p><strong>Uses:</strong> {{ item.intended_uses|join('; ') }}</p>
+      <p><strong>Limits:</strong> {{ item.limitations|join('; ') }}</p>
+      <a class="btn" href="{{ url_for('canvas.ideate', framework=key) }}">Open</a>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="panel">
+  <p class="label">Active framework</p>
+  <h2>{{ framework_record.name }}</h2>
+  <p>{{ framework_record.description }}</p>
+  <div class="grid two">
+    {% for prompt in framework_record.prompts %}
+    <article class="card">
+      <p class="project-meta">{{ prompt.output_type }}</p>
+      <h3>{{ prompt.label }}</h3>
+      <p>{{ prompt.question }}</p>
+      <p class="muted">{{ prompt.purpose }}</p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<form method="post" class="panel">
+  <p class="label">Session controls</p>
+  <input type="hidden" name="framework" value="{{ framework }}">
+  <div class="grid two">
+    <label>Session title<input name="ideation_session_title" value="{{ canvas.ideation_session_title }}"></label>
+    <label>Mode<select name="ideation_mode"><option value="divergent" {% if canvas.ideation_mode == 'divergent' %}selected{% endif %}>Divergent</option><option value="convergent" {% if canvas.ideation_mode == 'convergent' %}selected{% endif %}>Convergent</option></select></label>
+    <label>Facilitator<input name="ideation_facilitator" value="{{ canvas.ideation_facilitator }}"></label>
+    <label>Status<select name="ideation_status">{% for status in ['planned','active','complete','archived'] %}<option value="{{ status }}" {% if canvas.ideation_status == status %}selected{% endif %}>{{ status|title }}</option>{% endfor %}</select></label>
+  </div>
+  <label>Participants<textarea name="ideation_participants" rows="3" placeholder="One participant per line">{{ canvas.ideation_participants }}</textarea></label>
+  <label>Session notes<textarea name="ideation_notes" rows="3">{{ canvas.ideation_notes }}</textarea></label>
+
+  <p class="label">How might we</p>
+  <label>Selected HMW statement<textarea name="how_might_we" rows="2">{{ canvas.how_might_we }}</textarea></label>
+
+  <p class="label">Idea cards</p>
+  <p class="field-help">One idea per line: Title | Description | Author | Rationale | HMW ID | Prompt ID | Tags | Cluster ID | Status | Votes | Prototype IDs | Assumption IDs | Evidence IDs | Parent IDs | Merged Into</p>
+  <textarea id="idea-lines" name="idea_lines" rows="12" aria-describedby="idea-help">{{ canvas.idea_lines }}</textarea>
+  <p id="idea-help" class="field-help">Every idea requires an author and rationale. Use status selected only after a reviewable convergence step.</p>
+
+  <p class="label">Clusters</p>
+  <p class="field-help">One cluster per line: Name | Description | Idea IDs | Tags | Rationale | Sequence</p>
+  <textarea id="cluster-lines" name="cluster_lines" rows="8">{{ canvas.cluster_lines }}</textarea>
+  <div class="actions" aria-label="Accessible cluster ordering controls">
+    <button class="btn" type="button" data-line-move="up" aria-controls="cluster-lines">Move selected cluster up</button>
+    <button class="btn" type="button" data-line-move="down" aria-controls="cluster-lines">Move selected cluster down</button>
+  </div>
+  <p class="field-help">Select a cluster line and use the buttons or Alt+Arrow Up/Down. Drag-and-drop is not required.</p>
+
+  <details>
+    <summary>Custom framework JSON</summary>
+    <p class="field-help">Portable records use the same fields as built-in frameworks and require no code changes.</p>
+    <textarea name="custom_frameworks_json" rows="14">{{ canvas.custom_frameworks_json }}</textarea>
+  </details>
+  <details>
+    <summary>Reusable prompt-pack JSON</summary>
+    <textarea name="prompt_packs_json" rows="12">{{ canvas.prompt_packs_json }}</textarea>
+  </details>
+
+  <div class="actions">
+    <button class="btn" type="submit">Save ideation revision</button>
+    {% if canvas.project_id %}<a class="btn" href="{{ url_for('canvas.framework_package_export', project_id=canvas.project_id) }}">Export custom frameworks</a>{% endif %}
+    <a class="btn" href="{{ url_for('canvas.prototype') }}">Continue to prototype →</a>
+  </div>
+</form>
+
+<section class="panel">
+  <p class="label">Lineage and review</p>
+  <p>{{ contract.ideation_summary.indicator_note }}</p>
+  <div class="record-list">
+    {% for idea in contract.ideas %}
+    <article class="record-row">
+      <p class="project-meta">{{ idea.status }} · {{ idea.vote_count }} votes · {{ idea.idea_id }}</p>
+      <h3>{{ idea.title }}</h3>
+      <p>{{ idea.description }}</p>
+      <p><strong>Lineage:</strong> {{ idea.challenge_id }} → {{ idea.hmw_id }} → {{ idea.prompt_id }} → {{ idea.prototype_ids|join(', ') or 'prototype not linked' }}</p>
+      <p><strong>Author:</strong> {{ idea.author }} · <strong>Rationale:</strong> {{ idea.rationale }}</p>
+    </article>
+    {% else %}<p>No ideas recorded yet.</p>{% endfor %}
+  </div>
+</section>
+
+<script>
+(function(){
+  const area=document.getElementById('cluster-lines');
+  function selectedLineIndex(){return area.value.slice(0, area.selectionStart).split(/\n/).length-1;}
+  function move(direction){
+    const lines=area.value.split(/\n/), index=selectedLineIndex(), target=index+direction;
+    if(index<0||target<0||target>=lines.length)return;
+    [lines[index],lines[target]]=[lines[target],lines[index]];
+    area.value=lines.join('\n');
+    let start=0; for(let i=0;i<target;i++)start+=lines[i].length+1;
+    area.focus(); area.setSelectionRange(start,start+lines[target].length);
+  }
+  document.querySelectorAll('[data-line-move]').forEach(button=>button.addEventListener('click',()=>move(button.dataset.lineMove==='up'?-1:1)));
+  area.addEventListener('keydown',event=>{if(event.altKey&&event.key==='ArrowUp'){event.preventDefault();move(-1);}if(event.altKey&&event.key==='ArrowDown'){event.preventDefault();move(1);}});
+}());
+</script>
 {% endblock %}

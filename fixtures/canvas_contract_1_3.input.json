@@ -1,0 +1,850 @@
+{
+  "schema_version": "catalyst-canvas/1.3",
+  "canvas_id": "canvas-fixture-001",
+  "revision_id": "revision-fixture-001",
+  "title": "Community Heat Resilience Canvas",
+  "status": "active",
+  "owner_context": {
+    "owner_id": "owner-fixture-001",
+    "name": "Program Design Team",
+    "organization": "Sustainable Catalyst",
+    "role": "Facilitator"
+  },
+  "created_at": "2026-07-16T12:00:00+00:00",
+  "updated_at": "2026-07-16T12:00:00+00:00",
+  "challenge": "Neighborhood heat-response planning is fragmented across agencies and community organizations.",
+  "audience": {
+    "primary": "Municipal resilience coordinator",
+    "secondary": [
+      "Public-health program lead"
+    ],
+    "affected": [
+      "Residents in high-heat neighborhoods"
+    ],
+    "excluded": []
+  },
+  "goal": "Create a reviewable pilot that connects heat-risk evidence to neighborhood action.",
+  "constraints": [
+    {
+      "constraint_id": "constraint-001",
+      "statement": "Data coverage and community capacity vary by neighborhood.",
+      "source": "workshop"
+    }
+  ],
+  "personas": [
+    {
+      "persona_id": "persona-001",
+      "name": "Municipal Resilience Coordinator",
+      "role": "Coordinates heat preparedness across departments and partners.",
+      "description": "Needs a practical way to connect uneven evidence, community priorities, and operational decisions.",
+      "needs": [
+        "A shared evidence-to-action workflow"
+      ],
+      "pains": [
+        "Fragmented ownership and inconsistent data"
+      ],
+      "source_type": "mixed",
+      "confidence": "medium",
+      "context": "Coordinates municipal departments, public-health teams, and neighborhood partners under time pressure.",
+      "goals": [
+        "Connect risk evidence to a clear neighborhood action",
+        "Create shared ownership across agencies"
+      ],
+      "behaviors": [
+        "Reviews multiple dashboards before convening partners",
+        "Uses printable briefs during cross-agency meetings"
+      ],
+      "accessibility_needs": [
+        "Plain-language summaries for mixed technical audiences"
+      ],
+      "preferred_channels": [
+        "Working sessions",
+        "Printable briefs"
+      ],
+      "quotes": [
+        "I need everyone to see the same evidence gap before we commit resources."
+      ],
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "tags": [
+        "municipal",
+        "resilience"
+      ],
+      "validation_status": "researching",
+      "jobs": [
+        "Connect heat-risk evidence to a clear neighborhood action",
+        "Coordinate decisions across agencies and community partners"
+      ],
+      "gains": [
+        "A shared decision trail that all partners can review",
+        "Faster alignment without hiding evidence gaps"
+      ],
+      "barriers": [
+        "Uneven neighborhood data coverage",
+        "Different evidence standards across partner organizations"
+      ],
+      "motivations": [
+        "Protect residents while using public resources responsibly",
+        "Build durable trust with neighborhood partners"
+      ],
+      "empathy_map": {
+        "says": [
+          "We need a decision everyone can explain and defend."
+        ],
+        "thinks": [
+          "Which evidence gap could undermine this pilot later?"
+        ],
+        "does": [
+          "Compares dashboards, workshop notes, and operational constraints."
+        ],
+        "feels": [
+          "Responsible for moving quickly without overstating certainty."
+        ],
+        "sees": [
+          "Different teams using different definitions of priority."
+        ],
+        "hears": [
+          "Community partners asking how decisions will affect their neighborhoods."
+        ],
+        "pains": [
+          "Fragmented ownership and inconsistent data."
+        ],
+        "gains": [
+          "A shared decision trail that all partners can review."
+        ]
+      },
+      "attributes": [
+        {
+          "attribute_id": "attribute-001",
+          "category": "behavior",
+          "statement": "Uses printable briefs during cross-agency meetings.",
+          "basis": "observed",
+          "confidence": "medium",
+          "evidence_ids": [
+            "evidence-001"
+          ],
+          "notes": "Observed during pilot planning sessions."
+        },
+        {
+          "attribute_id": "attribute-002",
+          "category": "motivation",
+          "statement": "Values defensible decisions over rapid public claims.",
+          "basis": "assumed",
+          "confidence": "low",
+          "evidence_ids": [],
+          "notes": "Must be tested in interviews."
+        }
+      ],
+      "source_notes": "Synthesized from workshop observations and the current pilot dataset.",
+      "confidence_notes": "Operational behaviors are better supported than motivational claims."
+    }
+  ],
+  "stakeholders": [
+    {
+      "stakeholder_id": "stakeholder-001",
+      "name": "Neighborhood partner coalition",
+      "relationship": "affected and implementing",
+      "influence": 3,
+      "interest": 5,
+      "notes": "Must review intervention assumptions before pilot launch.",
+      "stakeholder_type": "community",
+      "stance": "supportive",
+      "decision_role": "contributor",
+      "engagement_strategy": "Review assumptions and neighborhood feasibility before pilot approval.",
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "dependencies": [
+        "Municipal data access"
+      ],
+      "tags": [
+        "community-partner"
+      ],
+      "impact": 5,
+      "responsibilities": [
+        "Review neighborhood feasibility",
+        "Surface implementation risks"
+      ],
+      "tensions": [
+        "Community urgency may conflict with municipal procurement timelines"
+      ]
+    }
+  ],
+  "framework": "JTBD",
+  "evidence": [
+    {
+      "evidence_id": "evidence-001",
+      "source_id": "source-001",
+      "evidence_type": "data_point",
+      "title": "Neighborhood heat indicators",
+      "summary": "Available heat, vulnerability, and service-access indicators with known coverage gaps.",
+      "quote": "",
+      "locator": "dataset overview",
+      "citation": "Internal pilot dataset",
+      "url": "https://example.org/heat-indicators",
+      "captured_at": "2026-07-16T12:00:00+00:00",
+      "captured_by": "Program Design Team",
+      "confidence": "medium",
+      "limitations": [
+        "Coverage varies by neighborhood"
+      ],
+      "contradiction_ids": [],
+      "tags": [
+        "heat",
+        "coverage-gap"
+      ]
+    },
+    {
+      "evidence_id": "evidence-002",
+      "source_id": "source-002",
+      "evidence_type": "quote",
+      "title": "Partner statement about shared evidence",
+      "summary": "Partners need evidence gaps to remain visible during pilot selection.",
+      "quote": "We need everyone to see the same evidence gap before we commit resources.",
+      "locator": "interview note 4",
+      "citation": "Neighborhood partner planning interview",
+      "url": "",
+      "captured_at": "2026-07-10T16:00:00+00:00",
+      "captured_by": "Program Design Team",
+      "confidence": "medium",
+      "limitations": [
+        "Single interview"
+      ],
+      "contradiction_ids": [],
+      "tags": [
+        "partner",
+        "decision-clarity"
+      ]
+    }
+  ],
+  "assumptions": [
+    {
+      "assumption_id": "assumption-001",
+      "statement": "A shared one-page pilot brief will improve cross-agency decision clarity.",
+      "owner": "Program Design Team",
+      "confidence": "low",
+      "criticality": "high",
+      "consequence": "If false, the format may add work without improving alignment.",
+      "test_method": "Compare reviewer interpretation before and after using the brief.",
+      "status": "planned",
+      "experiment_ids": [
+        "test-001"
+      ],
+      "evidence_ids": [
+        "evidence-002"
+      ],
+      "due_date": "2026-08-15",
+      "limitations": [
+        "Small pilot sample"
+      ],
+      "tags": [
+        "decision-clarity"
+      ]
+    }
+  ],
+  "prototypes": [
+    {
+      "prototype_id": "prototype-001",
+      "title": "Neighborhood heat-action brief",
+      "description": "A printable brief linking one neighborhood risk signal to one operational response and one review checkpoint.",
+      "status": "planned"
+    }
+  ],
+  "tests": [
+    {
+      "test_id": "test-001",
+      "title": "Cross-agency clarity review",
+      "signal": "Reviewers independently identify the same next action and evidence gap.",
+      "method": "Run a 30-minute review with municipal and community partners.",
+      "learning_goal": "Determine whether the brief supports a shared pilot decision.",
+      "status": "planned"
+    }
+  ],
+  "review_notes": [
+    {
+      "review_note_id": "review-001",
+      "type": "risk",
+      "note": "Do not treat incomplete neighborhood indicators as proof of individual vulnerability.",
+      "status": "open"
+    }
+  ],
+  "provenance": {
+    "generator": "catalyst-canvas",
+    "generator_version": "1.6.0",
+    "source_surface": "fixture",
+    "source_version": "1.6.0",
+    "migrated_from": "",
+    "warnings": []
+  },
+  "journeys": [
+    {
+      "journey_id": "journey-001",
+      "title": "Neighborhood heat-action planning journey",
+      "persona_id": "persona-001",
+      "scenario": "The resilience coordinator moves from detecting a neighborhood heat-risk signal to agreeing on an operational pilot with community partners.",
+      "desired_outcome": "A shared, evidence-aware pilot decision with explicit ownership and review checkpoints.",
+      "status": "research",
+      "stages": [
+        {
+          "stage_id": "stage-001",
+          "sequence": 1,
+          "name": "Detect",
+          "actions": [
+            "Review heat and vulnerability indicators"
+          ],
+          "thoughts": [
+            "Which signal is actionable?"
+          ],
+          "emotion": -1,
+          "pain_points": [
+            "Coverage gaps obscure neighborhood differences"
+          ],
+          "opportunities": [
+            "Show confidence and missingness beside each signal"
+          ],
+          "touchpoints": [
+            "Risk dashboard"
+          ],
+          "channels": [
+            "Web dashboard"
+          ],
+          "evidence_ids": [
+            "evidence-001"
+          ],
+          "owner": "Resilience coordinator",
+          "metrics": [
+            "Time to identify priority area"
+          ],
+          "questions": [
+            "Which signal is actionable?"
+          ],
+          "frictions": [
+            "Coverage gaps obscure neighborhood differences"
+          ],
+          "experiment_ids": []
+        },
+        {
+          "stage_id": "stage-002",
+          "sequence": 2,
+          "name": "Align",
+          "actions": [
+            "Convene agency and community partners"
+          ],
+          "thoughts": [
+            "Do we agree on the problem and constraints?"
+          ],
+          "emotion": 0,
+          "pain_points": [
+            "Different organizations use different evidence standards"
+          ],
+          "opportunities": [
+            "Use one shared evidence-to-action brief"
+          ],
+          "touchpoints": [
+            "Partner workshop"
+          ],
+          "channels": [
+            "Facilitated meeting"
+          ],
+          "evidence_ids": [
+            "evidence-001"
+          ],
+          "owner": "Program design team",
+          "metrics": [
+            "Shared problem statement accepted"
+          ],
+          "questions": [
+            "Do we agree on the problem and constraints?"
+          ],
+          "frictions": [
+            "Different organizations use different evidence standards"
+          ],
+          "experiment_ids": []
+        },
+        {
+          "stage_id": "stage-003",
+          "sequence": 3,
+          "name": "Commit",
+          "actions": [
+            "Select a pilot action and accountable owner"
+          ],
+          "thoughts": [
+            "Can we test this without overstating impact?"
+          ],
+          "emotion": 1,
+          "pain_points": [
+            "Pressure to communicate before evidence is complete"
+          ],
+          "opportunities": [
+            "Add explicit claims, assumptions, and review dates"
+          ],
+          "touchpoints": [
+            "Decision review"
+          ],
+          "channels": [
+            "Printable brief"
+          ],
+          "evidence_ids": [
+            "evidence-001"
+          ],
+          "owner": "Pilot sponsor",
+          "metrics": [
+            "Decision cycle time"
+          ],
+          "questions": [
+            "Can we test this without overstating impact?"
+          ],
+          "frictions": [
+            "Pressure to communicate before evidence is complete"
+          ],
+          "experiment_ids": [
+            "test-003"
+          ]
+        }
+      ],
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "tags": [
+        "heat",
+        "pilot"
+      ]
+    }
+  ],
+  "behavioral_signals": [
+    {
+      "signal_id": "signal-001",
+      "source_type": "ga4_export",
+      "metric": "brief_downloads",
+      "segment": "all visitors",
+      "value": "42",
+      "period": "2026-06",
+      "interpretation": "Printable briefs receive repeated use and may warrant further qualitative study.",
+      "limitation": "Download activity indicates engagement but does not prove user intent, identity, motivation, or demographic attributes.",
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "tags": [
+        "behavioral-hint",
+        "brief-format"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "source-001",
+      "source_type": "dataset",
+      "title": "Neighborhood heat indicators",
+      "creator": "Municipal analytics team",
+      "publisher": "City resilience office",
+      "source_date": "2026-06-30",
+      "accessed_at": "2026-07-16T12:00:00+00:00",
+      "url": "https://example.org/heat-indicators",
+      "owner": "Program Design Team",
+      "description": "Available heat, vulnerability, and service-access indicators with known coverage gaps.",
+      "rights": "Internal pilot use",
+      "limitations": [
+        "Coverage varies by neighborhood"
+      ],
+      "tags": [
+        "heat",
+        "pilot"
+      ],
+      "knowledge_library_record_id": "",
+      "provenance_note": "Registered from the pilot evidence inventory."
+    },
+    {
+      "source_id": "source-002",
+      "source_type": "interview",
+      "title": "Neighborhood partner planning interview",
+      "creator": "Program Design Team",
+      "publisher": "",
+      "source_date": "2026-07-10",
+      "accessed_at": "",
+      "url": "",
+      "owner": "Program Design Team",
+      "description": "Interview about evidence gaps and implementation constraints.",
+      "rights": "Internal research",
+      "limitations": [
+        "One coalition representative"
+      ],
+      "tags": [
+        "community",
+        "interview"
+      ],
+      "knowledge_library_record_id": "",
+      "provenance_note": "Consent and use restrictions must be reviewed before publication."
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "claim-001",
+      "statement": "A shared one-page pilot brief can improve cross-agency decision clarity.",
+      "state": "partially_supported",
+      "owner": "Program Design Team",
+      "confidence": "low",
+      "evidence_ids": [
+        "evidence-002"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "source_ids": [
+        "source-002"
+      ],
+      "uncertainty": "No before-and-after comparison has been completed.",
+      "limitations": [
+        "Evidence is based on a single interview and workshop observations."
+      ],
+      "contradictions": [],
+      "missing_data": [
+        "Baseline decision-clarity measure"
+      ],
+      "review_status": "review",
+      "reviewed_by": "",
+      "reviewed_at": "",
+      "updated_at": "2026-07-16T12:00:00+00:00",
+      "tags": [
+        "decision-clarity"
+      ]
+    },
+    {
+      "claim_id": "claim-002",
+      "statement": "The available indicators identify individual vulnerability.",
+      "state": "unsupported",
+      "owner": "Program Design Team",
+      "confidence": "low",
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "assumption_ids": [],
+      "source_ids": [
+        "source-001"
+      ],
+      "uncertainty": "Indicators are neighborhood-level and incomplete.",
+      "limitations": [
+        "Ecological data cannot establish individual conditions."
+      ],
+      "contradictions": [
+        "The review note prohibits individual-level interpretation."
+      ],
+      "missing_data": [
+        "Individual-level validated measures"
+      ],
+      "review_status": "draft",
+      "reviewed_by": "",
+      "reviewed_at": "",
+      "updated_at": "2026-07-16T12:00:00+00:00",
+      "tags": [
+        "overclaim-risk"
+      ]
+    }
+  ],
+  "research_questions": [
+    {
+      "research_question_id": "research-question-001",
+      "question": "Which evidence gaps most often block a shared pilot decision?",
+      "owner": "Program Design Team",
+      "status": "investigating",
+      "priority": "high",
+      "source_ids": [
+        "source-001",
+        "source-002"
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "notes": "Use interviews and workshop observations.",
+      "tags": [
+        "evidence-gap"
+      ]
+    }
+  ],
+  "interview_guides": [
+    {
+      "interview_guide_id": "interview-guide-001",
+      "title": "Cross-agency decision clarity interview",
+      "purpose": "Understand where evidence and ownership become unclear.",
+      "audience": "Municipal and community partners",
+      "questions": [
+        "What evidence do you trust?",
+        "Where does ownership become unclear?",
+        "What would make the next action reviewable?"
+      ],
+      "owner": "Program Design Team",
+      "status": "ready",
+      "source_ids": [
+        "source-002"
+      ],
+      "tags": [
+        "decision-clarity"
+      ]
+    }
+  ],
+  "observation_notes": [
+    {
+      "observation_note_id": "observation-001",
+      "title": "Pilot planning workshop",
+      "note": "Participants used different definitions of neighborhood priority and asked for visible confidence notes.",
+      "observed_at": "2026-07-09T15:00:00+00:00",
+      "observer": "Program Design Team",
+      "context": "Cross-agency pilot workshop",
+      "source_id": "source-002",
+      "evidence_ids": [
+        "evidence-002"
+      ],
+      "limitations": [
+        "Facilitator observation"
+      ],
+      "tags": [
+        "workshop",
+        "definitions"
+      ]
+    }
+  ],
+  "synthesis_tags": [
+    "heat-resilience",
+    "evidence-gap",
+    "cross-agency-alignment"
+  ],
+  "handoffs": [
+    {
+      "handoff_id": "handoff-001",
+      "target": "knowledge_library",
+      "status": "ready",
+      "purpose": "Register the pilot dataset and interview record.",
+      "context_note": "Preserve Canvas challenge, claim, and limitation context.",
+      "source_ids": [
+        "source-001",
+        "source-002"
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "claim_ids": [
+        "claim-001",
+        "claim-002"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "created_by": "Program Design Team"
+    }
+  ],
+  "challenge_id": "challenge-primary",
+  "custom_frameworks": [
+    {
+      "key": "EquityLens",
+      "name": "Equity Lens",
+      "category": "organizational",
+      "description": "Review who benefits, who bears cost, and who participates in decisions.",
+      "intended_uses": [
+        "Equity review",
+        "Affected-group analysis"
+      ],
+      "limitations": [
+        "Does not replace engagement with affected groups"
+      ],
+      "required_inputs": [
+        "Affected groups",
+        "Decision scope"
+      ],
+      "output_types": [
+        "review_questions"
+      ],
+      "mode_support": [
+        "divergent",
+        "convergent"
+      ],
+      "prompts": [
+        {
+          "prompt_id": "prompt-001",
+          "label": "Benefits",
+          "question": "Who is expected to benefit, and what evidence supports that expectation?",
+          "purpose": "Make expected benefits reviewable.",
+          "output_type": "review_question"
+        }
+      ],
+      "organization": "Sustainable Catalyst",
+      "created_by": "Program Design Team",
+      "version": "1.0",
+      "tags": [
+        "equity"
+      ]
+    }
+  ],
+  "prompt_packs": [
+    {
+      "prompt_pack_id": "prompt-pack-001",
+      "name": "Heat pilot prompts",
+      "description": "Reusable prompts for neighborhood heat-response ideation.",
+      "organization": "Sustainable Catalyst",
+      "created_by": "Program Design Team",
+      "tags": [
+        "heat",
+        "pilot"
+      ],
+      "prompts": [
+        {
+          "prompt_id": "pack-001-prompt-001",
+          "label": "Smallest test",
+          "question": "What is the smallest neighborhood action that can produce useful learning?",
+          "purpose": "Generate bounded experiments.",
+          "output_type": "experiment_seed"
+        }
+      ]
+    }
+  ],
+  "ideation_sessions": [
+    {
+      "session_id": "ideation-session-001",
+      "title": "Heat-response concept workshop",
+      "mode": "divergent",
+      "framework_key": "JTBD",
+      "prompt_pack_ids": [
+        "prompt-pack-001"
+      ],
+      "challenge_ids": [
+        "challenge-primary"
+      ],
+      "hmw_ids": [
+        "hmw-001"
+      ],
+      "facilitator": "Program Design Team",
+      "participants": [
+        "Municipal resilience coordinator",
+        "Neighborhood partner coalition"
+      ],
+      "status": "complete",
+      "notes": "Generated concepts before convergence.",
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
+    }
+  ],
+  "idea_clusters": [
+    {
+      "cluster_id": "idea-cluster-001",
+      "name": "Visible evidence gaps",
+      "description": "Concepts that keep missingness and confidence visible.",
+      "idea_ids": [
+        "idea-001",
+        "idea-002"
+      ],
+      "tags": [
+        "evidence",
+        "transparency"
+      ],
+      "rationale": "Both concepts reduce false certainty during pilot selection.",
+      "sequence": 1
+    }
+  ],
+  "ideas": [
+    {
+      "idea_id": "idea-001",
+      "title": "Evidence-gap action card",
+      "description": "Pair one heat signal with its confidence, missing data, proposed action, and review owner.",
+      "session_id": "ideation-session-001",
+      "challenge_id": "challenge-primary",
+      "hmw_id": "hmw-001",
+      "prompt_id": "prompt-002",
+      "author": "Program Design Team",
+      "rationale": "Makes the key evidence limitation visible at the point of action.",
+      "tags": [
+        "brief",
+        "evidence"
+      ],
+      "cluster_id": "idea-cluster-001",
+      "status": "selected",
+      "vote_count": 3,
+      "voter_ids": [
+        "participant-001",
+        "participant-002",
+        "participant-003"
+      ],
+      "parent_idea_ids": [],
+      "merged_into_id": "",
+      "prototype_ids": [
+        "prototype-001"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
+    },
+    {
+      "idea_id": "idea-002",
+      "title": "Neighborhood confidence legend",
+      "description": "Add a plain-language confidence and missingness legend to every neighborhood view.",
+      "session_id": "ideation-session-001",
+      "challenge_id": "challenge-primary",
+      "hmw_id": "hmw-001",
+      "prompt_id": "prompt-001",
+      "author": "Neighborhood partner coalition",
+      "rationale": "Partners need a shared way to interpret uneven data quality.",
+      "tags": [
+        "accessibility",
+        "data-quality"
+      ],
+      "cluster_id": "idea-cluster-001",
+      "status": "clustered",
+      "vote_count": 2,
+      "voter_ids": [
+        "participant-001",
+        "participant-003"
+      ],
+      "parent_idea_ids": [],
+      "merged_into_id": "",
+      "prototype_ids": [],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "evidence_ids": [
+        "evidence-002"
+      ],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
+    },
+    {
+      "idea_id": "idea-003",
+      "title": "Merged evidence note",
+      "description": "Earlier wording folded into the action-card concept.",
+      "session_id": "ideation-session-001",
+      "challenge_id": "challenge-primary",
+      "hmw_id": "hmw-001",
+      "prompt_id": "prompt-002",
+      "author": "Municipal resilience coordinator",
+      "rationale": "Preserve the originating concept and merge decision.",
+      "tags": [
+        "lineage"
+      ],
+      "cluster_id": "",
+      "status": "merged",
+      "vote_count": 0,
+      "voter_ids": [],
+      "parent_idea_ids": [],
+      "merged_into_id": "idea-001",
+      "prototype_ids": [],
+      "assumption_ids": [],
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
+    }
+  ]
+}

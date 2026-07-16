@@ -1,10 +1,10 @@
 # Catalyst Canvas Export Specification
 
-Catalyst Canvas v1.5.0 exports the same validated `catalyst-canvas/1.2` document through JSON, Markdown, and standalone print HTML. It also exports a research handoff package for supported institutional targets.
+Catalyst Canvas v1.6.0 exports the same validated `catalyst-canvas/1.3` document through JSON, Markdown, and standalone print HTML. It also exports a research handoff package for supported institutional targets.
 
 ## JSON
 
-JSON is the canonical machine-readable representation and must validate against `schemas/catalyst_canvas_contract_1_2.schema.json`. It includes research records, ledger records, descriptive ledger indicators, and provenance.
+JSON is the canonical machine-readable representation and must validate against `schemas/catalyst_canvas_contract_1_3.schema.json`. It includes research records, ledger records, descriptive ledger indicators, and provenance.
 
 ## Markdown
 

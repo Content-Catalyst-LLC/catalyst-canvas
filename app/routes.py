@@ -16,15 +16,17 @@ from flask import (
     url_for,
 )
 
-from catalyst_canvas.contract import CanvasContractError, load_schema, new_id, strip_internal_fields, utc_now
+from catalyst_canvas.contract import CanvasContractError, clean_text, load_schema, new_id, strip_internal_fields, utc_now
 from catalyst_canvas.migrations import migrate_payload
 from catalyst_canvas.ledger import build_handoff_package
 from catalyst_canvas.persona_templates import list_persona_templates
+from catalyst_canvas.frameworks import export_framework_package, framework_registry, import_framework_package
+from catalyst_canvas.ideation import merge_idea_records
 from catalyst_canvas.workspaces import DEFAULT_WORKSPACE_ID, load_workspace_schema
 
 from .models import SAMPLE_PERSONAS
 from .services.canvas_engine import new_canvas, normalize_form, to_form, to_markdown, to_pretty_json, to_print_html
-from .services.frameworks import all_frameworks, get_framework
+from .services.frameworks import all_frameworks, get_framework, get_framework_record
 from .services.storage import (
     archive_project,
     create_project,
@@ -437,18 +439,118 @@ def ga4_import():
 @bp.route("/ideate", methods=["GET", "POST"])
 def ideate():
     canvas = current_canvas()
-    framework = request.values.get("framework", view_model(canvas).get("framework", "AIDA"))
-    prompts = get_framework(framework)
+    form_canvas = view_model(canvas)
+    framework = request.values.get("framework", form_canvas.get("framework", "AIDA"))
+    custom_frameworks = canvas.get("custom_frameworks", [])
     if request.method == "POST":
-        save_from_form(canvas, change_note="Ideation framework updated")
-        return redirect(url_for("canvas.prototype"))
+        try:
+            save_from_form(canvas, change_note="Framework and ideation studio updated")
+        except ValueError as exc:
+            return Response(str(exc) + "\n", status=400, mimetype="text/plain")
+        return redirect(url_for("canvas.ideate"))
     return render_template(
         "ideate/ideate.html",
-        canvas=view_model(canvas),
-        frameworks=all_frameworks(),
+        canvas=form_canvas,
+        contract=strip_internal_fields(canvas),
+        frameworks=all_frameworks(custom_frameworks),
         framework=framework,
-        prompts=prompts,
+        framework_record=get_framework_record(framework, custom_frameworks),
+        prompts=get_framework(framework, custom_frameworks),
     )
+
+
+@bp.route("/api/frameworks")
+def frameworks_api():
+    canvas = current_canvas()
+    return jsonify({
+        "contract": "catalyst-canvas-framework-registry/1.0",
+        "active_framework_key": canvas.get("framework", {}).get("key", "AIDA"),
+        "frameworks": list(framework_registry(canvas.get("custom_frameworks", [])).values()),
+        "prompt_packs": canvas.get("prompt_packs", []),
+    })
+
+
+@bp.route("/projects/<project_id>/frameworks.json")
+def framework_package_export(project_id: str):
+    if not _project_in_workspace(project_id):
+        return jsonify({"error": "not found"}), 404
+    canvas = get_project_canvas(db_path(), project_id)
+    return jsonify(export_framework_package(canvas.get("custom_frameworks", []), organization=canvas.get("owner_context", {}).get("organization", "")))
+
+
+@bp.route("/api/frameworks/import", methods=["POST"])
+def framework_package_import():
+    canvas = current_canvas()
+    payload = request.get_json(silent=True) or {}
+    try:
+        imported = import_framework_package(payload)
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+    updated = strip_internal_fields(canvas)
+    existing = {item.get("key"): item for item in updated.get("custom_frameworks", [])}
+    for item in imported:
+        existing[item["key"]] = item
+    updated["custom_frameworks"] = list(existing.values())
+    updated["revision_id"] = new_id("revision")
+    updated["updated_at"] = utc_now()
+    from catalyst_canvas.engine import generate_canvas
+    updated = generate_canvas(updated, source_surface="flask")
+    save_canvas(db_path(), updated, project_id=canvas.get("_project_id"), workspace_id=workspace_id(), change_note="Framework package imported")
+    return jsonify({"imported": [item["key"] for item in imported], "framework_count": len(updated["custom_frameworks"])})
+
+
+@bp.route("/api/ideation")
+def ideation_api():
+    canvas = current_canvas()
+    return jsonify({
+        "workspace_id": workspace_id(),
+        "project_id": canvas.get("_project_id", ""),
+        "ideation_summary": canvas.get("ideation_summary", {}),
+        "sessions": canvas.get("ideation_sessions", []),
+        "ideas": canvas.get("ideas", []),
+        "clusters": canvas.get("idea_clusters", []),
+    })
+
+
+@bp.route("/api/ideas/<idea_id>/vote", methods=["POST"])
+def idea_vote(idea_id: str):
+    canvas = current_canvas()
+    updated = strip_internal_fields(canvas)
+    voter_id = clean_text((request.get_json(silent=True) or {}).get("voter_id"), "anonymous")
+    target = next((item for item in updated.get("ideas", []) if item.get("idea_id") == idea_id), None)
+    if not target:
+        return jsonify({"error": "idea not found"}), 404
+    voters = list(target.get("voter_ids", []))
+    if voter_id not in voters:
+        voters.append(voter_id)
+    target["voter_ids"] = voters
+    target["vote_count"] = len(voters)
+    target["updated_at"] = utc_now()
+    updated["revision_id"] = new_id("revision")
+    updated["updated_at"] = target["updated_at"]
+    from catalyst_canvas.engine import generate_canvas
+    updated = generate_canvas(updated, source_surface="flask")
+    save_canvas(db_path(), updated, project_id=canvas.get("_project_id"), workspace_id=workspace_id(), change_note=f"Vote recorded for {idea_id}")
+    return jsonify({"idea_id": idea_id, "vote_count": target["vote_count"]})
+
+
+@bp.route("/api/ideas/merge", methods=["POST"])
+def idea_merge():
+    canvas = current_canvas()
+    payload = request.get_json(silent=True) or {}
+    source_ids = payload.get("source_ids") if isinstance(payload.get("source_ids"), list) else []
+    target = payload.get("target") if isinstance(payload.get("target"), dict) else {}
+    if len(source_ids) < 2 or not target.get("title"):
+        return jsonify({"error": "Provide at least two source_ids and a target title."}), 400
+    updated = strip_internal_fields(canvas)
+    updated["ideas"] = merge_idea_records(updated.get("ideas", []), source_ids, target)
+    updated["revision_id"] = new_id("revision")
+    updated["updated_at"] = utc_now()
+    from catalyst_canvas.engine import generate_canvas
+    updated = generate_canvas(updated, source_surface="flask")
+    save_canvas(db_path(), updated, project_id=canvas.get("_project_id"), workspace_id=workspace_id(), change_note="Ideas merged")
+    merged = updated["ideas"][-1]
+    return jsonify({"merged_idea": merged, "ideation_summary": updated["ideation_summary"]})
 
 
 @bp.route("/ideate/heros")

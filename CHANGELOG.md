@@ -2,6 +2,29 @@
 
 All notable changes to Catalyst Canvas are documented here.
 
+## 1.6.0 — 2026-07-16
+
+### Canvas Contract 1.3 and framework registry
+
+- Upgraded the canonical document contract to `catalyst-canvas/1.3` with explicit migration from Contracts 1.0, 1.1, and 1.2.
+- Added a data-driven registry for AIDA, JTBD, Value Proposition Canvas, Message House, SWOT, PESTLE, 5W1H, Hero/Guide, Assumption Matrix, and Impact–Effort.
+- Added framework descriptions, intended uses, limitations, required inputs, output types, supported modes, and structured prompts.
+- Added portable custom-framework packages and reusable prompt packs without application-code changes.
+
+### Framework and Ideation Studio
+
+- Added divergent and convergent ideation sessions linked to challenges, HMW questions, frameworks, prompt packs, facilitators, and participants.
+- Added idea cards with author, rationale, tags, votes, cluster membership, evidence, assumptions, and prototype links.
+- Added clustering, accessible reordering, merging, selection, and preserved parent/merge lineage.
+- Added Flask framework and ideation APIs plus browser-local WordPress editing and persistence.
+- Added framework-package CLI import/export and framework-package API import.
+
+### Conformance and release hardening
+
+- Added deterministic Python, Flask, and Node conformance for the Contract 1.3 ideation fixture.
+- Added custom-framework round-trip, registry, lineage, clustering, voting, merging, migration, route, and browser tests.
+- Expanded the maintained Python suite to 60 pytest tests and 60 unittest tests before final packaging.
+
 ## 1.5.0 — 2026-07-16
 
 ### Canvas Contract 1.2 and governed ledger

@@ -1,6 +1,6 @@
 # Catalyst Canvas Demo Workflow
 
-The v1.5.0 workflow follows:
+The v1.6.0 workflow follows:
 
 ```text
 challenge → research questions → sources → evidence → claims and assumptions → personas/stakeholders/journeys → POV/HMW → prototype → experiment → review → handoff/export

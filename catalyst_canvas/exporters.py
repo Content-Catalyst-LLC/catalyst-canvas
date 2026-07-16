@@ -1,4 +1,4 @@
-"""Stable Canvas Contract 1.2 JSON, Markdown, and print-report exporters."""
+"""Stable Canvas Contract 1.3 JSON, Markdown, and print-report exporters."""
 
 from __future__ import annotations
 
@@ -32,6 +32,11 @@ def export_markdown(contract: Mapping[str, Any]) -> str:
     constraints = _bullets([item["statement"] for item in data["constraints"]])
     hmw = _bullets([item["question"] for item in data["how_might_we"]])
     prompts = _bullets([f"{item['label']}: {item['question']}" for item in data["framework"]["prompts"]])
+    sessions = _bullets([f"{item['title']} [{item['mode']}/{item['status']}] — framework: {item['framework_key']}; facilitator: {item['facilitator'] or 'unassigned'}" for item in data["ideation_sessions"]])
+    ideas = _bullets([f"{item['idea_id']} — {item['title']} [{item['status']}; {item['vote_count']} votes] — lineage: {item['challenge_id']} → {item['hmw_id']} → {item['prompt_id']} → {', '.join(item['prototype_ids']) or 'prototype not linked'}; author: {item['author']}; rationale: {item['rationale']}" for item in data["ideas"]])
+    clusters = _bullets([f"{item['sequence']}. {item['name']} — ideas: {', '.join(item['idea_ids']) or 'none'}; rationale: {item['rationale'] or 'not recorded'}" for item in data["idea_clusters"]])
+    custom_frameworks = _bullets([f"{item['key']} — {item['name']} [{item['category']}]" for item in data["custom_frameworks"]])
+    prompt_packs = _bullets([f"{item['prompt_pack_id']} — {item['name']}: {len(item['prompts'])} prompts" for item in data["prompt_packs"]])
     sources = _bullets([f"{item['source_id']} — {item['title']} [{item['source_type']}] {item['url']}".strip() for item in data["sources"]])
     evidence = _bullets([f"{item['evidence_id']} — {item['title']}: {item['summary'] or item['quote']} (source: {item['source_id'] or 'unlinked'})" for item in data["evidence"]])
     claims = _bullets([f"[{item['state']}] {item['statement']} — evidence: {', '.join(item['evidence_ids']) or 'none'}; assumptions: {', '.join(item['assumption_ids']) or 'none'}; uncertainty: {item['uncertainty'] or 'not recorded'}" for item in data["claims"]])
@@ -98,7 +103,8 @@ Status: {data['status']}
 Updated: {data['updated_at']}  
 Research readiness: {data['research_summary']['readiness']}  
 Evidence coverage: {data['ledger_summary']['evidence_coverage']}  
-Assumption exposure: {data['ledger_summary']['assumption_exposure']}
+Assumption exposure: {data['ledger_summary']['assumption_exposure']}  
+Ideas: {data['ideation_summary']['idea_count']} · Clusters: {data['ideation_summary']['cluster_count']} · Votes: {data['ideation_summary']['vote_count']}
 
 ## Publication and Review Warning
 
@@ -173,7 +179,34 @@ Analytics remain evidence hints and do not establish intent, identity, motivatio
 
 ## Ideation Framework: {data['framework']['name']}
 
+{data['framework']['description']}
+
 {prompts}
+
+**Intended uses:** {', '.join(data['framework']['intended_uses']) or 'None recorded'}  
+**Limitations:** {', '.join(data['framework']['limitations']) or 'None recorded'}
+
+## Custom Framework Library
+
+{custom_frameworks}
+
+## Reusable Prompt Packs
+
+{prompt_packs}
+
+## Ideation Sessions
+
+{sessions}
+
+## Idea Cards and Lineage
+
+{ideas}
+
+{data['ideation_summary']['indicator_note']}
+
+## Idea Clusters
+
+{clusters}
 
 ## Source Register
 

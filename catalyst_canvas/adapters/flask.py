@@ -1,8 +1,9 @@
-"""Flask form and view adapters for Canvas Contract 1.2."""
+"""Flask form and view adapters for Canvas Contract 1.3."""
 
 from __future__ import annotations
 
 from copy import deepcopy
+import json
 from typing import Any, Dict, Mapping
 
 from ..contract import build_contract, clean_text, new_id, strip_internal_fields, utc_now, validate_contract
@@ -197,6 +198,16 @@ def contract_to_form(contract: Mapping[str, Any], *, storage_id: int | None = No
         "observation_note_lines": "\n".join(" | ".join([item.get("title", ""), item.get("note", ""), item.get("observed_at", ""), item.get("observer", ""), item.get("context", ""), item.get("source_id", ""), ", ".join(item.get("evidence_ids", [])), "; ".join(item.get("limitations", [])), ", ".join(item.get("tags", []))]) for item in data.get("observation_notes", [])),
         "synthesis_tags": "\n".join(data.get("synthesis_tags", [])),
         "handoff_lines": "\n".join(" | ".join([item.get("target", "knowledge_library"), item.get("status", "draft"), item.get("purpose", ""), item.get("context_note", ""), ", ".join(item.get("source_ids", [])), ", ".join(item.get("evidence_ids", [])), ", ".join(item.get("claim_ids", [])), ", ".join(item.get("assumption_ids", [])), item.get("created_by", "")]) for item in data.get("handoffs", [])),
+        "ideation_session_title": _first(data.get("ideation_sessions", [])).get("title", ""),
+        "ideation_mode": _first(data.get("ideation_sessions", [])).get("mode", "divergent"),
+        "ideation_facilitator": _first(data.get("ideation_sessions", [])).get("facilitator", ""),
+        "ideation_participants": "\n".join(_first(data.get("ideation_sessions", [])).get("participants", [])),
+        "ideation_status": _first(data.get("ideation_sessions", [])).get("status", "planned"),
+        "ideation_notes": _first(data.get("ideation_sessions", [])).get("notes", ""),
+        "idea_lines": "\n".join(" | ".join([item.get("title", ""), item.get("description", ""), item.get("author", ""), item.get("rationale", ""), item.get("hmw_id", ""), item.get("prompt_id", ""), ", ".join(item.get("tags", [])), item.get("cluster_id", ""), item.get("status", "captured"), str(item.get("vote_count", 0)), ", ".join(item.get("prototype_ids", [])), ", ".join(item.get("assumption_ids", [])), ", ".join(item.get("evidence_ids", [])), ", ".join(item.get("parent_idea_ids", [])), item.get("merged_into_id", "")]) for item in data.get("ideas", [])),
+        "cluster_lines": "\n".join(" | ".join([item.get("name", ""), item.get("description", ""), ", ".join(item.get("idea_ids", [])), ", ".join(item.get("tags", [])), item.get("rationale", ""), str(item.get("sequence", 1))]) for item in data.get("idea_clusters", [])),
+        "custom_frameworks_json": json.dumps(data.get("custom_frameworks", []), ensure_ascii=False, indent=2),
+        "prompt_packs_json": json.dumps(data.get("prompt_packs", []), ensure_ascii=False, indent=2),
         "research_readiness": data.get("research_summary", {}).get("readiness", "hypothesis"),
         "evidence": evidence.get("summary", ""),
         "assumption": assumption.get("statement", ""),
@@ -427,6 +438,40 @@ def form_to_contract(form: Mapping[str, Any], existing: Mapping[str, Any] | None
         for index, row in enumerate(_parse_pipe_records(form.get("handoff_lines"), ["target","status","purpose","context_note","source_ids","evidence_ids","claim_ids","assumption_ids","created_by"]), start=1):
             if row["purpose"] or row["context_note"]:
                 updated["handoffs"].append({**row, "handoff_id":f"handoff-{index:03d}", "source_ids":_csv_list(row["source_ids"]), "evidence_ids":_csv_list(row["evidence_ids"]), "claim_ids":_csv_list(row["claim_ids"]), "assumption_ids":_csv_list(row["assumption_ids"]), "created_at":updated["updated_at"]})
+
+    if any(key in form for key in ("ideation_session_title", "ideation_mode", "ideation_facilitator", "ideation_participants", "ideation_status", "ideation_notes")):
+        session = _first(updated.get("ideation_sessions", []))
+        updated["ideation_sessions"] = [{
+            **session,
+            "title": form.get("ideation_session_title", session.get("title", "Primary ideation session")),
+            "mode": form.get("ideation_mode", session.get("mode", "divergent")),
+            "framework_key": updated.get("framework", {}).get("key", "AIDA"),
+            "challenge_ids": [updated.get("challenge_id", "challenge-primary")],
+            "hmw_ids": [item.get("hmw_id", "") for item in updated.get("how_might_we", []) if item.get("hmw_id")],
+            "facilitator": form.get("ideation_facilitator", session.get("facilitator", "")),
+            "participants": _lines(form.get("ideation_participants")) if "ideation_participants" in form else session.get("participants", []),
+            "status": form.get("ideation_status", session.get("status", "planned")),
+            "notes": form.get("ideation_notes", session.get("notes", "")),
+            "updated_at": updated["updated_at"],
+        }]
+    if "idea_lines" in form:
+        updated["ideas"] = []
+        for index, row in enumerate(_parse_pipe_records(form.get("idea_lines"), ["title","description","author","rationale","hmw_id","prompt_id","tags","cluster_id","status","vote_count","prototype_ids","assumption_ids","evidence_ids","parent_idea_ids","merged_into_id"]), start=1):
+            if row["title"]:
+                updated["ideas"].append({**row, "idea_id":f"idea-{index:03d}", "session_id":_first(updated.get("ideation_sessions", [])).get("session_id", "ideation-session-001"), "challenge_id":updated.get("challenge_id", "challenge-primary"), "tags":_csv_list(row["tags"]), "vote_count":row["vote_count"] or 0, "voter_ids":[], "prototype_ids":_csv_list(row["prototype_ids"]), "assumption_ids":_csv_list(row["assumption_ids"]), "evidence_ids":_csv_list(row["evidence_ids"]), "parent_idea_ids":_csv_list(row["parent_idea_ids"]), "created_at":updated["updated_at"], "updated_at":updated["updated_at"]})
+    if "cluster_lines" in form:
+        updated["idea_clusters"] = []
+        for index, row in enumerate(_parse_pipe_records(form.get("cluster_lines"), ["name","description","idea_ids","tags","rationale","sequence"]), start=1):
+            if row["name"]:
+                updated["idea_clusters"].append({**row, "cluster_id":f"idea-cluster-{index:03d}", "idea_ids":_csv_list(row["idea_ids"]), "tags":_csv_list(row["tags"])})
+    for form_key, contract_key in (("custom_frameworks_json", "custom_frameworks"), ("prompt_packs_json", "prompt_packs")):
+        if form_key in form:
+            raw_json = clean_text(form.get(form_key), "[]")
+            try:
+                value = json.loads(raw_json)
+            except json.JSONDecodeError as exc:
+                raise ValueError(f"{form_key} must contain valid JSON.") from exc
+            updated[contract_key] = value if isinstance(value, list) else [value]
 
     if "prototype" in form:
         updated["prototypes"][0]["description"] = clean_text(form.get("prototype"), updated["prototypes"][0]["description"])

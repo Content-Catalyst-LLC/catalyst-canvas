@@ -1,10 +1,10 @@
 # Catalyst Canvas
 
-**Current release: v1.5.0 — Research, Evidence, and Assumption Ledger**
+**Current release: v1.6.0 — Framework and Ideation Studio**
 
-Catalyst Canvas is the strategic-design and problem-framing workspace for Sustainable Catalyst. It turns ambiguous challenges into structured, reviewable projects covering audiences, personas, stakeholders, journeys, sources, evidence, claims, assumptions, research questions, prototypes, experiments, review notes, and institutional handoffs.
+Catalyst Canvas is the strategic-design and problem-framing workspace for Sustainable Catalyst. It turns ambiguous challenges into structured, reviewable projects covering audiences, personas, stakeholders, journeys, sources, evidence, claims, assumptions, research questions, ideation, prototypes, experiments, review notes, and institutional handoffs.
 
-Version 1.5.0 adds a governed research ledger to the persistent project and immutable revision system. It keeps sources, excerpts, claims, assumptions, contradictions, limitations, ownership, review state, and test plans visible across Python, Flask, CLI, and WordPress surfaces.
+Version 1.6.0 adds a data-driven framework registry and a traceable ideation workspace. Built-in and custom frameworks now use the same portable definition, while idea cards preserve the challenge, HMW prompt, author, rationale, votes, clusters, merges, evidence, assumptions, and prototype links that shaped them.
 
 ## Contracts
 
@@ -12,70 +12,70 @@ Every saved Canvas declares:
 
 ```json
 {
-  "schema_version": "catalyst-canvas/1.2",
+  "schema_version": "catalyst-canvas/1.3",
   "canvas_id": "canvas-...",
   "revision_id": "revision-..."
 }
 ```
 
-Every project registry record declares:
+Every project registry record declares `catalyst-canvas-workspace/1.0`. Portable custom frameworks use `catalyst-canvas-framework-package/1.0`.
 
-```json
-{
-  "schema_version": "catalyst-canvas-workspace/1.0",
-  "workspace_id": "workspace-...",
-  "project_id": "project-..."
-}
-```
+Authoritative schemas and registries:
 
-Authoritative schemas:
-
-- `schemas/catalyst_canvas_contract_1_2.schema.json`
+- `schemas/catalyst_canvas_contract_1_3.schema.json`
 - `schemas/catalyst_canvas_workspace_1_0.schema.json`
+- `contracts/frameworks.json`
+- `contracts/persona_templates.json`
 
-Canvas Contracts 1.0 and 1.1 remain available as migration sources. Recognized older payloads are upgraded to Contract 1.2 with migration provenance and review warnings. Unknown future contract versions are rejected rather than silently reshaped.
+Canvas Contracts 1.0, 1.1, and 1.2 remain migration sources. Recognized older payloads are upgraded to Contract 1.3 with migration provenance and review warnings. Unknown future versions are rejected rather than silently reshaped.
 
-## Research ledger
+## Framework and ideation model
 
 ```text
-Workspace
-├── Projects
-│   └── immutable Canvas Contract 1.2 revisions
-└── Reusable research assets
-    ├── personas, stakeholders, and journeys
-    ├── sources and evidence excerpts
-    ├── claims and assumptions
-    └── research questions, interview guides, and observation notes
+Challenge
+└── How-might-we question
+    └── Framework or prompt pack
+        └── Ideation session
+            ├── idea cards
+            ├── clusters, tags, votes, and rationale
+            ├── merges with preserved parent lineage
+            └── selected ideas linked to prototypes and experiments
 ```
 
-The ledger supports:
+The built-in framework registry includes:
 
-- structured source records with creator, date, URL, rights, limitations, tags, and Knowledge Library identifiers;
-- evidence excerpts with locators, citations, confidence, limitations, and contradiction links;
-- claims marked `supported`, `partially_supported`, `unsupported`, `disputed`, or `outdated`;
-- assumptions with owner, confidence, criticality, consequence, test method, status, evidence links, and experiment links;
-- open research questions, interview guides, observation notes, and synthesis tags;
-- exportable handoff packages for Knowledge Library and Research Librarian;
-- publication warnings for unsupported, disputed, or outdated claims.
+- AIDA
+- Jobs to Be Done
+- Value Proposition Canvas
+- Message House
+- SWOT
+- PESTLE
+- 5W1H
+- Hero/Guide
+- Assumption Matrix
+- Impact–Effort
 
-Ledger indicators describe recorded coverage and workflow gaps. They do not certify truth, score research quality, or replace expert and stakeholder review.
+Each framework defines its description, intended uses, limitations, required inputs, output types, supported modes, and structured prompts. Custom organization frameworks and reusable prompt packs follow the same model and can be exported and imported without source-code changes.
+
+Idea votes and selections represent participant judgment. They do not establish objective quality, feasibility, impact, or decision readiness.
 
 ## Shared surfaces
 
-1. **Canonical Python package** — Contract 1.2 normalization, research and ledger modeling, migration, validation, workspace contracts, handoffs, and exporters.
-2. **CLI and compatibility adapters** — canonical generation, validation, migration, JSON, Markdown, and print HTML.
-3. **Flask workspace** — persistent projects, immutable revisions, autosave, design-research studio, evidence ledger, reusable assets, comparison, archive/restore, and workspace APIs.
-4. **WordPress browser workspace** — localStorage-backed projects, research records, ledger indicators, and exports without transmitting visitor inputs.
+1. **Canonical Python package** — Contract 1.3 normalization, research ledger, framework registry, ideation lineage, migration, validation, handoffs, and exporters.
+2. **CLI and compatibility adapters** — generation, validation, migration, framework-package import/export, JSON, Markdown, and print HTML.
+3. **Flask workspace** — persistent projects, immutable revisions, autosave, research and evidence studios, ideation sessions, clusters, votes, merges, archive/restore, and APIs.
+4. **WordPress browser workspace** — localStorage-backed projects, frameworks, prompt packs, ideas, clusters, ledger indicators, and exports without transmitting visitor inputs.
 
 ## Repository structure
 
 ```text
 VERSION                            Canonical release version
-catalyst_canvas/                   Contracts, engine, research, ledger, migration, exporters
-schemas/                           Canvas 1.2, Workspace 1.0, and historical schemas
+catalyst_canvas/                   Contracts, engines, research, ledger, ideation, migration
+contracts/                         Framework and persona registries
+schemas/                           Canvas 1.3, Workspace 1.0, and historical schemas
 app/                               Flask routes and SQLite persistence
-fixtures/                          Cross-surface Canvas Contract 1.2 fixtures
-wordpress/catalyst-canvas-demo/    Browser engine and local research workspace
+fixtures/                          Cross-surface Contract 1.3 fixtures
+wordpress/catalyst-canvas-demo/    Browser engine and local workspace
 scripts/                           Asset sync, validation, and plugin packaging
 tests/                             Python, Flask, storage, route, and Node tests
 ```
@@ -98,7 +98,7 @@ python demo/seed_demo.py
 python app.py
 ```
 
-Open `http://127.0.0.1:5000`. The design-research studio is available at `/research`; the evidence ledger is available at `/ledger` after a project is active.
+Open `http://127.0.0.1:5000`. Use `/research` for design research, `/ledger` for evidence governance, and `/ideate` for frameworks and ideation after a project is active.
 
 ## CLI
 
@@ -111,6 +111,15 @@ python -m catalyst_canvas.cli generate \
 
 python -m catalyst_canvas.cli validate --input outputs/sample_canvas.json
 python -m catalyst_canvas.cli migrate --input legacy-canvas.json --output canonical-canvas.json
+
+python -m catalyst_canvas.cli framework-export \
+  --input outputs/sample_canvas.json \
+  --output outputs/framework-package.json
+
+python -m catalyst_canvas.cli framework-import \
+  --input outputs/sample_canvas.json \
+  --package outputs/framework-package.json \
+  --output outputs/sample-with-frameworks.json
 ```
 
 ## Flask APIs
@@ -123,16 +132,20 @@ PATCH /api/projects/<project_id>
 GET  /api/projects/<project_id>/revisions
 POST /api/projects/<project_id>/autosave
 GET  /api/research/assets?q=&type=
-GET  /api/research/persona-templates
-GET  /research/compare?type=persona|journey
 GET  /api/ledger
+GET  /api/frameworks
+GET  /projects/<project_id>/frameworks.json
+POST /api/frameworks/import
+GET  /api/ideation
+POST /api/ideas/<idea_id>/vote
+POST /api/ideas/merge
 GET  /projects/<project_id>/research-handoff/<target>.json
 POST /api/canvas/import
 GET  /api/contract/schema.json
 GET  /api/workspace-contract/schema.json
 ```
 
-Supported handoff targets are `knowledge_library` and `research_librarian`. Project and research-asset operations enforce the active workspace boundary.
+Project operations enforce the active workspace boundary.
 
 ## WordPress plugin
 
@@ -141,13 +154,13 @@ python scripts/sync_contract_assets.py
 python scripts/build_plugin.py
 ```
 
-Install `dist/catalyst-canvas-demo-v1.5.0.zip`, activate it, and add:
+Install `dist/catalyst-canvas-demo-v1.6.0.zip`, activate it, and add:
 
 ```text
 [catalyst_canvas_demo]
 ```
 
-Projects, revisions, and research records are saved only in the current browser's localStorage. Clearing site data removes them.
+Projects, revisions, research records, custom frameworks, prompt packs, and ideas remain in the current browser's localStorage. Clearing site data removes them.
 
 ## Validation
 
@@ -155,11 +168,11 @@ Projects, revisions, and research records are saved only in the current browser'
 python scripts/validate_release.py
 ```
 
-The release gate runs pytest and unittest, both schemas, Contract 1.0 and 1.1 migration, SQLite workspace operations, ledger coverage and handoff tests, research-asset indexing, Flask routes, cross-surface fixtures, Node browser tests, PHP and JavaScript syntax checks, sample exports, and WordPress package inspection.
+The release gate runs pytest and unittest, both current schemas, Contract 1.0–1.2 migrations, SQLite workspace operations, ledger and ideation lineage checks, framework-package round trips, Flask routes, exact Python/Flask/browser fixtures, Node tests, PHP and JavaScript syntax checks, sample exports, and WordPress package inspection.
 
 ## Boundaries
 
-Catalyst Canvas supports problem framing, design research, evidence organization, structured review, and experimentation. It does not certify evidence, establish causality, guarantee product-market fit, provide legal or compliance advice, or guarantee implementation outcomes. Claims and assumptions remain provisional until reviewed against appropriate evidence and stakeholder context.
+Catalyst Canvas supports problem framing, design research, evidence organization, ideation, structured review, and experimentation. It does not certify evidence, establish causality, guarantee product-market fit, provide legal or compliance advice, or guarantee implementation outcomes. Claims, assumptions, votes, and selected ideas remain provisional until reviewed against appropriate evidence and stakeholder context.
 
 ## License
 

@@ -3,7 +3,7 @@
  * Plugin Name: Catalyst Canvas Demo
  * Plugin URI: https://sustainablecatalyst.com/catalyst-canvas/
  * Description: Adds a persistent, client-side Catalyst Canvas project workspace via the [catalyst_canvas_demo] shortcode.
- * Version: 1.5.0
+ * Version: 1.6.0
  * Author: Content Catalyst LLC
  * License: MIT
  * Text Domain: catalyst-canvas-demo
@@ -14,8 +14,8 @@ if (!defined('ABSPATH')) {
 }
 
 final class Catalyst_Canvas_Demo_Plugin {
-    private const VERSION = '1.5.0';
-    private const CONTRACT_VERSION = 'catalyst-canvas/1.2';
+    private const VERSION = '1.6.0';
+    private const CONTRACT_VERSION = 'catalyst-canvas/1.3';
     private const SHORTCODE = 'catalyst_canvas_demo';
 
     public function __construct() {
@@ -190,10 +190,24 @@ final class Catalyst_Canvas_Demo_Plugin {
                             <select data-field="framework">
                                 <option value="AIDA">AIDA</option>
                                 <option value="JTBD">Jobs To Be Done</option>
-                                <option value="Hero">Hero’s Journey</option>
-                                <option value="Matrix">Content Matrix</option>
+                                <option value="ValueProposition">Value Proposition Canvas</option>
+                                <option value="MessageHouse">Message House</option>
+                                <option value="SWOT">SWOT</option>
+                                <option value="PESTLE">PESTLE</option>
+                                <option value="FiveWOneH">5W1H</option>
+                                <option value="HeroGuide">Hero / Guide</option>
+                                <option value="AssumptionMatrix">Assumption Matrix</option>
+                                <option value="ImpactEffort">Impact–Effort Matrix</option>
                             </select>
                         </label>
+                        <div class="ccanvasdemo-inline-fields"><label><span>Session title</span><input data-field="ideationSessionTitle" type="text" value="Primary ideation session"></label><label><span>Mode</span><select data-field="ideationMode"><option value="divergent">Divergent</option><option value="convergent">Convergent</option></select></label></div>
+                        <div class="ccanvasdemo-inline-fields"><label><span>Facilitator</span><input data-field="ideationFacilitator" type="text"></label><label><span>Status</span><select data-field="ideationStatus"><option value="planned">Planned</option><option value="active">Active</option><option value="complete">Complete</option><option value="archived">Archived</option></select></label></div>
+                        <label><span>Participants</span><textarea data-field="ideationParticipants" rows="3" placeholder="One participant per line"></textarea></label>
+                        <label><span>Session notes</span><textarea data-field="ideationNotes" rows="3"></textarea></label>
+                        <label><span>Idea cards</span><textarea data-field="ideaLines" rows="8" placeholder="Title | Description | Author | Rationale | HMW ID | Prompt ID | Tags | Cluster ID | Status | Votes | Prototype IDs | Assumption IDs | Evidence IDs | Parent IDs | Merged Into"></textarea></label>
+                        <label><span>Idea clusters</span><textarea data-field="clusterLines" rows="5" placeholder="Name | Description | Idea IDs | Tags | Rationale | Sequence"></textarea></label>
+                        <details><summary>Custom framework JSON</summary><textarea data-field="customFrameworksJson" rows="10">[]</textarea></details>
+                        <details><summary>Reusable prompt-pack JSON</summary><textarea data-field="promptPacksJson" rows="8">[]</textarea></details>
                         <label><span>Custom idea</span><input data-field="customIdea" type="text" placeholder="Add your own idea after generating the draft"></label>
                         <div class="ccanvasdemo-actions">
                             <button type="button" class="ccanvasdemo-btn ccanvasdemo-btn-primary" data-action="generate">Generate draft canvas</button>

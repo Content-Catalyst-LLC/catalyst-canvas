@@ -1,10 +1,10 @@
-# Catalyst Canvas Demo v1.5.0
+# Catalyst Canvas Demo v1.6.0
 
 The `[catalyst_canvas_demo]` shortcode provides a private browser-local project, design-research, and evidence-ledger workspace.
 
 ## Capabilities
 
-- generate Canvas Contract 1.2 documents through the shared browser engine;
+- generate Canvas Contract 1.3 documents through the shared browser engine;
 - capture structured personas, empathy maps, stakeholder maps, and journeys;
 - register sources, evidence excerpts, claims, assumptions, research questions, synthesis tags, and handoff plans;
 - display descriptive evidence-coverage, claim-state, and assumption-exposure indicators;
@@ -16,6 +16,6 @@ The `[catalyst_canvas_demo]` shortcode provides a private browser-local project,
 
 ## Install
 
-Upload `catalyst-canvas-demo-v1.5.0.zip`, activate it, and place `[catalyst_canvas_demo]` on a page.
+Upload `catalyst-canvas-demo-v1.6.0.zip`, activate it, and place `[catalyst_canvas_demo]` on a page.
 
 Browser projects are device- and browser-specific. Clearing site data removes the workspace. Ledger indicators describe recorded links and gaps; they do not certify evidence or research quality.

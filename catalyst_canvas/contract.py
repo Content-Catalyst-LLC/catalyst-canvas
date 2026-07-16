@@ -1,4 +1,4 @@
-"""Canvas Contract 1.2 normalization and JSON Schema validation."""
+"""Canvas Contract 1.3 normalization and JSON Schema validation."""
 
 from __future__ import annotations
 
@@ -23,6 +23,14 @@ from .ledger import (
     normalize_research_questions,
     normalize_sources,
 )
+from .ideation import (
+    ideation_summary,
+    normalize_custom_frameworks,
+    normalize_idea_clusters,
+    normalize_ideas,
+    normalize_ideation_sessions,
+    normalize_prompt_packs,
+)
 from .research import (
     normalize_behavioral_signals,
     normalize_journeys,
@@ -32,7 +40,7 @@ from .research import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA_PATH = ROOT / "schemas" / "catalyst_canvas_contract_1_2.schema.json"
+SCHEMA_PATH = ROOT / "schemas" / "catalyst_canvas_contract_1_3.schema.json"
 
 
 class CanvasContractError(ValueError):
@@ -307,7 +315,7 @@ def normalize_provenance(value: Any, *, source_surface: str, migrated_from: str 
 
 
 def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: str = "python") -> Dict[str, Any]:
-    """Normalize a compact or partially structured payload into Canvas Contract 1.2."""
+    """Normalize a compact or partially structured payload into Canvas Contract 1.3."""
     from .frameworks import framework_record
 
     source: Mapping[str, Any] = payload or {}
@@ -369,9 +377,12 @@ def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: 
             "status": clean_text(item_source.get("status"), "candidate"),
         })
 
+    custom_frameworks = normalize_custom_frameworks(source.get("custom_frameworks"))
+    prompt_packs = normalize_prompt_packs(source.get("prompt_packs"))
     framework_value = source.get("framework", "AIDA")
     if isinstance(framework_value, Mapping):
         framework_value = framework_value.get("key", "AIDA")
+    framework = framework_record(framework_value, custom_frameworks)
 
     created_at = clean_text(source.get("created_at"), utc_now())
     updated_at = clean_text(source.get("updated_at"), created_at)
@@ -384,10 +395,27 @@ def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: 
     interview_guides = normalize_interview_guides(source.get("interview_guides"))
     observation_notes = normalize_observation_notes(source.get("observation_notes"))
     handoffs = normalize_handoffs(source.get("handoffs"))
+    prototypes = normalize_prototypes(source.get("prototypes", source.get("prototype")))
+    sessions = normalize_ideation_sessions(source.get("ideation_sessions"), framework_key=framework["key"], created_at=created_at)
+    clusters = normalize_idea_clusters(source.get("idea_clusters"))
+    ideas = normalize_ideas(
+        source.get("ideas"),
+        sessions=sessions,
+        hmw_ids=[item["hmw_id"] for item in hmw_records],
+        framework_prompts=framework["prompts"],
+        prototypes=prototypes,
+        created_at=created_at,
+    )
+    cluster_map = {cluster["cluster_id"]: cluster for cluster in clusters}
+    for idea in ideas:
+        cluster_id = idea.get("cluster_id")
+        if cluster_id and cluster_id in cluster_map and idea["idea_id"] not in cluster_map[cluster_id]["idea_ids"]:
+            cluster_map[cluster_id]["idea_ids"].append(idea["idea_id"])
 
     contract = {
         "schema_version": CONTRACT_VERSION,
         "canvas_id": clean_text(source.get("canvas_id"), new_id("canvas")),
+        "challenge_id": clean_text(source.get("challenge_id"), "challenge-primary"),
         "revision_id": clean_text(source.get("revision_id"), new_id("revision")),
         "title": title,
         "status": clean_text(source.get("status"), "draft"),
@@ -405,7 +433,13 @@ def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: 
         "research_summary": research_summary(personas, stakeholders, journeys, behavioral_signals, generated_at=updated_at),
         "point_of_view": pov,
         "how_might_we": hmw_records,
-        "framework": framework_record(framework_value),
+        "framework": framework,
+        "custom_frameworks": custom_frameworks,
+        "prompt_packs": prompt_packs,
+        "ideation_sessions": sessions,
+        "ideas": ideas,
+        "idea_clusters": list(cluster_map.values()),
+        "ideation_summary": ideation_summary(sessions, ideas, list(cluster_map.values()), generated_at=updated_at),
         "sources": sources,
         "evidence": evidence,
         "claims": claims,
@@ -416,7 +450,7 @@ def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: 
         "synthesis_tags": clean_list(source.get("synthesis_tags")),
         "ledger_summary": ledger_summary(sources, evidence, claims, assumptions, research_questions, generated_at=updated_at),
         "handoffs": handoffs,
-        "prototypes": normalize_prototypes(source.get("prototypes", source.get("prototype"))),
+        "prototypes": prototypes,
         "tests": normalize_tests(source.get("tests", source.get("test_plan"))),
         "review_notes": normalize_review_notes(source.get("review_notes", source.get("review_note"))),
         "provenance": normalize_provenance(source.get("provenance"), source_surface=source_surface),

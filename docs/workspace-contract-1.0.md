@@ -12,4 +12,4 @@ A project record contains:
 
 The authoritative schema is `schemas/catalyst_canvas_workspace_1_0.schema.json`.
 
-The workspace contract does not duplicate the full Canvas. In v1.5.0, Canvas payloads validate against `catalyst-canvas/1.2`; Contracts 1.0 and 1.1 migrate on read, import, save, or reuse. Research and ledger assets are stored separately and linked back to contributing projects and revisions.
+The workspace contract does not duplicate the full Canvas. In v1.6.0, Canvas payloads validate against `catalyst-canvas/1.3`; Contracts 1.0 and 1.1 migrate on read, import, save, or reuse. Research and ledger assets are stored separately and linked back to contributing projects and revisions.

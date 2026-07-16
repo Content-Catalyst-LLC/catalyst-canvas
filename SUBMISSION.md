@@ -1,8 +1,8 @@
 # Catalyst Canvas Submission
 
-**Catalyst Canvas v1.5.0 — Persona, Stakeholder, and Journey Studio**
+**Catalyst Canvas v1.6.0 — Framework and Ideation Studio**
 
-This release adds Canvas Contract 1.2, evidence-aware personas and empathy maps, observed-versus-assumed attributes, quantified stakeholder mapping, experiment-linked journeys, guarded analytics CSV hints, reusable templates, workspace research comparison, enriched exports, and matching Flask and browser engines.
+This release adds Canvas Contract 1.3, ten data-driven built-in framework packs, portable custom frameworks, reusable prompt packs, divergent and convergent ideation sessions, traceable idea cards, clustering, voting, merging, accessible reordering, prototype lineage, matching Python/Flask/browser engines, and framework-package import/export.
 
 Run the release gate before submission:
 

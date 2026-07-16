@@ -1,7 +1,8 @@
 {
-  "schema_version": "catalyst-canvas/1.2",
+  "schema_version": "catalyst-canvas/1.3",
   "canvas_id": "canvas-sample-community-impact",
-  "revision_id": "revision-sample-v140",
+  "challenge_id": "challenge-primary",
+  "revision_id": "revision-sample-v160",
   "title": "Community impact evidence canvas",
   "status": "active",
   "owner_context": {
@@ -360,50 +361,301 @@
   "how_might_we": [
     {
       "hmw_id": "hmw-001",
-      "question": "How might we help Maya Chen make the challenge concrete enough to act on?",
-      "status": "candidate"
+      "question": "How might we make evidence, limitations, and next actions understandable in one reviewable artifact?",
+      "status": "selected"
     },
     {
       "hmw_id": "hmw-002",
-      "question": "How might we turn the goal — Build a defensible impact story with traceable indicators — into a small testable experiment?",
-      "status": "candidate"
-    },
-    {
-      "hmw_id": "hmw-003",
-      "question": "How might we make the constraint visible without letting it stop progress?",
-      "status": "candidate"
-    },
-    {
-      "hmw_id": "hmw-004",
-      "question": "How might we document assumptions so the next decision can be reviewed?",
+      "question": "How might we test a clearer impact narrative without overstating certainty?",
       "status": "candidate"
     }
   ],
   "framework": {
     "name": "Jobs To Be Done",
+    "category": "user_research",
+    "description": "Frame the progress a person is trying to make in a specific situation.",
+    "intended_uses": [
+      "Opportunity framing",
+      "Persona refinement",
+      "Service concept generation"
+    ],
+    "limitations": [
+      "Can underrepresent institutional and collective dynamics",
+      "Requires validation with real users"
+    ],
+    "required_inputs": [
+      "Situation",
+      "Desired progress",
+      "Outcome",
+      "Constraint"
+    ],
+    "output_types": [
+      "job_statement",
+      "opportunity_prompts"
+    ],
+    "mode_support": [
+      "divergent",
+      "convergent"
+    ],
     "prompts": [
       {
         "prompt_id": "prompt-001",
         "label": "When",
-        "question": "What situation creates the need?"
+        "question": "What situation creates the need?",
+        "purpose": "Identify the triggering context.",
+        "output_type": "context"
       },
       {
         "prompt_id": "prompt-002",
         "label": "I want to",
-        "question": "What progress is the user trying to make?"
+        "question": "What progress is the user trying to make?",
+        "purpose": "Describe the job without prescribing a solution.",
+        "output_type": "job_statement"
       },
       {
         "prompt_id": "prompt-003",
         "label": "So I can",
-        "question": "What outcome matters?"
+        "question": "What outcome matters?",
+        "purpose": "Clarify the desired result.",
+        "output_type": "outcome"
       },
       {
         "prompt_id": "prompt-004",
         "label": "Constraint",
-        "question": "What prevents the user from making progress today?"
+        "question": "What prevents the user from making progress today?",
+        "purpose": "Expose barriers and tradeoffs.",
+        "output_type": "constraint"
       }
     ],
-    "key": "JTBD"
+    "key": "JTBD",
+    "origin": "builtin",
+    "organization": "",
+    "created_by": "",
+    "version": "1.0",
+    "tags": []
+  },
+  "custom_frameworks": [
+    {
+      "key": "EvidenceStory",
+      "name": "Evidence Story",
+      "category": "organizational",
+      "description": "Structure a narrative around a supported claim, its limitations, and the next learning action.",
+      "intended_uses": [
+        "Evidence-aware reporting",
+        "Review preparation"
+      ],
+      "limitations": [
+        "Does not establish whether a claim is true"
+      ],
+      "required_inputs": [
+        "Claim",
+        "Evidence",
+        "Limitations"
+      ],
+      "output_types": [
+        "narrative_outline"
+      ],
+      "mode_support": [
+        "divergent",
+        "convergent"
+      ],
+      "prompts": [
+        {
+          "prompt_id": "evidence-story-prompt-001",
+          "label": "Supported statement",
+          "question": "What can be stated now, and what evidence supports it?",
+          "purpose": "Separate supported language from interpretation.",
+          "output_type": "claim"
+        }
+      ],
+      "origin": "custom",
+      "organization": "Sustainable Catalyst",
+      "created_by": "Program Design Team",
+      "version": "1.0",
+      "tags": [
+        "evidence",
+        "narrative"
+      ]
+    }
+  ],
+  "prompt_packs": [
+    {
+      "prompt_pack_id": "prompt-pack-impact-001",
+      "name": "Impact narrative prompts",
+      "description": "Reusable prompts for evidence-aware impact communication.",
+      "organization": "Sustainable Catalyst",
+      "created_by": "Program Design Team",
+      "prompts": [
+        {
+          "prompt_id": "impact-pack-prompt-001",
+          "label": "Smallest useful artifact",
+          "question": "What is the smallest artifact that helps a reviewer trace a claim to evidence and limitations?",
+          "purpose": "Generate bounded prototype concepts.",
+          "output_type": "prototype_seed"
+        }
+      ],
+      "tags": [
+        "impact",
+        "evidence"
+      ]
+    }
+  ],
+  "ideation_sessions": [
+    {
+      "session_id": "ideation-session-001",
+      "title": "Evidence-aware impact concept workshop",
+      "mode": "divergent",
+      "framework_key": "JTBD",
+      "prompt_pack_ids": [
+        "prompt-pack-impact-001"
+      ],
+      "challenge_ids": [
+        "challenge-primary"
+      ],
+      "hmw_ids": [
+        "hmw-001"
+      ],
+      "facilitator": "Program Design Team",
+      "participants": [
+        "Program director",
+        "Evaluation partner"
+      ],
+      "status": "complete",
+      "notes": "Generated distinct concepts before convergence.",
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
+    }
+  ],
+  "ideas": [
+    {
+      "idea_id": "idea-001",
+      "title": "Evidence-to-claim review card",
+      "description": "Pair every material claim with its source, limitation, confidence note, and next learning action.",
+      "session_id": "ideation-session-001",
+      "challenge_id": "challenge-primary",
+      "hmw_id": "hmw-001",
+      "prompt_id": "impact-pack-prompt-001",
+      "author": "Program Design Team",
+      "rationale": "Keeps uncertainty visible where narrative decisions are made.",
+      "tags": [
+        "evidence",
+        "review"
+      ],
+      "cluster_id": "idea-cluster-001",
+      "status": "selected",
+      "vote_count": 3,
+      "voter_ids": [
+        "participant-001",
+        "participant-002",
+        "participant-003"
+      ],
+      "parent_idea_ids": [],
+      "merged_into_id": "",
+      "prototype_ids": [
+        "prototype-001"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
+    },
+    {
+      "idea_id": "idea-002",
+      "title": "Reviewer confidence legend",
+      "description": "Add a plain-language legend for evidence confidence, limitations, and unsupported language.",
+      "session_id": "ideation-session-001",
+      "challenge_id": "challenge-primary",
+      "hmw_id": "hmw-001",
+      "prompt_id": "prompt-001",
+      "author": "Evaluation partner",
+      "rationale": "Creates a shared interpretation guide for mixed-confidence evidence.",
+      "tags": [
+        "confidence",
+        "accessibility"
+      ],
+      "cluster_id": "idea-cluster-001",
+      "status": "clustered",
+      "vote_count": 2,
+      "voter_ids": [
+        "participant-001",
+        "participant-002"
+      ],
+      "parent_idea_ids": [],
+      "merged_into_id": "",
+      "prototype_ids": [],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "evidence_ids": [
+        "evidence-002"
+      ],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
+    },
+    {
+      "idea_id": "idea-003",
+      "title": "Evidence summary strip",
+      "description": "Earlier compact summary concept folded into the review-card direction.",
+      "session_id": "ideation-session-001",
+      "challenge_id": "challenge-primary",
+      "hmw_id": "hmw-001",
+      "prompt_id": "prompt-002",
+      "author": "Program director",
+      "rationale": "Preserve the originating concept and merge decision.",
+      "tags": [
+        "lineage"
+      ],
+      "cluster_id": "",
+      "status": "merged",
+      "vote_count": 0,
+      "voter_ids": [],
+      "parent_idea_ids": [],
+      "merged_into_id": "idea-001",
+      "prototype_ids": [],
+      "assumption_ids": [],
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
+    }
+  ],
+  "idea_clusters": [
+    {
+      "cluster_id": "idea-cluster-001",
+      "name": "Visible evidence and uncertainty",
+      "description": "Concepts that keep source support and limitations visible during review.",
+      "idea_ids": [
+        "idea-001",
+        "idea-002"
+      ],
+      "tags": [
+        "evidence",
+        "transparency"
+      ],
+      "rationale": "Both concepts reduce false certainty in impact communication.",
+      "sequence": 1
+    }
+  ],
+  "ideation_summary": {
+    "session_count": 1,
+    "idea_count": 3,
+    "cluster_count": 1,
+    "vote_count": 5,
+    "selected_count": 1,
+    "merged_count": 1,
+    "prototype_link_count": 1,
+    "orphaned_lineage_count": 0,
+    "modes_used": [
+      "divergent"
+    ],
+    "indicator_note": "Ideation indicators describe recorded activity and lineage. Votes and selections represent participant judgment, not objective quality.",
+    "generated_at": "2026-07-16T12:00:00+00:00"
   },
   "sources": [
     {
@@ -427,7 +679,7 @@
         "workflow"
       ],
       "knowledge_library_record_id": "",
-      "provenance_note": "Captured during the v1.5.0 sample workflow."
+      "provenance_note": "Captured during the v1.6.0 sample workflow."
     },
     {
       "source_id": "source-002",
@@ -802,9 +1054,9 @@
   ],
   "provenance": {
     "generator": "catalyst-canvas",
-    "generator_version": "1.5.0",
+    "generator_version": "1.6.0",
     "source_surface": "cli",
-    "source_version": "1.5.0",
+    "source_version": "1.6.0",
     "migrated_from": "",
     "warnings": []
   }

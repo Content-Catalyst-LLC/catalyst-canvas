@@ -53,6 +53,9 @@
   function parseAssumptions(value){return pipeRows(value,12).filter(p=>p[1]).map((p,i)=>({assumption_id:'assumption-'+String(i+1).padStart(3,'0'),criticality:p[0]||'medium',statement:p[1],owner:p[2],confidence:p[3]||'unknown',consequence:p[4],test_method:p[5],status:p[6]||'untested',experiment_ids:ids(p[7]),evidence_ids:ids(p[8]),due_date:p[9],limitations:ids(p[10]),tags:ids(p[11])}));}
   function parseResearchQuestions(value){return pipeRows(value,8).filter(p=>p[1]).map((p,i)=>({research_question_id:'research-question-'+String(i+1).padStart(3,'0'),priority:p[0]||'medium',question:p[1],owner:p[2],status:p[3]||'open',source_ids:ids(p[4]),evidence_ids:ids(p[5]),notes:p[6],tags:ids(p[7])}));}
   function parseHandoffs(value){return pipeRows(value,9).filter(p=>p[2]||p[3]).map((p,i)=>({handoff_id:'handoff-'+String(i+1).padStart(3,'0'),target:p[0]||'knowledge_library',status:p[1]||'draft',purpose:p[2],context_note:p[3],source_ids:ids(p[4]),evidence_ids:ids(p[5]),claim_ids:ids(p[6]),assumption_ids:ids(p[7]),created_at:'',created_by:p[8]}));}
+  function parseIdeas(value,existing){const session=(existing.ideation_sessions||[])[0]||{};return pipeRows(value,15).filter(p=>p[0]).map((p,i)=>({idea_id:'idea-'+String(i+1).padStart(3,'0'),title:p[0],description:p[1],author:p[2]||'Unassigned author',rationale:p[3]||'Captured for review; rationale not yet expanded.',hmw_id:p[4]||'hmw-001',prompt_id:p[5]||'prompt-001',tags:ids(p[6]),cluster_id:p[7],status:p[8]||'captured',vote_count:p[9]||0,voter_ids:[],prototype_ids:ids(p[10]),assumption_ids:ids(p[11]),evidence_ids:ids(p[12]),parent_idea_ids:ids(p[13]),merged_into_id:p[14],session_id:session.session_id||'ideation-session-001',challenge_id:existing.challenge_id||'challenge-primary'}));}
+  function parseClusters(value){return pipeRows(value,6).filter(p=>p[0]).map((p,i)=>({cluster_id:'idea-cluster-'+String(i+1).padStart(3,'0'),name:p[0],description:p[1],idea_ids:ids(p[2]),tags:ids(p[3]),rationale:p[4],sequence:p[5]||i+1}));}
+  function parseJsonList(value){const text=String(value||'').trim();if(!text)return[];const parsed=JSON.parse(text);return Array.isArray(parsed)?parsed:[parsed];}
 
   function projectTitle(root) {
     const element = root.querySelector('[data-workspace-field="title"]');
@@ -89,6 +92,10 @@
       }] : [],
       behavioral_signals:Engine.parseBehavioralSignalCsv(field(root,'behavioralSignalCsv'),field(root,'behavioralSignalSource')||'analytics_csv'),
       sources:parseSources(field(root,'sourceLines')), evidence:parseEvidence(field(root,'evidenceLines')), claims:parseClaims(field(root,'claimLines')), assumptions:parseAssumptions(field(root,'assumptionLines')), research_questions:parseResearchQuestions(field(root,'researchQuestionLines')), interview_guides:existing.interview_guides||[], observation_notes:existing.observation_notes||[], synthesis_tags:lines(field(root,'synthesisTags')), handoffs:parseHandoffs(field(root,'handoffLines')),
+      custom_frameworks:parseJsonList(field(root,'customFrameworksJson')), prompt_packs:parseJsonList(field(root,'promptPacksJson')),
+      ideation_sessions:[Object.assign({},(existing.ideation_sessions||[])[0]||{},{title:field(root,'ideationSessionTitle')||'Primary ideation session',mode:field(root,'ideationMode')||'divergent',framework_key:field(root,'framework')||'AIDA',challenge_ids:[existing.challenge_id||'challenge-primary'],hmw_ids:(existing.how_might_we||[]).map(item=>item.hmw_id),facilitator:field(root,'ideationFacilitator'),participants:lines(field(root,'ideationParticipants')),status:field(root,'ideationStatus')||'planned',notes:field(root,'ideationNotes')})],
+      ideas:parseIdeas(field(root,'ideaLines'),existing), idea_clusters:parseClusters(field(root,'clusterLines')),
+      prototypes:existing.prototypes||[], tests:existing.tests||[], review_notes:existing.review_notes||[],
       framework: field(root, 'framework'),
       provenance: { source_surface: 'wordpress', source_version: root.dataset.version || Engine.RELEASE_VERSION, warnings: [] }
     };
@@ -125,10 +132,6 @@
   function buildFromInputs(root) {
     const existing = root._canvasContract || null;
     const contract = Engine.buildContract(inputPayload(root), 'wordpress');
-    if (existing && existing.framework && contract.framework && existing.framework.key === contract.framework.key) {
-      const custom = (existing.framework.prompts || []).filter(item => item.label === 'Custom idea');
-      contract.framework.prompts = contract.framework.prompts.concat(custom);
-    }
     return Engine.validateContract(contract);
   }
 
@@ -167,7 +170,7 @@
     setText(root, 'signal', test.signal || 'No signal recorded.');
     setText(root, 'test', test.method || 'No test method recorded.');
     setText(root, 'risk', risk.note || 'Review assumptions and evidence gaps before relying on this brief.');
-    setList(root, 'ideas', contract.framework.prompts.map(item => `${item.label}: ${item.question} — apply this to: ${contract.challenge}`));
+    setList(root, 'ideas', contract.ideas.length ? contract.ideas.map(item => `${item.title} [${item.status}; ${item.vote_count} votes] — ${item.rationale}`) : contract.framework.prompts.map(item => `${item.label}: ${item.question} — apply this to: ${contract.challenge}`));
   }
 
   function populate(root, contract) {
@@ -196,6 +199,10 @@
     setField(root,'synthesisTags',(contract.synthesis_tags||[]).join('\n'));
     setField(root,'handoffLines',(contract.handoffs||[]).map(i=>[i.target,i.status,i.purpose,i.context_note,(i.source_ids||[]).join(', '),(i.evidence_ids||[]).join(', '),(i.claim_ids||[]).join(', '),(i.assumption_ids||[]).join(', '),i.created_by].join(' | ')).join('\n'));
     setField(root, 'framework', contract.framework.key);
+    const session=(contract.ideation_sessions||[])[0]||{}; setField(root,'ideationSessionTitle',session.title); setField(root,'ideationMode',session.mode); setField(root,'ideationFacilitator',session.facilitator); setField(root,'ideationParticipants',(session.participants||[]).join('\n')); setField(root,'ideationStatus',session.status); setField(root,'ideationNotes',session.notes);
+    setField(root,'ideaLines',(contract.ideas||[]).map(i=>[i.title,i.description,i.author,i.rationale,i.hmw_id,i.prompt_id,(i.tags||[]).join(', '),i.cluster_id,i.status,i.vote_count,(i.prototype_ids||[]).join(', '),(i.assumption_ids||[]).join(', '),(i.evidence_ids||[]).join(', '),(i.parent_idea_ids||[]).join(', '),i.merged_into_id].join(' | ')).join('\n'));
+    setField(root,'clusterLines',(contract.idea_clusters||[]).map(i=>[i.name,i.description,(i.idea_ids||[]).join(', '),(i.tags||[]).join(', '),i.rationale,i.sequence].join(' | ')).join('\n'));
+    setField(root,'customFrameworksJson',JSON.stringify(contract.custom_frameworks||[],null,2)); setField(root,'promptPacksJson',JSON.stringify(contract.prompt_packs||[],null,2));
     const title = root.querySelector('[data-workspace-field="title"]');
     if (title) title.value = contract.title || 'Untitled Canvas Project';
     render(root, contract);
@@ -369,14 +376,10 @@
             const idea = String(field(root, 'customIdea') || '').trim();
             const contract = JSON.parse(JSON.stringify(currentContract(root)));
             if (idea) {
-              contract.framework.prompts.push({
-                prompt_id: 'prompt-' + String(contract.framework.prompts.length + 1).padStart(3, '0'),
-                label: 'Custom idea',
-                question: idea
-              });
+              const index=contract.ideas.length+1, session=(contract.ideation_sessions||[])[0]||{}, hmw=(contract.how_might_we||[])[0]||{}, prompt=(contract.framework.prompts||[])[0]||{};
+              contract.ideas.push({idea_id:'idea-'+String(index).padStart(3,'0'),title:idea,description:'',session_id:session.session_id||'ideation-session-001',challenge_id:contract.challenge_id||'challenge-primary',hmw_id:hmw.hmw_id||'hmw-001',prompt_id:prompt.prompt_id||'prompt-001',author:'Browser participant',rationale:'Added directly in the browser workspace for later review.',tags:[],cluster_id:'',status:'captured',vote_count:0,voter_ids:[],parent_idea_ids:[],merged_into_id:'',prototype_ids:[],assumption_ids:[],evidence_ids:[],created_at:new Date().toISOString(),updated_at:new Date().toISOString()});
             }
-            render(root, Engine.validateContract(contract));
-            queueAutosave();
+            const rebuilt=Engine.buildContract(contract,'wordpress'); populate(root,rebuilt); queueAutosave();
             return;
           }
           if (action === 'reset' || action === 'new-project') {

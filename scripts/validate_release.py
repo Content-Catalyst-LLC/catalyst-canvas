@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-CONTRACT_VERSION = "catalyst-canvas/1.2"
+CONTRACT_VERSION = "catalyst-canvas/1.3"
 WORKSPACE_CONTRACT_VERSION = "catalyst-canvas-workspace/1.0"
 
 
@@ -40,7 +40,7 @@ def verify_version_markers() -> None:
         raise RuntimeError(f"Invalid semantic version: {VERSION!r}")
 
     manifest = load_json("canvas_manifest.json")
-    schema = load_json("schemas/catalyst_canvas_contract_1_2.schema.json")
+    schema = load_json("schemas/catalyst_canvas_contract_1_3.schema.json")
     workspace_schema = load_json("schemas/catalyst_canvas_workspace_1_0.schema.json")
     plugin = (ROOT / "wordpress/catalyst-canvas-demo/catalyst-canvas-demo.php").read_text(encoding="utf-8")
     package_version = (ROOT / "catalyst_canvas/version.py").read_text(encoding="utf-8")
@@ -75,7 +75,7 @@ def verify_version_markers() -> None:
     if f"private const VERSION = '{VERSION}';" not in plugin:
         raise RuntimeError("WordPress plugin release constant does not match VERSION")
     if f"private const CONTRACT_VERSION = '{CONTRACT_VERSION}';" not in plugin:
-        raise RuntimeError("WordPress contract constant does not match Canvas Contract 1.2")
+        raise RuntimeError("WordPress contract constant does not match Canvas Contract 1.3")
     if f'"releaseVersion":"{VERSION}"' not in contract_data:
         raise RuntimeError("Generated browser contract data has the wrong release version")
     if f'"contractVersion":"{CONTRACT_VERSION}"' not in contract_data:
@@ -117,7 +117,7 @@ def verify_source_tree() -> None:
 
 
 def validate_schemas() -> tuple[dict, dict]:
-    schema = load_json("schemas/catalyst_canvas_contract_1_2.schema.json")
+    schema = load_json("schemas/catalyst_canvas_contract_1_3.schema.json")
     workspace_schema = load_json("schemas/catalyst_canvas_workspace_1_0.schema.json")
     Draft202012Validator.check_schema(schema)
     Draft202012Validator.check_schema(workspace_schema)
@@ -147,9 +147,9 @@ def validate_generated_contract(temp_dir: Path, schema: dict) -> None:
     if errors:
         raise RuntimeError("Generated sample failed schema validation: " + "; ".join(error.message for error in errors))
     if payload.get("schema_version") != CONTRACT_VERSION:
-        raise RuntimeError("Generated JSON does not declare Canvas Contract 1.2")
+        raise RuntimeError("Generated JSON does not declare Canvas Contract 1.3")
     if f"Contract: {CONTRACT_VERSION}" not in markdown_output.read_text(encoding="utf-8"):
-        raise RuntimeError("Generated Markdown does not declare Canvas Contract 1.2")
+        raise RuntimeError("Generated Markdown does not declare Canvas Contract 1.3")
     if "<!doctype html>" not in html_output.read_text(encoding="utf-8").lower():
         raise RuntimeError("Generated print report is not standalone HTML")
     run(sys.executable, "-m", "catalyst_canvas.cli", "validate", "--input", str(json_output))
@@ -174,7 +174,7 @@ def validate_demo_seed(temp_dir: Path) -> None:
     run(sys.executable, "demo/seed_demo.py", "--database", str(database))
     canvas = get_canvas(str(database), 1)
     if not canvas or canvas.get("schema_version") != CONTRACT_VERSION:
-        raise RuntimeError("Demo seed did not create a Canvas Contract 1.2 record")
+        raise RuntimeError("Demo seed did not create a Canvas Contract 1.3 record")
 
 
 
@@ -227,6 +227,13 @@ def validate_workspace_operations(temp_dir: Path, workspace_schema: dict) -> Non
         "claims": [{"claim_id":"claim-release","statement":"The release gate completed.","state":"supported","evidence_ids":["evidence-release"],"source_ids":["source-release"]}],
         "assumptions": [{"assumption_id":"assumption-release","statement":"Installer preservation will remain reliable.","owner":"Maintainer","criticality":"high","status":"planned","test_method":"Run disposable installer test","experiment_ids":["test-release"]}],
         "research_questions": [{"research_question_id":"research-question-release","question":"Does the upgrade preserve existing runtime data?","owner":"Maintainer","status":"investigating","priority":"high"}],
+        "how_might_we": [{"hmw_id":"hmw-release","question":"How might we preserve release lineage across ideation and prototype decisions?","status":"selected"}],
+        "framework": "ReleaseLens",
+        "custom_frameworks": [{"key":"ReleaseLens","name":"Release Lens","description":"Review release integrity through a portable custom framework.","prompts":[{"label":"Integrity","question":"What must remain traceable after installation?"}]}],
+        "prompt_packs": [{"prompt_pack_id":"prompt-pack-release","name":"Release prompts","prompts":[{"label":"Smallest check","question":"What is the smallest check that protects the upgrade?"}]}],
+        "ideation_sessions": [{"session_id":"ideation-session-release","title":"Release ideation","mode":"convergent","framework_key":"ReleaseLens","prompt_pack_ids":["prompt-pack-release"],"challenge_ids":["challenge-primary"],"hmw_ids":["hmw-release"],"facilitator":"Maintainer","participants":["Reviewer"],"status":"complete"}],
+        "ideas": [{"idea_id":"idea-release","title":"Preservation manifest","description":"Record data-preservation evidence with the release.","session_id":"ideation-session-release","challenge_id":"challenge-primary","hmw_id":"hmw-release","prompt_id":"prompt-001","author":"Maintainer","rationale":"Makes installer evidence reviewable.","status":"selected","vote_count":1,"voter_ids":["reviewer-001"],"prototype_ids":["prototype-001"],"assumption_ids":["assumption-release"],"evidence_ids":["evidence-release"]}],
+        "idea_clusters": [{"cluster_id":"idea-cluster-release","name":"Release integrity","idea_ids":["idea-release"],"rationale":"Groups safeguards around traceable installation."}],
     })
     save_canvas(database, research_canvas, project_id=project["project_id"], change_note="Research validation")
     counts = research_asset_counts(database)
@@ -239,6 +246,23 @@ def validate_workspace_operations(temp_dir: Path, workspace_schema: dict) -> Non
     handoff = build_handoff_package(research_canvas, "knowledge_library")
     if handoff["handoff_contract"] != "catalyst-canvas-research-handoff/1.0" or not handoff["research"]["claims"]:
         raise RuntimeError("Research handoff package did not preserve ledger context")
+    if research_canvas["ideation_summary"]["idea_count"] != 1 or research_canvas["ideation_summary"]["prototype_link_count"] != 1:
+        raise RuntimeError("Ideation lineage and prototype links were not preserved")
+    if research_canvas["framework"]["key"] != "ReleaseLens":
+        raise RuntimeError("Custom framework did not resolve through the shared registry")
+
+def validate_framework_package_cli(temp_dir: Path) -> None:
+    contract_source = ROOT / "fixtures/canvas_contract_1_3.expected.json"
+    package = temp_dir / "framework-package.json"
+    imported = temp_dir / "framework-imported.json"
+    run(sys.executable, "-m", "catalyst_canvas.cli", "framework-export", "--input", str(contract_source), "--output", str(package), "--organization", "Release validation")
+    package_payload = json.loads(package.read_text(encoding="utf-8"))
+    if package_payload.get("package_contract") != "catalyst-canvas-framework-package/1.0" or not package_payload.get("frameworks"):
+        raise RuntimeError("Framework package export omitted custom framework records")
+    run(sys.executable, "-m", "catalyst_canvas.cli", "framework-import", "--input", str(contract_source), "--package", str(package), "--output", str(imported))
+    imported_payload = json.loads(imported.read_text(encoding="utf-8"))
+    if not any(record.get("key") == "EquityLens" for record in imported_payload.get("custom_frameworks", [])):
+        raise RuntimeError("Framework package import did not preserve the custom framework")
 
 def validate_migration_cli(temp_dir: Path, schema: dict) -> None:
     legacy = {
@@ -246,7 +270,7 @@ def validate_migration_cli(temp_dir: Path, schema: dict) -> None:
         "generated_at": "2026-07-16T10:00:00+00:00",
         "challenge": "Migrate a legacy export",
         "audience": "Maintainer",
-        "goal": "Produce Canvas Contract 1.2",
+        "goal": "Produce Canvas Contract 1.3",
         "constraint": "Flat fields",
         "framework": "AIDA",
         "persona": {"name": "Maintainer", "description": "Needs safe migration."},
@@ -260,7 +284,7 @@ def validate_migration_cli(temp_dir: Path, schema: dict) -> None:
     payload = json.loads(output.read_text(encoding="utf-8"))
     errors = list(Draft202012Validator(schema).iter_errors(payload))
     if errors:
-        raise RuntimeError("Migrated CLI output failed Canvas Contract 1.2 validation")
+        raise RuntimeError("Migrated CLI output failed Canvas Contract 1.3 validation")
     if payload["provenance"]["migrated_from"] != "legacy-core/1.1.1":
         raise RuntimeError("Migration provenance was not recorded")
 
@@ -269,8 +293,8 @@ def validate_cross_surface_fixture() -> None:
     from catalyst_canvas.adapters.flask import compact_to_contract
     from catalyst_canvas.engine import generate_canvas
 
-    source = load_json("fixtures/canvas_contract_1_2.input.json")
-    expected = load_json("fixtures/canvas_contract_1_2.expected.json")
+    source = load_json("fixtures/canvas_contract_1_3.input.json")
+    expected = load_json("fixtures/canvas_contract_1_3.expected.json")
     if generate_canvas(source, source_surface="python") != expected:
         raise RuntimeError("Python engine diverges from the shared fixture")
     if compact_to_contract(source) != expected:
@@ -282,6 +306,7 @@ def validate_cross_surface_fixture() -> None:
         run(node, "tests/js/test_workspace.js")
         run(node, "tests/js/test_research_studio.js")
         run(node, "tests/js/test_ledger.js")
+        run(node, "tests/js/test_ideation.js")
     else:
         print("SKIP: Node.js is unavailable; browser fixture conformance will run in CI.")
 
@@ -338,6 +363,7 @@ def main() -> int:
         validate_demo_seed(temp_dir)
         validate_workspace_operations(temp_dir, workspace_schema)
         validate_migration_cli(temp_dir, schema)
+        validate_framework_package_cli(temp_dir)
         validate_cross_surface_fixture()
         validate_optional_syntax_tools()
         validate_plugin_package(temp_dir)
