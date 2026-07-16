@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deprecated v1.x compatibility adapter over Canvas Contract 1.5."""
+"""Deprecated v1.x compatibility adapter over Canvas Contract 1.6."""
 
 from __future__ import annotations
 

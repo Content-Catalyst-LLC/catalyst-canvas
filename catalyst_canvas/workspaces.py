@@ -1,4 +1,4 @@
-"""Workspace and project records for Catalyst Canvas v1.8.0."""
+"""Workspace and project records for Catalyst Canvas v1.9.0."""
 
 from __future__ import annotations
 

@@ -2,7 +2,7 @@
 
 Before treating a Canvas as ready for broader review, confirm that:
 
-- the document declares `catalyst-canvas/1.5` and has stable Canvas and revision IDs;
+- the document declares `catalyst-canvas/1.6` and has stable Canvas and revision IDs;
 - material claims expose supporting evidence, contradictions, limitations, and review state;
 - high-criticality assumptions have an owner and test method;
 - idea and decision lineage remains traceable to the challenge and evidence;

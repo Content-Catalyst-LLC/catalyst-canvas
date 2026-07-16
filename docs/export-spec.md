@@ -1,6 +1,6 @@
 # Export Specification
 
-Catalyst Canvas v1.8.0 exports the same validated `catalyst-canvas/1.5` document through JSON, Markdown, and standalone print HTML.
+Catalyst Canvas v1.9.0 exports the same validated `catalyst-canvas/1.6` document through JSON, Markdown, and standalone print HTML.
 
 ## Canonical exports
 

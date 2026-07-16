@@ -3,7 +3,7 @@
  * Plugin Name: Catalyst Canvas Demo
  * Plugin URI: https://sustainablecatalyst.com/catalyst-canvas/
  * Description: Adds a persistent, client-side Catalyst Canvas project workspace via the [catalyst_canvas_demo] shortcode.
- * Version: 1.8.0
+ * Version: 1.9.0
  * Author: Content Catalyst LLC
  * License: MIT
  * Text Domain: catalyst-canvas-demo
@@ -14,8 +14,8 @@ if (!defined('ABSPATH')) {
 }
 
 final class Catalyst_Canvas_Demo_Plugin {
-    private const VERSION = '1.8.0';
-    private const CONTRACT_VERSION = 'catalyst-canvas/1.5';
+    private const VERSION = '1.9.0';
+    private const CONTRACT_VERSION = 'catalyst-canvas/1.6';
     private const SHORTCODE = 'catalyst_canvas_demo';
 
     public function __construct() {
@@ -237,6 +237,18 @@ final class Catalyst_Canvas_Demo_Plugin {
                         <details><summary>Iteration history JSON</summary><textarea data-field="iterationHistoryJson" rows="12">[]</textarea></details>
                         <details><summary>Research Lab and Workbench handoffs JSON</summary><textarea data-field="experimentHandoffsJson" rows="12">[]</textarea></details>
                     </div>
+
+                    <div class="ccanvasdemo-panel">
+                        <p class="ccanvasdemo-section-label">Collaboration, review, and publication</p>
+                        <p class="ccanvasdemo-help">Manage browser-local members, assignments, comments, approvals, publication records, release history, and governed handoffs. Public-safe packages omit internal collaboration records and participant details.</p>
+                        <details open><summary>Workspace members JSON</summary><textarea data-field="workspaceMembersJson" rows="10">[]</textarea></details>
+                        <details open><summary>Review assignments JSON</summary><textarea data-field="reviewAssignmentsJson" rows="12">[]</textarea></details>
+                        <details open><summary>Comments JSON</summary><textarea data-field="commentsJson" rows="14">[]</textarea></details>
+                        <details><summary>Approvals JSON</summary><textarea data-field="approvalsJson" rows="12">[]</textarea></details>
+                        <details><summary>Publication records JSON</summary><textarea data-field="publicationRecordsJson" rows="14">[]</textarea></details>
+                        <details><summary>Release history JSON</summary><textarea data-field="releaseHistoryJson" rows="12">[]</textarea></details>
+                        <details><summary>Publication handoffs JSON</summary><textarea data-field="publicationHandoffsJson" rows="12">[]</textarea></details>
+                    </div>
                 </form>
 
                 <div class="ccanvasdemo-output" aria-live="polite">
@@ -314,13 +326,26 @@ final class Catalyst_Canvas_Demo_Plugin {
                     </div>
 
                     <div class="ccanvasdemo-panel">
+                        <p class="ccanvasdemo-section-label">Collaboration and publication readiness</p>
+                        <div class="ccanvasdemo-grid ccanvasdemo-grid-three">
+                            <article class="ccanvasdemo-mini"><strong>Readiness</strong><p data-output="collaborationReadiness">Draft collaboration state</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Open comments</strong><p data-output="openComments">0 open</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Pending reviews</strong><p data-output="pendingReviews">0 pending</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Published releases</strong><p data-output="publishedCount">0 releases</p></article>
+                        </div>
+                        <h4>Publication records</h4><ul data-output="publicationSummary"></ul>
+                        <p class="ccanvasdemo-help">Publication readiness is blocked when required reviews, approvals, or public redaction checks remain unresolved.</p>
+                    </div>
+
+                    <div class="ccanvasdemo-panel">
                         <p class="ccanvasdemo-section-label">Ideas</p>
                         <ul class="ccanvasdemo-ideas" data-output="ideas"></ul>
                     </div>
 
                     <div class="ccanvasdemo-actions ccanvasdemo-export-actions">
                         <button type="button" class="ccanvasdemo-btn" data-action="copy">Copy brief</button>
-                        <button type="button" class="ccanvasdemo-btn" data-action="download">Download JSON</button>
+                        <button type="button" class="ccanvasdemo-btn" data-action="download">Download full JSON</button>
+                        <button type="button" class="ccanvasdemo-btn" data-action="download-public">Download public-safe JSON</button>
                         <button type="button" class="ccanvasdemo-btn" data-action="print">Print / Save PDF</button>
                     </div>
                 </div>

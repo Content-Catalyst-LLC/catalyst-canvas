@@ -1,6 +1,6 @@
 # Prioritization and Decision Readiness
 
-Catalyst Canvas v1.8.0 compares alternatives without presenting rankings as objective truth.
+Catalyst Canvas v1.9.0 compares alternatives without presenting rankings as objective truth.
 
 ## Methods
 

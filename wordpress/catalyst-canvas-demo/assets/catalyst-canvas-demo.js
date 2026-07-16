@@ -107,6 +107,13 @@
       learning_decisions:parseJsonList(field(root,'learningDecisionsJson')),
       iteration_history:parseJsonList(field(root,'iterationHistoryJson')),
       experiment_handoffs:parseJsonList(field(root,'experimentHandoffsJson')),
+      workspace_members:parseJsonList(field(root,'workspaceMembersJson')),
+      review_assignments:parseJsonList(field(root,'reviewAssignmentsJson')),
+      comments:parseJsonList(field(root,'commentsJson')),
+      approvals:parseJsonList(field(root,'approvalsJson')),
+      publication_records:parseJsonList(field(root,'publicationRecordsJson')),
+      release_history:parseJsonList(field(root,'releaseHistoryJson')),
+      publication_handoffs:parseJsonList(field(root,'publicationHandoffsJson')),
       tests:existing.tests||[], review_notes:existing.review_notes||[],
       framework: field(root, 'framework'),
       provenance: { source_surface: 'wordpress', source_version: root.dataset.version || Engine.RELEASE_VERSION, warnings: [] }
@@ -204,6 +211,11 @@
     setList(root, 'learningSummary', contract.learning_decisions.map(item => `${item.outcome}: ${item.rationale || 'No rationale recorded'}`));
     setText(root, 'latestExperimentResult', latestRun.summary || 'No run recorded.');
     setText(root, 'latestLearningDecision', latestDecision.rationale || 'No learning decision recorded.');
+    setText(root, 'collaborationReadiness', (contract.collaboration_summary.readiness || 'collaboration_draft').replace(/_/g, ' '));
+    setText(root, 'openComments', contract.collaboration_summary.open_comment_count);
+    setText(root, 'pendingReviews', contract.collaboration_summary.required_review_open_count);
+    setText(root, 'publishedCount', contract.collaboration_summary.published_count);
+    setList(root, 'publicationSummary', (contract.publication_records || []).map(item => `${item.title} v${item.version} [${item.channel}/${item.state}]`));
     setList(root, 'ideas', contract.ideas.length ? contract.ideas.map(item => `${item.title} [${item.status}; ${item.vote_count} votes] — ${item.rationale}`) : contract.framework.prompts.map(item => `${item.label}: ${item.question} — apply this to: ${contract.challenge}`));
   }
 
@@ -249,6 +261,13 @@
     setField(root,'learningDecisionsJson',JSON.stringify(contract.learning_decisions||[],null,2));
     setField(root,'iterationHistoryJson',JSON.stringify(contract.iteration_history||[],null,2));
     setField(root,'experimentHandoffsJson',JSON.stringify(contract.experiment_handoffs||[],null,2));
+    setField(root,'workspaceMembersJson',JSON.stringify(contract.workspace_members||[],null,2));
+    setField(root,'reviewAssignmentsJson',JSON.stringify(contract.review_assignments||[],null,2));
+    setField(root,'commentsJson',JSON.stringify(contract.comments||[],null,2));
+    setField(root,'approvalsJson',JSON.stringify(contract.approvals||[],null,2));
+    setField(root,'publicationRecordsJson',JSON.stringify(contract.publication_records||[],null,2));
+    setField(root,'releaseHistoryJson',JSON.stringify(contract.release_history||[],null,2));
+    setField(root,'publicationHandoffsJson',JSON.stringify(contract.publication_handoffs||[],null,2));
     const title = root.querySelector('[data-workspace-field="title"]');
     if (title) title.value = contract.title || 'Untitled Canvas Project';
     render(root, contract);
@@ -261,6 +280,19 @@
     const link = document.createElement('a');
     link.href = url;
     link.download = contract.canvas_id + '.json';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function downloadPublicJSON(contract) {
+    const payload = Engine.buildPublicationPackage(contract, 'public_json');
+    const blob = new Blob([JSON.stringify(payload, null, 2) + '\n'], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = contract.canvas_id + '-public-safe.json';
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -485,6 +517,7 @@
             return;
           }
           if (action === 'download') { downloadJSON(currentContract(root)); return; }
+          if (action === 'download-public') { downloadPublicJSON(currentContract(root)); return; }
           if (action === 'print') window.print();
         } catch (error) {
           setWorkspaceStatus(root, error.message || 'Workspace action failed.', 'error');

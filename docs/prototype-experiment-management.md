@@ -1,6 +1,6 @@
 # Prototype and Experiment Management
 
-Catalyst Canvas v1.8.0 turns a prototype from a single concept description into a traceable learning object.
+Catalyst Canvas v1.9.0 turns a prototype from a single concept description into a traceable learning object.
 
 ## Prototype portfolio
 

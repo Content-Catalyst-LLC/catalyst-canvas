@@ -1,4 +1,4 @@
-"""Prototype and experiment management for Canvas Contract 1.5."""
+"""Prototype and experiment management for Canvas Contract 1.6."""
 
 from __future__ import annotations
 

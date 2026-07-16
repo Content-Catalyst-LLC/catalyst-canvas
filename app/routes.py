@@ -24,6 +24,7 @@ from catalyst_canvas.frameworks import export_framework_package, framework_regis
 from catalyst_canvas.ideation import merge_idea_records
 from catalyst_canvas.prioritization import build_decision_handoff_package, normalize_sensitivity_views
 from catalyst_canvas.experiments import build_experiment_handoff_package
+from catalyst_canvas.collaboration import build_publication_package, member_can, publication_release_record
 from catalyst_canvas.workspaces import DEFAULT_WORKSPACE_ID, load_workspace_schema
 
 from .models import SAMPLE_PERSONAS
@@ -44,6 +45,11 @@ from .services.storage import (
     list_workspaces,
     list_research_assets,
     research_asset_counts,
+    list_workspace_members,
+    get_workspace_member,
+    ensure_workspace_member,
+    list_collaboration_records,
+    collaboration_record_counts,
     reuse_research_asset,
     project_counts,
     restore_project,
@@ -61,6 +67,21 @@ def db_path() -> str:
 
 def workspace_id() -> str:
     return str(session.get("workspace_id") or current_app.config.get("CANVAS_WORKSPACE_ID") or DEFAULT_WORKSPACE_ID)
+
+
+def acting_user_id() -> str:
+    return str(session.get("canvas_user_id") or current_app.config.get("CANVAS_USER_ID") or "local-user")
+
+
+def current_member() -> dict[str, Any] | None:
+    return get_workspace_member(db_path(), workspace_id(), acting_user_id())
+
+
+def require_capability(capability: str):
+    member = current_member()
+    if not member_can(member, capability):
+        return jsonify({"error": f"{capability} permission required"}), 403
+    return None
 
 
 def _project_in_workspace(project_id: str) -> dict[str, Any] | None:
@@ -141,6 +162,7 @@ def inject_workspace_context() -> dict[str, Any]:
     return {
         "active_workspace": get_workspace(db_path(), workspace_id()),
         "active_project": active_project,
+        "active_member": current_member(),
     }
 
 
@@ -680,6 +702,187 @@ def experiment_handoff_export(project_id: str, target: str):
         return jsonify({"error": "not found"}), 404
     canvas = get_project_canvas(db_path(), project_id)
     return jsonify(build_experiment_handoff_package(strip_internal_fields(canvas), target))
+
+
+@bp.route("/collaborate", methods=["GET", "POST"])
+def collaboration_studio():
+    canvas = current_canvas()
+    if request.method == "POST":
+        denied = require_capability("edit")
+        if denied:
+            return denied
+        try:
+            save_from_form(canvas, change_note="Collaboration, review, and publication workspace updated")
+        except ValueError as exc:
+            return Response(str(exc) + "\n", status=400, mimetype="text/plain")
+        return redirect(url_for("canvas.collaboration_studio"))
+    contract = strip_internal_fields(canvas)
+    return render_template(
+        "collaboration/studio.html",
+        canvas=view_model(canvas),
+        contract=contract,
+        members=list_workspace_members(db_path(), workspace_id()),
+        records=list_collaboration_records(db_path(), workspace_id(), project_id=str(canvas.get("_project_id") or "")),
+        record_counts=collaboration_record_counts(db_path(), workspace_id(), str(canvas.get("_project_id") or "")),
+    )
+
+
+@bp.route("/api/collaboration")
+def collaboration_api():
+    canvas = current_canvas()
+    return jsonify({
+        "workspace_id": workspace_id(),
+        "project_id": canvas.get("_project_id", ""),
+        "member": current_member(),
+        "workspace_members": canvas.get("workspace_members", []),
+        "review_assignments": canvas.get("review_assignments", []),
+        "comments": canvas.get("comments", []),
+        "approvals": canvas.get("approvals", []),
+        "publication_records": canvas.get("publication_records", []),
+        "release_history": canvas.get("release_history", []),
+        "publication_handoffs": canvas.get("publication_handoffs", []),
+        "collaboration_summary": canvas.get("collaboration_summary", {}),
+    })
+
+
+@bp.route("/api/workspaces/members", methods=["GET", "POST"])
+def workspace_members_api():
+    if request.method == "GET":
+        return jsonify({"workspace_id": workspace_id(), "members": list_workspace_members(db_path(), workspace_id())})
+    denied = require_capability("manage_members")
+    if denied:
+        return denied
+    payload = request.get_json(silent=True) or {}
+    member_id = clean_text(payload.get("member_id"))
+    if not member_id:
+        return jsonify({"error": "member_id is required"}), 400
+    member = ensure_workspace_member(
+        db_path(), workspace_id(), member_id, name=clean_text(payload.get("name"), member_id),
+        organization=clean_text(payload.get("organization")), role=clean_text(payload.get("role"), "viewer"),
+        status=clean_text(payload.get("status"), "active"),
+    )
+    return jsonify({"member": member}), 201
+
+
+@bp.route("/api/comments", methods=["POST"])
+def comment_create():
+    denied = require_capability("comment")
+    if denied:
+        return denied
+    canvas = current_canvas()
+    payload = request.get_json(silent=True) or {}
+    if not clean_text(payload.get("body")):
+        return jsonify({"error": "body is required"}), 400
+    updated = strip_internal_fields(canvas)
+    payload.setdefault("author_id", acting_user_id())
+    payload.setdefault("created_at", utc_now())
+    payload.setdefault("updated_at", payload["created_at"])
+    updated.setdefault("comments", []).append(payload)
+    updated["revision_id"] = new_id("revision")
+    updated["updated_at"] = utc_now()
+    from catalyst_canvas.engine import generate_canvas
+    updated = generate_canvas(updated, source_surface="flask")
+    save_canvas(db_path(), updated, project_id=canvas.get("_project_id"), workspace_id=workspace_id(), change_note="Review comment added")
+    return jsonify({"comment": updated["comments"][-1], "collaboration_summary": updated["collaboration_summary"]}), 201
+
+
+@bp.route("/api/comments/<comment_id>/resolve", methods=["POST"])
+def comment_resolve(comment_id: str):
+    denied = require_capability("comment")
+    if denied:
+        return denied
+    canvas = current_canvas(); updated = strip_internal_fields(canvas)
+    target = next((item for item in updated.get("comments", []) if item.get("comment_id") == comment_id), None)
+    if not target:
+        return jsonify({"error": "comment not found"}), 404
+    target.update({"status": "resolved", "resolved_by": acting_user_id(), "resolved_at": utc_now(), "updated_at": utc_now()})
+    updated["revision_id"] = new_id("revision"); updated["updated_at"] = utc_now()
+    from catalyst_canvas.engine import generate_canvas
+    updated = generate_canvas(updated, source_surface="flask")
+    save_canvas(db_path(), updated, project_id=canvas.get("_project_id"), workspace_id=workspace_id(), change_note=f"Comment {comment_id} resolved")
+    return jsonify({"comment": next(item for item in updated["comments"] if item["comment_id"] == comment_id)})
+
+
+@bp.route("/api/reviews", methods=["POST"])
+def review_assignment_create():
+    denied = require_capability("assign_review")
+    if denied:
+        return denied
+    canvas=current_canvas(); payload=request.get_json(silent=True) or {}
+    if not clean_text(payload.get("title")):
+        return jsonify({"error":"title is required"}),400
+    updated=strip_internal_fields(canvas); payload.setdefault("requested_by",acting_user_id()); payload.setdefault("created_at",utc_now())
+    updated.setdefault("review_assignments",[]).append(payload); updated["revision_id"]=new_id("revision"); updated["updated_at"]=utc_now()
+    from catalyst_canvas.engine import generate_canvas
+    updated=generate_canvas(updated,source_surface="flask")
+    save_canvas(db_path(),updated,project_id=canvas.get("_project_id"),workspace_id=workspace_id(),change_note="Review assignment created")
+    return jsonify({"assignment":updated["review_assignments"][-1]}),201
+
+
+@bp.route("/api/approvals", methods=["POST"])
+def approval_create():
+    denied = require_capability("approve")
+    if denied:
+        return denied
+    canvas=current_canvas(); payload=request.get_json(silent=True) or {}; payload.setdefault("reviewer_id",acting_user_id()); payload.setdefault("created_at",utc_now())
+    if clean_text(payload.get("decision")) not in {"pending","approved","changes_requested","rejected","abstained"}:
+        return jsonify({"error":"invalid decision"}),400
+    if payload.get("decision") != "pending": payload.setdefault("decided_at",utc_now())
+    updated=strip_internal_fields(canvas); updated.setdefault("approvals",[]).append(payload); updated["revision_id"]=new_id("revision"); updated["updated_at"]=utc_now()
+    from catalyst_canvas.engine import generate_canvas
+    updated=generate_canvas(updated,source_surface="flask")
+    save_canvas(db_path(),updated,project_id=canvas.get("_project_id"),workspace_id=workspace_id(),change_note="Approval decision recorded")
+    return jsonify({"approval":updated["approvals"][-1],"collaboration_summary":updated["collaboration_summary"]}),201
+
+
+def _publication_clear(contract: dict[str, Any], publication: dict[str, Any]) -> tuple[bool, list[str]]:
+    reasons=[]
+    assignments={item.get("assignment_id"):item for item in contract.get("review_assignments",[])}
+    approvals={item.get("approval_id"):item for item in contract.get("approvals",[])}
+    review_ids=publication.get("review_assignment_ids",[])
+    approval_ids=publication.get("approval_ids",[])
+    if review_ids and any(assignments.get(identifier,{}).get("status") != "complete" for identifier in review_ids): reasons.append("required reviews are incomplete")
+    if not approval_ids: reasons.append("no publication approval is linked")
+    elif any(approvals.get(identifier,{}).get("decision") != "approved" for identifier in approval_ids): reasons.append("linked approvals are not all approved")
+    if publication.get("publication_type") != "internal_report" and not publication.get("redaction_notes"): reasons.append("public redaction review is not recorded")
+    if any(item.get("decision") in {"rejected","changes_requested"} for item in contract.get("approvals",[])): reasons.append("an approval blocks publication")
+    return not reasons,reasons
+
+
+@bp.route("/api/publications/<publication_id>/publish", methods=["POST"])
+def publication_publish(publication_id: str):
+    denied = require_capability("publish")
+    if denied:
+        return denied
+    canvas=current_canvas(); updated=strip_internal_fields(canvas)
+    publication=next((item for item in updated.get("publication_records",[]) if item.get("publication_id")==publication_id),None)
+    if not publication: return jsonify({"error":"publication not found"}),404
+    clear,reasons=_publication_clear(updated,publication)
+    if not clear: return jsonify({"error":"publication is not cleared","reasons":reasons}),409
+    published_at=utc_now(); publication.update({"state":"published","published_at":published_at,"updated_at":published_at})
+    updated["revision_id"]=new_id("revision"); updated["updated_at"]=published_at
+    from catalyst_canvas.engine import generate_canvas
+    updated=generate_canvas(updated,source_surface="flask")
+    release=publication_release_record(updated,publication_id,published_by=acting_user_id(),generated_at=published_at,url=clean_text((request.get_json(silent=True) or {}).get("url")))
+    updated["release_history"]=[*updated.get("release_history",[]),release]; updated["revision_id"]=new_id("revision")
+    updated=generate_canvas(updated,source_surface="flask")
+    save_canvas(db_path(),updated,project_id=canvas.get("_project_id"),workspace_id=workspace_id(),change_note=f"Publication {publication_id} released")
+    return jsonify({"publication":next(item for item in updated["publication_records"] if item["publication_id"]==publication_id),"release":release,"collaboration_summary":updated["collaboration_summary"]}),201
+
+
+@bp.route("/projects/<project_id>/publication/<target>.json")
+def publication_export(project_id: str, target: str):
+    if target not in {"wordpress","knowledge_library","public_api","download"}: return jsonify({"error":"unsupported target"}),404
+    if not _project_in_workspace(project_id): return jsonify({"error":"not found"}),404
+    canvas=get_project_canvas(db_path(),project_id)
+    return jsonify(build_publication_package(strip_internal_fields(canvas),target,request.args.get("publication_id", "")))
+
+
+@bp.route("/projects/<project_id>/public.json")
+def public_safe_export(project_id: str):
+    if not _project_in_workspace(project_id): return jsonify({"error":"not found"}),404
+    canvas=get_project_canvas(db_path(),project_id)
+    return jsonify(build_publication_package(strip_internal_fields(canvas),"public_api",request.args.get("publication_id", "")))
 
 
 @bp.route("/ideate/heros")

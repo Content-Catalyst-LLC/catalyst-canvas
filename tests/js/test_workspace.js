@@ -10,7 +10,7 @@ vm.runInContext(fs.readFileSync('wordpress/catalyst-canvas-demo/assets/catalyst-
 const Workspace = context.CatalystCanvasWorkspace;
 const store = Workspace.createStore(Workspace.memoryStorage());
 const canvas = {
-  schema_version: 'catalyst-canvas/1.5', canvas_id: 'canvas-test', revision_id: 'revision-test',
+  schema_version: 'catalyst-canvas/1.6', canvas_id: 'canvas-test', revision_id: 'revision-test',
   title: 'Workspace Test', created_at: '2026-07-16T00:00:00.000Z', updated_at: '2026-07-16T00:00:00.000Z'
 };
 const project = store.create(canvas, 'Workspace Test');

@@ -16,7 +16,7 @@ const contract = Engine.buildContract({
   journeys:[{title:'Pilot journey',stages:[{name:'Discover',emotion:-9,questions:['What is supported?'],frictions:['Missing evidence'],opportunities:['Show confidence'],evidence_ids:['evidence-001'],experiment_ids:['test-001']},{name:'Act',emotion:9}]}],
   behavioral_signals:[{source_type:'ga4_export',metric:'brief_downloads',value:'42',interpretation:'Investigate format use'}]
 }, 'wordpress');
-assert.strictEqual(contract.schema_version, 'catalyst-canvas/1.5');
+assert.strictEqual(contract.schema_version, 'catalyst-canvas/1.6');
 assert.strictEqual(contract.stakeholders[0].influence, 5);
 assert.strictEqual(contract.stakeholders[0].interest, 3);
 assert.strictEqual(contract.stakeholders[0].impact, 5);

@@ -1,6 +1,6 @@
 """Workspace-aware SQLite persistence for Catalyst Canvas.
 
-Version 1.8.0 stores immutable Canvas revisions beneath durable workspace
+Version 1.9.0 stores immutable Canvas revisions beneath durable workspace
 projects. The legacy ``canvas_briefs`` table remains readable and is migrated
 into the default workspace during initialization.
 """
@@ -140,6 +140,47 @@ def init_db(db_path: str) -> None:
         )
         conn.execute(
             """
+            CREATE TABLE IF NOT EXISTS workspace_members (
+              workspace_id TEXT NOT NULL,
+              member_id TEXT NOT NULL,
+              name TEXT NOT NULL,
+              organization TEXT NOT NULL DEFAULT '',
+              role TEXT NOT NULL,
+              status TEXT NOT NULL,
+              capabilities TEXT NOT NULL DEFAULT '[]',
+              joined_at TEXT NOT NULL,
+              last_active_at TEXT NOT NULL DEFAULT '',
+              PRIMARY KEY(workspace_id, member_id),
+              FOREIGN KEY(workspace_id) REFERENCES workspaces(workspace_id) ON DELETE CASCADE
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS collaboration_records (
+              record_key TEXT PRIMARY KEY,
+              workspace_id TEXT NOT NULL,
+              project_id TEXT NOT NULL,
+              record_type TEXT NOT NULL,
+              record_id TEXT NOT NULL,
+              status TEXT NOT NULL DEFAULT '',
+              assignee_id TEXT NOT NULL DEFAULT '',
+              payload TEXT NOT NULL,
+              created_at TEXT NOT NULL,
+              updated_at TEXT NOT NULL,
+              FOREIGN KEY(workspace_id) REFERENCES workspaces(workspace_id) ON DELETE CASCADE,
+              FOREIGN KEY(project_id) REFERENCES projects(project_id) ON DELETE CASCADE
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE INDEX IF NOT EXISTS idx_collaboration_workspace_type_updated
+            ON collaboration_records(workspace_id, record_type, updated_at DESC)
+            """
+        )
+        conn.execute(
+            """
             CREATE INDEX IF NOT EXISTS idx_research_assets_workspace_type_updated
             ON research_assets(workspace_id, asset_type, updated_at DESC)
             """
@@ -157,6 +198,7 @@ def init_db(db_path: str) -> None:
             """
         )
         _ensure_workspace_conn(conn)
+        _ensure_workspace_member_conn(conn, DEFAULT_WORKSPACE_ID, "local-user", name="Local owner", role="owner")
         _migrate_legacy_rows_conn(conn)
         conn.commit()
 
@@ -183,6 +225,56 @@ def _ensure_workspace_conn(
         (workspace_id, name, description, owner_id, now, now),
     )
     return workspace_id
+
+
+def _ensure_workspace_member_conn(
+    conn: sqlite3.Connection, workspace_id: str, member_id: str, *, name: str = "Workspace member",
+    organization: str = "", role: str = "viewer", status: str = "active", capabilities: Sequence[str] | None = None,
+) -> str:
+    from catalyst_canvas.collaboration import ROLE_CAPABILITIES
+    selected_role = role if role in ROLE_CAPABILITIES else "viewer"
+    now = utc_now()
+    caps = list(capabilities) if capabilities is not None else list(ROLE_CAPABILITIES[selected_role])
+    conn.execute(
+        """INSERT INTO workspace_members
+        (workspace_id, member_id, name, organization, role, status, capabilities, joined_at, last_active_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, '')
+        ON CONFLICT(workspace_id, member_id) DO UPDATE SET
+          name=excluded.name, organization=excluded.organization, role=excluded.role,
+          status=excluded.status, capabilities=excluded.capabilities""",
+        (workspace_id, member_id, name, organization, selected_role, status, json.dumps(caps), now),
+    )
+    return member_id
+
+
+def ensure_workspace_member(db_path: str, workspace_id: str, member_id: str, **kwargs: Any) -> Dict[str, Any]:
+    with closing(connect(db_path)) as conn:
+        _ensure_workspace_conn(conn, workspace_id)
+        _ensure_workspace_member_conn(conn, workspace_id, member_id, **kwargs)
+        conn.commit()
+    member = get_workspace_member(db_path, workspace_id, member_id)
+    if not member:
+        raise RuntimeError("Workspace member could not be created")
+    return member
+
+
+def get_workspace_member(db_path: str, workspace_id: str, member_id: str) -> Dict[str, Any] | None:
+    with closing(connect(db_path)) as conn:
+        row = conn.execute("SELECT * FROM workspace_members WHERE workspace_id=? AND member_id=?", (workspace_id, member_id)).fetchone()
+    if not row:
+        return None
+    record = dict(row)
+    record["capabilities"] = json.loads(record.get("capabilities") or "[]")
+    return record
+
+
+def list_workspace_members(db_path: str, workspace_id: str) -> List[Dict[str, Any]]:
+    with closing(connect(db_path)) as conn:
+        rows = conn.execute("SELECT * FROM workspace_members WHERE workspace_id=? ORDER BY role, name", (workspace_id,)).fetchall()
+    records=[]
+    for row in rows:
+        item=dict(row); item["capabilities"]=json.loads(item.get("capabilities") or "[]"); records.append(item)
+    return records
 
 
 def ensure_workspace(
@@ -222,6 +314,7 @@ def create_workspace(
             owner_id=owner_id,
             description=description,
         )
+        _ensure_workspace_member_conn(conn, identifier, owner_id, name="Workspace owner", role="owner")
         conn.commit()
     workspace = get_workspace(db_path, identifier)
     if not workspace:
@@ -392,6 +485,66 @@ def _sync_research_assets_conn(
         conn.execute("UPDATE research_assets SET archived_at=?, updated_at=? WHERE asset_key=?", (now, now, asset_key))
 
 
+def _sync_collaboration_records_conn(conn: sqlite3.Connection, project_id: str, payload: Mapping[str, Any]) -> None:
+    project = _project_row(conn, project_id)
+    if not project:
+        return
+    workspace_id = str(project["workspace_id"])
+    now = str(payload.get("updated_at") or utc_now())
+    collections = {
+        "review_assignment": (payload.get("review_assignments", []), "assignment_id", "status", "assignee_ids"),
+        "comment": (payload.get("comments", []), "comment_id", "status", "author_id"),
+        "approval": (payload.get("approvals", []), "approval_id", "decision", "reviewer_id"),
+        "publication": (payload.get("publication_records", []), "publication_id", "state", "owner_id"),
+        "publication_release": (payload.get("release_history", []), "release_id", "state", "published_by"),
+        "publication_handoff": (payload.get("publication_handoffs", []), "handoff_id", "status", "created_by"),
+    }
+    active=set()
+    for record_type,(records,id_key,status_key,assignee_key) in collections.items():
+        for record in records if isinstance(records,list) else []:
+            if not isinstance(record,Mapping): continue
+            record_id=str(record.get(id_key) or '').strip()
+            if not record_id: continue
+            key=f"{project_id}:{record_type}:{record_id}"; active.add(key)
+            assignee=record.get(assignee_key, '')
+            if isinstance(assignee,list): assignee=','.join(str(x) for x in assignee)
+            created=str(record.get('created_at') or record.get('published_at') or now)
+            conn.execute(
+                """INSERT INTO collaboration_records
+                (record_key,workspace_id,project_id,record_type,record_id,status,assignee_id,payload,created_at,updated_at)
+                VALUES (?,?,?,?,?,?,?,?,?,?)
+                ON CONFLICT(record_key) DO UPDATE SET status=excluded.status, assignee_id=excluded.assignee_id, payload=excluded.payload, updated_at=excluded.updated_at""",
+                (key,workspace_id,project_id,record_type,record_id,str(record.get(status_key) or ''),str(assignee or ''),json.dumps(record,ensure_ascii=False),created,now),
+            )
+    rows=conn.execute("SELECT record_key FROM collaboration_records WHERE project_id=?",(project_id,)).fetchall()
+    stale=[str(row['record_key']) for row in rows if str(row['record_key']) not in active]
+    if stale:
+        conn.executemany("DELETE FROM collaboration_records WHERE record_key=?",[(key,) for key in stale])
+    for member in payload.get('workspace_members', []) if isinstance(payload.get('workspace_members'),list) else []:
+        if isinstance(member,Mapping) and member.get('member_id'):
+            _ensure_workspace_member_conn(conn, workspace_id, str(member['member_id']), name=str(member.get('name') or 'Workspace member'), organization=str(member.get('organization') or ''), role=str(member.get('role') or 'viewer'), status=str(member.get('status') or 'active'), capabilities=member.get('capabilities') if isinstance(member.get('capabilities'),list) else None)
+
+
+def list_collaboration_records(db_path: str, workspace_id: str, *, project_id: str = "", record_type: str = "all") -> List[Dict[str, Any]]:
+    clauses=['workspace_id=?']; params: List[Any]=[workspace_id]
+    if project_id: clauses.append('project_id=?'); params.append(project_id)
+    if record_type!='all': clauses.append('record_type=?'); params.append(record_type)
+    with closing(connect(db_path)) as conn:
+        rows=conn.execute(f"SELECT * FROM collaboration_records WHERE {' AND '.join(clauses)} ORDER BY updated_at DESC",params).fetchall()
+    records=[]
+    for row in rows:
+        item=dict(row); item['payload']=json.loads(item['payload']); records.append(item)
+    return records
+
+
+def collaboration_record_counts(db_path: str, workspace_id: str, project_id: str = "") -> Dict[str,int]:
+    clauses=['workspace_id=?']; params: List[Any]=[workspace_id]
+    if project_id: clauses.append('project_id=?'); params.append(project_id)
+    with closing(connect(db_path)) as conn:
+        rows=conn.execute(f"SELECT record_type, COUNT(*) AS total FROM collaboration_records WHERE {' AND '.join(clauses)} GROUP BY record_type",params).fetchall()
+    return {str(row['record_type']):int(row['total']) for row in rows}
+
+
 def _insert_revision_conn(
     conn: sqlite3.Connection,
     project_id: str,
@@ -429,6 +582,7 @@ def _insert_revision_conn(
         (payload["title"], payload["updated_at"], revision_storage_id, project_id),
     )
     _sync_research_assets_conn(conn, project_id, payload)
+    _sync_collaboration_records_conn(conn, project_id, payload)
     if autosave:
         _prune_autosaves_conn(conn, project_id)
     return revision_storage_id

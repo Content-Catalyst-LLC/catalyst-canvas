@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 class PrioritizationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.source = json.loads((ROOT / "fixtures/canvas_contract_1_5.input.json").read_text(encoding="utf-8"))
+        cls.source = json.loads((ROOT / "fixtures/canvas_contract_1_6.input.json").read_text(encoding="utf-8"))
         cls.contract = generate_canvas(cls.source, source_surface="python")
 
     def test_score_inputs_preserve_basis_confidence_rationale_and_links(self):
@@ -89,13 +89,13 @@ class PrioritizationTests(unittest.TestCase):
         self.assertIn("technical_validation", build_decision_handoff_package(self.contract, "workbench"))
         self.assertIn("governance", build_decision_handoff_package(self.contract, "decision_studio"))
 
-    def test_contract_1_3_migrates_to_1_4(self):
+    def test_contract_1_3_migrates_to_current_contract(self):
         legacy = copy.deepcopy(self.contract)
         legacy["schema_version"] = "catalyst-canvas/1.3"
         for key in ["decision_criteria", "decision_options", "sensitivity_views", "decision_notes", "decision_handoffs", "prioritization_summary"]:
             legacy.pop(key, None)
         result = migrate_payload(legacy)
-        self.assertEqual(result.contract["schema_version"], "catalyst-canvas/1.5")
+        self.assertEqual(result.contract["schema_version"], "catalyst-canvas/1.6")
         self.assertEqual(result.migrated_from, "catalyst-canvas/1.3")
         self.assertIn("prioritization", result.warnings[0])
 
@@ -105,7 +105,7 @@ class PrioritizationRouteTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.app = create_app({"TESTING": True, "SECRET_KEY": "test-secret", "CANVAS_DB": str(Path(self.tmp.name) / "prioritization.sqlite3")})
         self.client = self.app.test_client()
-        source = json.loads((ROOT / "fixtures/canvas_contract_1_5.expected.json").read_text(encoding="utf-8"))
+        source = json.loads((ROOT / "fixtures/canvas_contract_1_6.expected.json").read_text(encoding="utf-8"))
         response = self.client.post("/api/canvas/import", json=source)
         self.assertEqual(response.status_code, 201)
         self.project_id = response.get_json()["project_id"]

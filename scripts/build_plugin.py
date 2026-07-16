@@ -16,7 +16,7 @@ except ImportError:  # Direct script execution.
 ROOT = Path(__file__).resolve().parents[1]
 PLUGIN_DIR = ROOT / "wordpress" / "catalyst-canvas-demo"
 VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-CONTRACT_VERSION = "catalyst-canvas/1.5"
+CONTRACT_VERSION = "catalyst-canvas/1.6"
 
 
 def validate_plugin_version() -> None:
@@ -26,7 +26,7 @@ def validate_plugin_version() -> None:
     if f"private const VERSION = '{VERSION}';" not in php:
         raise RuntimeError("WordPress plugin asset version does not match VERSION")
     if f"private const CONTRACT_VERSION = '{CONTRACT_VERSION}';" not in php:
-        raise RuntimeError("WordPress plugin contract version does not match Canvas Contract 1.5")
+        raise RuntimeError("WordPress plugin contract version does not match Canvas Contract 1.6")
 
 
 def validate_contract_asset() -> None:

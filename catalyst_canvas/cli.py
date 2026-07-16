@@ -1,4 +1,4 @@
-"""Command-line interface for Canvas Contract 1.5."""
+"""Command-line interface for Canvas Contract 1.6."""
 
 from __future__ import annotations
 
@@ -48,7 +48,7 @@ def command_generate(args: argparse.Namespace) -> int:
 def command_validate(args: argparse.Namespace) -> int:
     payload = load_json(args.input)
     validate_contract(payload)
-    print(f"PASS: {args.input} is a valid Canvas Contract 1.5 payload.")
+    print(f"PASS: {args.input} is a valid Canvas Contract 1.6 payload.")
     return 0
 
 
@@ -99,14 +99,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Generate, validate, migrate, and export Catalyst Canvas contracts.")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    generate = subparsers.add_parser("generate", help="Generate Canvas Contract 1.5 from compact JSON input.")
+    generate = subparsers.add_parser("generate", help="Generate Canvas Contract 1.6 from compact JSON input.")
     generate.add_argument("--input", type=Path, required=True)
     generate.add_argument("--json", dest="json_output", type=Path)
     generate.add_argument("--markdown", type=Path)
     generate.add_argument("--html", type=Path)
     generate.set_defaults(func=command_generate)
 
-    validate = subparsers.add_parser("validate", help="Validate a Canvas Contract 1.5 JSON document.")
+    validate = subparsers.add_parser("validate", help="Validate a Canvas Contract 1.6 JSON document.")
     validate.add_argument("--input", type=Path, required=True)
     validate.set_defaults(func=command_validate)
 

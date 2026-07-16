@@ -1,4 +1,4 @@
-"""Flask form and view adapters for Canvas Contract 1.5."""
+"""Flask form and view adapters for Canvas Contract 1.6."""
 
 from __future__ import annotations
 
@@ -220,6 +220,13 @@ def contract_to_form(contract: Mapping[str, Any], *, storage_id: int | None = No
         "learning_decisions_json": json.dumps(data.get("learning_decisions", []), ensure_ascii=False, indent=2),
         "iteration_history_json": json.dumps(data.get("iteration_history", []), ensure_ascii=False, indent=2),
         "experiment_handoffs_json": json.dumps(data.get("experiment_handoffs", []), ensure_ascii=False, indent=2),
+        "workspace_members_json": json.dumps(data.get("workspace_members", []), ensure_ascii=False, indent=2),
+        "review_assignments_json": json.dumps(data.get("review_assignments", []), ensure_ascii=False, indent=2),
+        "comments_json": json.dumps(data.get("comments", []), ensure_ascii=False, indent=2),
+        "approvals_json": json.dumps(data.get("approvals", []), ensure_ascii=False, indent=2),
+        "publication_records_json": json.dumps(data.get("publication_records", []), ensure_ascii=False, indent=2),
+        "release_history_json": json.dumps(data.get("release_history", []), ensure_ascii=False, indent=2),
+        "publication_handoffs_json": json.dumps(data.get("publication_handoffs", []), ensure_ascii=False, indent=2),
         "research_readiness": data.get("research_summary", {}).get("readiness", "hypothesis"),
         "evidence": evidence.get("summary", ""),
         "assumption": assumption.get("statement", ""),
@@ -491,6 +498,13 @@ def form_to_contract(form: Mapping[str, Any], existing: Mapping[str, Any] | None
         ("learning_decisions_json", "learning_decisions"),
         ("iteration_history_json", "iteration_history"),
         ("experiment_handoffs_json", "experiment_handoffs"),
+        ("workspace_members_json", "workspace_members"),
+        ("review_assignments_json", "review_assignments"),
+        ("comments_json", "comments"),
+        ("approvals_json", "approvals"),
+        ("publication_records_json", "publication_records"),
+        ("release_history_json", "release_history"),
+        ("publication_handoffs_json", "publication_handoffs"),
     ):
         if form_key in form:
             raw_json = clean_text(form.get(form_key), "[]")

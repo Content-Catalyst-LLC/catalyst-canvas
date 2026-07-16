@@ -4,6 +4,6 @@ The Workspace Project Contract describes project metadata around a versioned Can
 
 It records stable workspace and project identifiers, title, description, tags, lifecycle status, current Canvas and revision identifiers, revision count, and timestamps.
 
-The workspace contract does not duplicate the full Canvas. In v1.8.0, Canvas payloads validate against `catalyst-canvas/1.5`; Contracts 1.0–1.4 migrate on read, import, save, or reuse.
+The workspace contract does not duplicate the full Canvas. In v1.9.0, Canvas payloads validate against `catalyst-canvas/1.6`; Contracts 1.0–1.5 migrate on read, import, save, or reuse.
 
 The workspace research-asset library indexes personas, stakeholders, journeys, sources, evidence, claims, assumptions, research questions, interview guides, observations, prototypes, hypotheses, experiment plans, experiment runs, learning decisions, and iterations. Reusing an asset creates a new immutable Canvas revision rather than modifying the source project.

@@ -1,6 +1,6 @@
 # Flask Application
 
-The Flask application is a persistent workspace adapter over Canvas Contract 1.5 and Workspace Project Contract 1.0.
+The Flask application is a persistent workspace adapter over Canvas Contract 1.6 and Workspace Project Contract 1.0.
 
 It provides project creation, switching, search, immutable revisions, autosave, archive and restore, historical export, research and evidence studios, framework-driven ideation, prioritization, and prototype and experiment management.
 

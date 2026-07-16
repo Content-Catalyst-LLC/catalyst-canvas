@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Collaboration Studio — Catalyst Canvas{% endblock %}
+{% block content %}
+<section class="panel">
+  <div class="split-heading">
+    <div>
+      <p class="label">Collaboration, Review, and Publication</p>
+      <h2>Review the work, record approval, publish safely</h2>
+      <p class="muted">Keep members, assignments, comments, approvals, publication plans, and release history attached to the exact Canvas revision they govern.</p>
+    </div>
+    <div class="stats">
+      <span><strong>{{ contract.collaboration_summary.active_member_count }}</strong><br>active members</span>
+      <span><strong>{{ contract.collaboration_summary.open_comment_count }}</strong><br>open comments</span>
+      <span><strong>{{ contract.collaboration_summary.required_review_open_count }}</strong><br>required reviews</span>
+      <span><strong>{{ contract.collaboration_summary.readiness|replace('_',' ') }}</strong><br>readiness</span>
+    </div>
+  </div>
+  <div class="trace">{{ contract.collaboration_summary.indicator_note }}</div>
+
+  <div class="grid two" style="margin-top:18px">
+    <article class="card">
+      <p class="label">Workspace membership</p>
+      <h3>Roles and capabilities</h3>
+      {% for member in members %}
+      <p><strong>{{ member.name }}</strong> · {{ member.role }} · {{ member.status }}<br><span class="muted">{{ member.capabilities|join(', ') }}</span></p>
+      {% else %}<p>No workspace members indexed.</p>{% endfor %}
+    </article>
+    <article class="card">
+      <p class="label">Publication governance</p>
+      <h3>{{ contract.collaboration_summary.publication_count }} publication records</h3>
+      <p><strong>{{ contract.collaboration_summary.pending_approval_count }}</strong> pending approvals · <strong>{{ contract.collaboration_summary.changes_requested_count }}</strong> changes requested · <strong>{{ contract.collaboration_summary.published_count }}</strong> published</p>
+      <p><strong>Redaction reviews open:</strong> {{ contract.collaboration_summary.redaction_review_open_count }}</p>
+    </article>
+  </div>
+
+  <div class="record-list" style="margin-top:18px">
+    {% for assignment in contract.review_assignments %}
+    <article class="record-row">
+      <p class="label">{{ assignment.review_type }} review · {{ assignment.status }}</p>
+      <h3>{{ assignment.title }}</h3>
+      <p>{{ assignment.scope }} · assignees: {{ assignment.assignee_ids|join(', ') or 'unassigned' }} · due: {{ assignment.due_at or 'not set' }}</p>
+      <p>{{ assignment.instructions or 'No instructions recorded.' }}</p>
+    </article>
+    {% endfor %}
+    {% for publication in contract.publication_records %}
+    <article class="record-row">
+      <p class="label">{{ publication.publication_type|replace('_',' ') }} · {{ publication.state }}</p>
+      <h3>{{ publication.title }} <small>v{{ publication.version }}</small></h3>
+      <p>{{ publication.channel }} · {{ publication.audience }} · source revision {{ publication.source_revision_id }}</p>
+      <p><strong>Sections:</strong> {{ publication.selected_sections|join(', ') or 'none' }}<br><strong>Redaction review:</strong> {{ publication.redaction_notes|join('; ') or 'not recorded' }}</p>
+      {% if canvas.project_id %}
+      <div class="actions compact">
+        <a class="small-link" href="{{ url_for('canvas.publication_export', project_id=canvas.project_id, target='public_api', publication_id=publication.publication_id) }}">Public-safe package</a>
+        <a class="small-link" href="{{ url_for('canvas.publication_export', project_id=canvas.project_id, target='wordpress', publication_id=publication.publication_id) }}">WordPress handoff</a>
+      </div>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </div>
+
+  <form method="post" data-autosave-project="{{ canvas.project_id }}" style="margin-top:22px">
+    <label>Workspace members JSON</label><textarea name="workspace_members_json" rows="12">{{ canvas.workspace_members_json }}</textarea>
+    <label>Review assignments JSON</label><textarea name="review_assignments_json" rows="14">{{ canvas.review_assignments_json }}</textarea>
+    <label>Comments and threads JSON</label><textarea name="comments_json" rows="16">{{ canvas.comments_json }}</textarea>
+    <label>Approvals JSON</label><textarea name="approvals_json" rows="14">{{ canvas.approvals_json }}</textarea>
+    <label>Publication records JSON</label><textarea name="publication_records_json" rows="18">{{ canvas.publication_records_json }}</textarea>
+    <label>Release history JSON</label><textarea name="release_history_json" rows="12">{{ canvas.release_history_json }}</textarea>
+    <label>Publication handoffs JSON</label><textarea name="publication_handoffs_json" rows="12">{{ canvas.publication_handoffs_json }}</textarea>
+    <p class="field-help">Internal comments, member records, approvals, participant details, and private working notes are excluded from public-safe packages.</p>
+    <div class="actions"><button class="btn" type="submit">Save collaboration workspace</button></div>
+  </form>
+
+  {% if canvas.project_id %}
+  <div class="actions">
+    <a class="btn" href="{{ url_for('canvas.public_safe_export', project_id=canvas.project_id) }}">Public-safe JSON</a>
+    <a class="btn" href="{{ url_for('canvas.project_revisions', project_id=canvas.project_id) }}">Revision history</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

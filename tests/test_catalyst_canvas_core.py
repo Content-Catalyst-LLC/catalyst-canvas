@@ -27,7 +27,7 @@ class CatalystCanvasCoreCompatibilityTests(unittest.TestCase):
         brief = generate_brief({"challenge": "Test challenge"})
         markdown = brief.to_markdown()
         self.assertIn("# Catalyst Canvas Brief", markdown)
-        self.assertIn("Contract: catalyst-canvas/1.5", markdown)
+        self.assertIn("Contract: catalyst-canvas/1.6", markdown)
         self.assertIn("## Challenge", markdown)
         self.assertIn("## Review Notes", markdown)
 

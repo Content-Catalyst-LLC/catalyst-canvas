@@ -1,19 +1,7 @@
-# Catalyst Canvas Submission
+# Release Submission
 
-**Catalyst Canvas v1.8.0 — Prototype and Experiment Management**
+**Catalyst Canvas v1.9.0 — Collaboration, Review, and Publication**
 
-This release adds Canvas Contract 1.5, versioned prototypes, falsifiable hypotheses, participant and metric plans, safeguards, structured experiment runs, observed results, learning decisions, iteration history, and provenance-preserving Research Lab and Workbench handoffs.
+This release adds Canvas Contract 1.6, capability-based workspace roles, review assignments, threaded comments, approval decisions, publication records, readiness gates, release history, SHA-256 integrity records, and public-safe WordPress, Knowledge Library, API, and download packages.
 
-Run the release gate before submission:
-
-```bash
-python scripts/validate_release.py
-```
-
-Build the WordPress package with:
-
-```bash
-python scripts/build_plugin.py
-```
-
-Canonical release metadata is stored in `VERSION` and `canvas_manifest.json`.
+The release preserves immutable project revisions and migrates Canvas Contracts 1.0 through 1.5. Publication readiness is a descriptive workflow state and does not establish legal, factual, ethical, accessibility, security, or institutional clearance.

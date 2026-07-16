@@ -1,4 +1,4 @@
-"""Canvas Contract 1.5 normalization and JSON Schema validation."""
+"""Canvas Contract 1.6 normalization and JSON Schema validation."""
 
 from __future__ import annotations
 
@@ -56,9 +56,19 @@ from .research import (
     normalize_stakeholders as normalize_research_stakeholders,
     research_summary,
 )
+from .collaboration import (
+    collaboration_summary,
+    normalize_approvals,
+    normalize_comments,
+    normalize_publication_handoffs,
+    normalize_publication_records,
+    normalize_release_history,
+    normalize_review_assignments,
+    normalize_workspace_members,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA_PATH = ROOT / "schemas" / "catalyst_canvas_contract_1_5.schema.json"
+SCHEMA_PATH = ROOT / "schemas" / "catalyst_canvas_contract_1_6.schema.json"
 
 
 class CanvasContractError(ValueError):
@@ -333,7 +343,7 @@ def normalize_provenance(value: Any, *, source_surface: str, migrated_from: str 
 
 
 def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: str = "python") -> Dict[str, Any]:
-    """Normalize a compact or partially structured payload into Canvas Contract 1.5."""
+    """Normalize a compact or partially structured payload into Canvas Contract 1.6."""
     from .frameworks import framework_record
 
     source: Mapping[str, Any] = payload or {}
@@ -404,6 +414,8 @@ def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: 
 
     created_at = clean_text(source.get("created_at"), utc_now())
     updated_at = clean_text(source.get("updated_at"), created_at)
+    canvas_id = clean_text(source.get("canvas_id"), new_id("canvas"))
+    revision_id = clean_text(source.get("revision_id"), new_id("revision"))
     title = clean_text(source.get("title"), "Catalyst Canvas Brief")
     sources = normalize_sources(source.get("sources", source.get("source_records")))
     evidence = normalize_ledger_evidence(source.get("evidence"))
@@ -458,15 +470,25 @@ def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: 
     learning_decisions = normalize_learning_decisions(source.get("learning_decisions"), generated_at=updated_at)
     iteration_history = normalize_iteration_history(source.get("iteration_history"), generated_at=updated_at)
     experiment_handoffs = normalize_experiment_handoffs(source.get("experiment_handoffs"), generated_at=updated_at)
+    owner_context = normalize_owner_context(source.get("owner_context"))
+    workspace_members = normalize_workspace_members(source.get("workspace_members"), owner_context=owner_context, generated_at=updated_at)
+    review_assignments = normalize_review_assignments(source.get("review_assignments"), generated_at=updated_at)
+    comments = normalize_comments(source.get("comments"), generated_at=updated_at)
+    approvals = normalize_approvals(source.get("approvals"), generated_at=updated_at)
+    publication_records = normalize_publication_records(
+        source.get("publication_records"), revision_id=revision_id, title=title, generated_at=updated_at
+    )
+    release_history = normalize_release_history(source.get("release_history"), generated_at=updated_at)
+    publication_handoffs = normalize_publication_handoffs(source.get("publication_handoffs"), generated_at=updated_at)
 
     contract = {
         "schema_version": CONTRACT_VERSION,
-        "canvas_id": clean_text(source.get("canvas_id"), new_id("canvas")),
+        "canvas_id": canvas_id,
         "challenge_id": clean_text(source.get("challenge_id"), "challenge-primary"),
-        "revision_id": clean_text(source.get("revision_id"), new_id("revision")),
+        "revision_id": revision_id,
         "title": title,
         "status": clean_text(source.get("status"), "draft"),
-        "owner_context": normalize_owner_context(source.get("owner_context")),
+        "owner_context": owner_context,
         "created_at": created_at,
         "updated_at": updated_at,
         "challenge": challenge,
@@ -512,6 +534,16 @@ def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: 
         "experiment_handoffs": experiment_handoffs,
         "experiment_summary": experiment_summary(
             prototypes, hypotheses, experiment_plans, experiment_runs, learning_decisions, iteration_history, generated_at=updated_at
+        ),
+        "workspace_members": workspace_members,
+        "review_assignments": review_assignments,
+        "comments": comments,
+        "approvals": approvals,
+        "publication_records": publication_records,
+        "release_history": release_history,
+        "publication_handoffs": publication_handoffs,
+        "collaboration_summary": collaboration_summary(
+            workspace_members, review_assignments, comments, approvals, publication_records, release_history, generated_at=updated_at
         ),
         "tests": normalize_tests(source.get("tests", source.get("test_plan"))),
         "review_notes": normalize_review_notes(source.get("review_notes", source.get("review_note"))),

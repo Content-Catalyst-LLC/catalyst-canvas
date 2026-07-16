@@ -1,6 +1,6 @@
 # Demo Workflow
 
-The v1.8.0 workflow follows:
+The v1.9.0 workflow follows:
 
 ```text
 Create or open a project
@@ -16,4 +16,4 @@ Create or open a project
 → export or hand off to the appropriate platform
 ```
 
-The Flask workspace persists projects and immutable revisions in SQLite. The WordPress shortcode uses browser-local storage. Both surfaces emit Canvas Contract 1.5 and preserve the same canonical fixture.
+The Flask workspace persists projects and immutable revisions in SQLite. The WordPress shortcode uses browser-local storage. Both surfaces emit Canvas Contract 1.6 and preserve the same canonical fixture.

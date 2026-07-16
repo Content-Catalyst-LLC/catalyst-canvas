@@ -2,6 +2,29 @@
 
 All notable changes to Catalyst Canvas are documented here.
 
+## 1.9.0 — 2026-07-16
+
+### Canvas Contract 1.6 and workspace collaboration
+
+- Upgraded the canonical document contract to `catalyst-canvas/1.6` with migration from Contracts 1.0 through 1.5.
+- Added capability-based workspace members with owner, editor, contributor, reviewer, and viewer roles.
+- Added review assignments, threaded comments, resolution history, approval decisions, conditions, and immutable revision persistence.
+- Added workspace-scoped collaboration indexes and the Flask Collaboration Studio.
+
+### Governed publication and public-safe export
+
+- Added publication records with selected sections, channels, audience, owner, source revision, review requirements, approvals, redaction notes, release notes, scheduling, and lifecycle states.
+- Added publication gates that block release while required reviews, approvals, or redaction checks remain unresolved.
+- Added `catalyst-canvas-public-safe/1.0` packages for WordPress, Knowledge Library, public API, and download targets.
+- Added release history with SHA-256 content checksums, publisher identity, source revision, URL, and timestamps.
+- Expanded WordPress with browser-local collaboration fields, readiness summaries, complete JSON, and public-safe JSON downloads.
+
+### Conformance and release hardening
+
+- Added exact Python, Flask, and browser conformance for the Contract 1.6 collaboration fixture.
+- Added role, migration, storage-indexing, comment, review, approval, blocked-publication, successful-release, checksum, and redaction tests.
+- Expanded the maintained suite to 82 pytest tests and 82 unittest tests before final packaging.
+
 ## 1.8.0 — 2026-07-16
 
 ### Canvas Contract 1.5 and governed experimentation

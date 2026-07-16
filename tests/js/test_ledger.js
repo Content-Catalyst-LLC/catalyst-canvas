@@ -17,7 +17,7 @@ const contract = Engine.buildContract({
   handoffs:[{handoff_id:'handoff-001',target:'knowledge_library',status:'ready',source_ids:['source-001'],evidence_ids:['evidence-001'],claim_ids:['claim-001'],assumption_ids:['assumption-001']}]
 }, 'wordpress');
 
-assert.strictEqual(contract.schema_version, 'catalyst-canvas/1.5');
+assert.strictEqual(contract.schema_version, 'catalyst-canvas/1.6');
 assert.strictEqual(contract.ledger_summary.source_count, 1);
 assert.strictEqual(contract.ledger_summary.evidence_count, 1);
 assert.strictEqual(contract.ledger_summary.claim_states.supported, 1);
