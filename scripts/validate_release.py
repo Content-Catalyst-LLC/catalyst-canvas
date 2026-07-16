@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-CONTRACT_VERSION = "catalyst-canvas/1.3"
+CONTRACT_VERSION = "catalyst-canvas/1.4"
 WORKSPACE_CONTRACT_VERSION = "catalyst-canvas-workspace/1.0"
 
 
@@ -28,11 +28,25 @@ def run(*args: str, env: dict[str, str] | None = None) -> None:
     effective_env = os.environ.copy()
     if env:
         effective_env.update(env)
-    subprocess.run(args, cwd=ROOT, check=True, env=effective_env)
+    subprocess.run(args, cwd=ROOT, check=True, env=effective_env, timeout=120)
 
 
 def load_json(relative_path: str) -> dict:
     return json.loads((ROOT / relative_path).read_text(encoding="utf-8"))
+
+
+def invoke_cli(*args: str) -> None:
+    """Exercise the installed CLI parser without spawning another Python runtime."""
+    from catalyst_canvas.cli import main as cli_main
+
+    previous = sys.argv[:]
+    try:
+        sys.argv = ["catalyst-canvas", *args]
+        result = cli_main()
+    finally:
+        sys.argv = previous
+    if result:
+        raise RuntimeError(f"CLI command failed with status {result}: {' '.join(args)}")
 
 
 def verify_version_markers() -> None:
@@ -40,7 +54,7 @@ def verify_version_markers() -> None:
         raise RuntimeError(f"Invalid semantic version: {VERSION!r}")
 
     manifest = load_json("canvas_manifest.json")
-    schema = load_json("schemas/catalyst_canvas_contract_1_3.schema.json")
+    schema = load_json("schemas/catalyst_canvas_contract_1_4.schema.json")
     workspace_schema = load_json("schemas/catalyst_canvas_workspace_1_0.schema.json")
     plugin = (ROOT / "wordpress/catalyst-canvas-demo/catalyst-canvas-demo.php").read_text(encoding="utf-8")
     package_version = (ROOT / "catalyst_canvas/version.py").read_text(encoding="utf-8")
@@ -75,7 +89,7 @@ def verify_version_markers() -> None:
     if f"private const VERSION = '{VERSION}';" not in plugin:
         raise RuntimeError("WordPress plugin release constant does not match VERSION")
     if f"private const CONTRACT_VERSION = '{CONTRACT_VERSION}';" not in plugin:
-        raise RuntimeError("WordPress contract constant does not match Canvas Contract 1.3")
+        raise RuntimeError("WordPress contract constant does not match Canvas Contract 1.4")
     if f'"releaseVersion":"{VERSION}"' not in contract_data:
         raise RuntimeError("Generated browser contract data has the wrong release version")
     if f'"contractVersion":"{CONTRACT_VERSION}"' not in contract_data:
@@ -83,12 +97,13 @@ def verify_version_markers() -> None:
 
 
 def verify_generated_contract_asset(temp_dir: Path) -> None:
+    from scripts.sync_contract_assets import render
+
     candidate = temp_dir / "catalyst-canvas-contract-data.js"
-    run(sys.executable, "scripts/sync_contract_assets.py", "--output", str(candidate))
+    candidate.write_text(render(), encoding="utf-8")
     canonical = ROOT / "wordpress/catalyst-canvas-demo/assets/catalyst-canvas-contract-data.js"
     if candidate.read_bytes() != canonical.read_bytes():
         raise RuntimeError("WordPress contract-data asset is stale; run scripts/sync_contract_assets.py")
-
 
 def verify_source_tree() -> None:
     forbidden_files = [
@@ -117,7 +132,7 @@ def verify_source_tree() -> None:
 
 
 def validate_schemas() -> tuple[dict, dict]:
-    schema = load_json("schemas/catalyst_canvas_contract_1_3.schema.json")
+    schema = load_json("schemas/catalyst_canvas_contract_1_4.schema.json")
     workspace_schema = load_json("schemas/catalyst_canvas_workspace_1_0.schema.json")
     Draft202012Validator.check_schema(schema)
     Draft202012Validator.check_schema(workspace_schema)
@@ -125,58 +140,43 @@ def validate_schemas() -> tuple[dict, dict]:
 
 
 def validate_generated_contract(temp_dir: Path, schema: dict) -> None:
+    from catalyst_canvas.engine import generate_canvas
+    from catalyst_canvas.exporters import export_json, export_markdown, export_print_html
+    from python.catalyst_canvas_core import generate_brief
+
+    source = load_json("data/catalyst_canvas_sample_input.json")
+    contract = generate_canvas(source, source_surface="cli")
     json_output = temp_dir / "sample.json"
     markdown_output = temp_dir / "sample.md"
     html_output = temp_dir / "sample.html"
-    run(
-        sys.executable,
-        "-m",
-        "catalyst_canvas.cli",
-        "generate",
-        "--input",
-        "data/catalyst_canvas_sample_input.json",
-        "--json",
-        str(json_output),
-        "--markdown",
-        str(markdown_output),
-        "--html",
-        str(html_output),
-    )
-    payload = json.loads(json_output.read_text(encoding="utf-8"))
-    errors = sorted(Draft202012Validator(schema).iter_errors(payload), key=lambda error: list(error.path))
+    json_output.write_text(export_json(contract), encoding="utf-8")
+    markdown_output.write_text(export_markdown(contract), encoding="utf-8")
+    html_output.write_text(export_print_html(contract), encoding="utf-8")
+
+    errors = sorted(Draft202012Validator(schema).iter_errors(contract), key=lambda error: list(error.path))
     if errors:
         raise RuntimeError("Generated sample failed schema validation: " + "; ".join(error.message for error in errors))
-    if payload.get("schema_version") != CONTRACT_VERSION:
-        raise RuntimeError("Generated JSON does not declare Canvas Contract 1.3")
+    if contract.get("schema_version") != CONTRACT_VERSION:
+        raise RuntimeError("Generated JSON does not declare Canvas Contract 1.4")
     if f"Contract: {CONTRACT_VERSION}" not in markdown_output.read_text(encoding="utf-8"):
-        raise RuntimeError("Generated Markdown does not declare Canvas Contract 1.3")
+        raise RuntimeError("Generated Markdown does not declare Canvas Contract 1.4")
     if "<!doctype html>" not in html_output.read_text(encoding="utf-8").lower():
         raise RuntimeError("Generated print report is not standalone HTML")
-    run(sys.executable, "-m", "catalyst_canvas.cli", "validate", "--input", str(json_output))
 
-    compatibility_output = temp_dir / "compatibility.json"
-    run(
-        sys.executable,
-        "python/catalyst_canvas_core.py",
-        "--input",
-        "data/catalyst_canvas_sample_input.json",
-        "--output",
-        str(compatibility_output),
-    )
-    if json.loads(compatibility_output.read_text(encoding="utf-8"))["schema_version"] != CONTRACT_VERSION:
+    invoke_cli("validate", "--input", str(json_output))
+    compatibility = generate_brief(source).contract
+    if compatibility.get("schema_version") != CONTRACT_VERSION:
         raise RuntimeError("Legacy Python core adapter did not emit the canonical contract")
-
 
 def validate_demo_seed(temp_dir: Path) -> None:
     from app.services.storage import get_canvas
+    from demo.seed_demo import seed
 
     database = temp_dir / "seed.sqlite3"
-    run(sys.executable, "demo/seed_demo.py", "--database", str(database))
+    seed(database)
     canvas = get_canvas(str(database), 1)
     if not canvas or canvas.get("schema_version") != CONTRACT_VERSION:
-        raise RuntimeError("Demo seed did not create a Canvas Contract 1.3 record")
-
-
+        raise RuntimeError("Demo seed did not create a Canvas Contract 1.4 record")
 
 def validate_workspace_operations(temp_dir: Path, workspace_schema: dict) -> None:
     from catalyst_canvas import generate_canvas
@@ -250,19 +250,43 @@ def validate_workspace_operations(temp_dir: Path, workspace_schema: dict) -> Non
         raise RuntimeError("Ideation lineage and prototype links were not preserved")
     if research_canvas["framework"]["key"] != "ReleaseLens":
         raise RuntimeError("Custom framework did not resolve through the shared registry")
+    if len(research_canvas.get("decision_criteria", [])) != 8 or len(research_canvas.get("decision_options", [])) != 1:
+        raise RuntimeError("Prioritization records were not generated from the selected release idea")
+    if research_canvas.get("prioritization_summary", {}).get("readiness") not in {"needs_review", "prioritized_not_ready"}:
+        raise RuntimeError("Decision readiness did not preserve incomplete review state")
 
 def validate_framework_package_cli(temp_dir: Path) -> None:
-    contract_source = ROOT / "fixtures/canvas_contract_1_3.expected.json"
+    contract_source = ROOT / "fixtures/canvas_contract_1_4.expected.json"
     package = temp_dir / "framework-package.json"
     imported = temp_dir / "framework-imported.json"
-    run(sys.executable, "-m", "catalyst_canvas.cli", "framework-export", "--input", str(contract_source), "--output", str(package), "--organization", "Release validation")
+    invoke_cli("framework-export", "--input", str(contract_source), "--output", str(package), "--organization", "Release validation")
     package_payload = json.loads(package.read_text(encoding="utf-8"))
     if package_payload.get("package_contract") != "catalyst-canvas-framework-package/1.0" or not package_payload.get("frameworks"):
         raise RuntimeError("Framework package export omitted custom framework records")
-    run(sys.executable, "-m", "catalyst_canvas.cli", "framework-import", "--input", str(contract_source), "--package", str(package), "--output", str(imported))
+    invoke_cli("framework-import", "--input", str(contract_source), "--package", str(package), "--output", str(imported))
     imported_payload = json.loads(imported.read_text(encoding="utf-8"))
     if not any(record.get("key") == "EquityLens" for record in imported_payload.get("custom_frameworks", [])):
         raise RuntimeError("Framework package import did not preserve the custom framework")
+
+def validate_decision_handoff_cli(temp_dir: Path) -> None:
+    # Validate the same package builder used by the CLI without spawning two
+    # additional jsonschema-heavy Python interpreters inside the release gate.
+    from catalyst_canvas.prioritization import build_decision_handoff_package
+
+    contract = load_json("fixtures/canvas_contract_1_4.expected.json")
+    decision = build_decision_handoff_package(contract, "decision_studio")
+    workbench = build_decision_handoff_package(contract, "workbench")
+    (temp_dir / "decision-studio-handoff.json").write_text(json.dumps(decision, indent=2) + "\n", encoding="utf-8")
+    (temp_dir / "workbench-handoff.json").write_text(json.dumps(workbench, indent=2) + "\n", encoding="utf-8")
+    if decision.get("handoff_contract") != "catalyst-canvas-decision-handoff/1.0":
+        raise RuntimeError("Decision Studio handoff contract marker is missing")
+    context = decision.get("decision_context", {})
+    if not context.get("alternatives") or not context.get("criteria") or not context.get("assumptions") or not context.get("evidence") or not context.get("unresolved_questions"):
+        raise RuntimeError("Decision Studio handoff omitted required decision context")
+    technical = workbench.get("technical_validation", {})
+    if not technical.get("calculation_requirements") or not technical.get("modeling_questions") or not technical.get("inputs"):
+        raise RuntimeError("Workbench handoff omitted technical-validation context")
+
 
 def validate_migration_cli(temp_dir: Path, schema: dict) -> None:
     legacy = {
@@ -270,7 +294,7 @@ def validate_migration_cli(temp_dir: Path, schema: dict) -> None:
         "generated_at": "2026-07-16T10:00:00+00:00",
         "challenge": "Migrate a legacy export",
         "audience": "Maintainer",
-        "goal": "Produce Canvas Contract 1.3",
+        "goal": "Produce Canvas Contract 1.4",
         "constraint": "Flat fields",
         "framework": "AIDA",
         "persona": {"name": "Maintainer", "description": "Needs safe migration."},
@@ -280,11 +304,11 @@ def validate_migration_cli(temp_dir: Path, schema: dict) -> None:
     source = temp_dir / "legacy.json"
     output = temp_dir / "migrated.json"
     source.write_text(json.dumps(legacy), encoding="utf-8")
-    run(sys.executable, "-m", "catalyst_canvas.cli", "migrate", "--input", str(source), "--output", str(output))
+    invoke_cli("migrate", "--input", str(source), "--output", str(output))
     payload = json.loads(output.read_text(encoding="utf-8"))
     errors = list(Draft202012Validator(schema).iter_errors(payload))
     if errors:
-        raise RuntimeError("Migrated CLI output failed Canvas Contract 1.3 validation")
+        raise RuntimeError("Migrated CLI output failed Canvas Contract 1.4 validation")
     if payload["provenance"]["migrated_from"] != "legacy-core/1.1.1":
         raise RuntimeError("Migration provenance was not recorded")
 
@@ -293,8 +317,8 @@ def validate_cross_surface_fixture() -> None:
     from catalyst_canvas.adapters.flask import compact_to_contract
     from catalyst_canvas.engine import generate_canvas
 
-    source = load_json("fixtures/canvas_contract_1_3.input.json")
-    expected = load_json("fixtures/canvas_contract_1_3.expected.json")
+    source = load_json("fixtures/canvas_contract_1_4.input.json")
+    expected = load_json("fixtures/canvas_contract_1_4.expected.json")
     if generate_canvas(source, source_surface="python") != expected:
         raise RuntimeError("Python engine diverges from the shared fixture")
     if compact_to_contract(source) != expected:
@@ -307,9 +331,59 @@ def validate_cross_surface_fixture() -> None:
         run(node, "tests/js/test_research_studio.js")
         run(node, "tests/js/test_ledger.js")
         run(node, "tests/js/test_ideation.js")
+        run(node, "tests/js/test_prioritization.js")
     else:
         print("SKIP: Node.js is unavailable; browser fixture conformance will run in CI.")
 
+
+
+def validate_prioritization_and_handoffs() -> None:
+    from copy import deepcopy
+    from catalyst_canvas.engine import generate_canvas
+    from catalyst_canvas.prioritization import build_decision_handoff_package, normalize_sensitivity_views
+
+    source = load_json("fixtures/canvas_contract_1_4.input.json")
+    contract = generate_canvas(source, source_surface="release-validation")
+    summary = contract.get("prioritization_summary", {})
+    if summary.get("option_count") != 3 or summary.get("criterion_count", 0) < 8:
+        raise RuntimeError("Prioritization fixture omitted alternatives or criteria")
+    if not all(
+        score.get("rationale") and score.get("basis") != "unknown" and score.get("confidence") != "unknown"
+        for option in contract.get("decision_options", [])
+        for score in option.get("criterion_scores", [])
+    ):
+        raise RuntimeError("Prioritization scores do not preserve rationale, basis, and confidence")
+
+    options = deepcopy(contract["decision_options"])
+    raw_before = {item["option_id"]: [score["raw_value"] for score in item["criterion_scores"]] for item in options}
+    views = normalize_sensitivity_views(
+        [{"name": "Release feasibility emphasis", "weight_overrides": [
+            {"criterion_id": "criterion-feasibility", "weight": 50},
+            {"criterion_id": "criterion-resource-efficiency", "weight": 40},
+            {"criterion_id": "criterion-impact", "weight": 10},
+        ]}],
+        options=options,
+        criteria=contract["decision_criteria"],
+        generated_at=contract["updated_at"],
+    )
+    if [item["option_id"] for item in views[0]["rankings"]] == [item["option_id"] for item in views[1]["rankings"]]:
+        raise RuntimeError("Sensitivity weighting did not change the release-fixture ranking")
+    raw_after = {item["option_id"]: [score["raw_value"] for score in item["criterion_scores"]] for item in options}
+    if raw_before != raw_after:
+        raise RuntimeError("Sensitivity weighting overwrote raw criterion values")
+
+    for target in ("decision_studio", "workbench"):
+        package = build_decision_handoff_package(contract, target)
+        context = package.get("decision_context", {})
+        if package.get("handoff_contract") != "catalyst-canvas-decision-handoff/1.0":
+            raise RuntimeError("Decision handoff contract marker is missing")
+        for required in ("alternatives", "criteria", "assumptions", "evidence", "unresolved_questions"):
+            if not context.get(required):
+                raise RuntimeError(f"Decision handoff omitted {required}")
+    if not build_decision_handoff_package(contract, "workbench").get("technical_validation", {}).get("inputs"):
+        raise RuntimeError("Workbench handoff omitted calculation inputs")
+    if "governance" not in build_decision_handoff_package(contract, "decision_studio"):
+        raise RuntimeError("Decision Studio handoff omitted governance context")
 
 def validate_optional_syntax_tools() -> None:
     php = shutil.which("php")
@@ -332,8 +406,10 @@ def validate_optional_syntax_tools() -> None:
 
 
 def validate_plugin_package(temp_dir: Path) -> None:
+    from scripts.build_plugin import build
+
     output = temp_dir / f"catalyst-canvas-demo-v{VERSION}.zip"
-    run(sys.executable, "scripts/build_plugin.py", "--output", str(output))
+    build(output)
     with ZipFile(output) as archive:
         names = set(archive.namelist())
     required = {
@@ -348,7 +424,6 @@ def validate_plugin_package(temp_dir: Path) -> None:
     if missing:
         raise RuntimeError(f"Plugin ZIP is missing required entries: {missing}")
 
-
 def main() -> int:
     verify_version_markers()
     verify_source_tree()
@@ -358,15 +433,22 @@ def main() -> int:
     run(sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v")
     with tempfile.TemporaryDirectory(prefix="catalyst-canvas-release-") as tmp:
         temp_dir = Path(tmp)
-        verify_generated_contract_asset(temp_dir)
-        validate_generated_contract(temp_dir, schema)
-        validate_demo_seed(temp_dir)
-        validate_workspace_operations(temp_dir, workspace_schema)
-        validate_migration_cli(temp_dir, schema)
-        validate_framework_package_cli(temp_dir)
-        validate_cross_surface_fixture()
-        validate_optional_syntax_tools()
-        validate_plugin_package(temp_dir)
+        phases = [
+            ("generated browser assets", lambda: verify_generated_contract_asset(temp_dir)),
+            ("sample generation", lambda: validate_generated_contract(temp_dir, schema)),
+            ("demo seed", lambda: validate_demo_seed(temp_dir)),
+            ("workspace persistence", lambda: validate_workspace_operations(temp_dir, workspace_schema)),
+            ("legacy migration", lambda: validate_migration_cli(temp_dir, schema)),
+            ("framework package", lambda: validate_framework_package_cli(temp_dir)),
+            ("decision handoffs", lambda: validate_decision_handoff_cli(temp_dir)),
+            ("cross-surface conformance", validate_cross_surface_fixture),
+            ("prioritization invariants", validate_prioritization_and_handoffs),
+            ("optional syntax tools", validate_optional_syntax_tools),
+            ("WordPress package", lambda: validate_plugin_package(temp_dir)),
+        ]
+        for label, phase in phases:
+            print(f"==> Validating {label}", flush=True)
+            phase()
     print(f"PASS: Catalyst Canvas v{VERSION} / {CONTRACT_VERSION} / {WORKSPACE_CONTRACT_VERSION} release validation completed.")
     return 0
 

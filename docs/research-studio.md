@@ -1,6 +1,6 @@
 # Persona, Stakeholder, and Journey Studio
 
-The v1.6.0 research studio is the structured design-research layer inside each Catalyst Canvas workspace. It is designed to keep research findings, observations, and assumptions distinguishable throughout framing, journey design, and experimentation.
+The v1.7.0 research studio is the structured design-research layer inside each Catalyst Canvas workspace. It is designed to keep research findings, observations, and assumptions distinguishable throughout framing, journey design, and experimentation.
 
 ## Persona studio
 
@@ -60,4 +60,4 @@ The Flask surface stores research records in its configured local SQLite databas
 
 ## Evidence Ledger integration
 
-Persona, stakeholder, and journey evidence links resolve against the Contract 1.3 ledger. Saving a revision indexes both design-research records and source/evidence/claim/assumption records in the active workspace. Reuse creates a new immutable revision and does not mutate the contributing project.
+Persona, stakeholder, and journey evidence links resolve against the Contract 1.4 ledger. Saving a revision indexes both design-research records and source/evidence/claim/assumption records in the active workspace. Reuse creates a new immutable revision and does not mutate the contributing project.

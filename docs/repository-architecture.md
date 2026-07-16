@@ -1,9 +1,9 @@
 # Repository Architecture
 
-Catalyst Canvas v1.6.0 is organized around one canonical domain package, explicit surface adapters, and workspace-scoped persistence.
+Catalyst Canvas v1.7.0 is organized around one canonical domain package, explicit surface adapters, and workspace-scoped persistence.
 
 - `VERSION` is the canonical release version.
-- `catalyst_canvas/contract.py` owns Contract 1.3 normalization and validation.
+- `catalyst_canvas/contract.py` owns Contract 1.4 normalization and validation.
 - `catalyst_canvas/research.py` owns persona, stakeholder, journey, stage, behavioral-signal, and readiness normalization.
 - `catalyst_canvas/ledger.py` owns sources, evidence, claims, assumptions, research planning, ledger indicators, and handoff packages.
 - `catalyst_canvas/migrations.py` upgrades Contracts 1.0 and 1.1 plus recognized legacy formats.

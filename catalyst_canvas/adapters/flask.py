@@ -1,4 +1,4 @@
-"""Flask form and view adapters for Canvas Contract 1.3."""
+"""Flask form and view adapters for Canvas Contract 1.4."""
 
 from __future__ import annotations
 
@@ -208,6 +208,11 @@ def contract_to_form(contract: Mapping[str, Any], *, storage_id: int | None = No
         "cluster_lines": "\n".join(" | ".join([item.get("name", ""), item.get("description", ""), ", ".join(item.get("idea_ids", [])), ", ".join(item.get("tags", [])), item.get("rationale", ""), str(item.get("sequence", 1))]) for item in data.get("idea_clusters", [])),
         "custom_frameworks_json": json.dumps(data.get("custom_frameworks", []), ensure_ascii=False, indent=2),
         "prompt_packs_json": json.dumps(data.get("prompt_packs", []), ensure_ascii=False, indent=2),
+        "decision_criteria_json": json.dumps(data.get("decision_criteria", []), ensure_ascii=False, indent=2),
+        "decision_options_json": json.dumps(data.get("decision_options", []), ensure_ascii=False, indent=2),
+        "sensitivity_views_json": json.dumps(data.get("sensitivity_views", [])[1:], ensure_ascii=False, indent=2),
+        "decision_notes_json": json.dumps(data.get("decision_notes", []), ensure_ascii=False, indent=2),
+        "decision_handoffs_json": json.dumps(data.get("decision_handoffs", []), ensure_ascii=False, indent=2),
         "research_readiness": data.get("research_summary", {}).get("readiness", "hypothesis"),
         "evidence": evidence.get("summary", ""),
         "assumption": assumption.get("statement", ""),
@@ -464,7 +469,15 @@ def form_to_contract(form: Mapping[str, Any], existing: Mapping[str, Any] | None
         for index, row in enumerate(_parse_pipe_records(form.get("cluster_lines"), ["name","description","idea_ids","tags","rationale","sequence"]), start=1):
             if row["name"]:
                 updated["idea_clusters"].append({**row, "cluster_id":f"idea-cluster-{index:03d}", "idea_ids":_csv_list(row["idea_ids"]), "tags":_csv_list(row["tags"])})
-    for form_key, contract_key in (("custom_frameworks_json", "custom_frameworks"), ("prompt_packs_json", "prompt_packs")):
+    for form_key, contract_key in (
+        ("custom_frameworks_json", "custom_frameworks"),
+        ("prompt_packs_json", "prompt_packs"),
+        ("decision_criteria_json", "decision_criteria"),
+        ("decision_options_json", "decision_options"),
+        ("sensitivity_views_json", "sensitivity_views"),
+        ("decision_notes_json", "decision_notes"),
+        ("decision_handoffs_json", "decision_handoffs"),
+    ):
         if form_key in form:
             raw_json = clean_text(form.get(form_key), "[]")
             try:

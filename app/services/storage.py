@@ -1,6 +1,6 @@
 """Workspace-aware SQLite persistence for Catalyst Canvas.
 
-Version 1.6.0 stores immutable Canvas revisions beneath durable workspace
+Version 1.7.0 stores immutable Canvas revisions beneath durable workspace
 projects. The legacy ``canvas_briefs`` table remains readable and is migrated
 into the default workspace during initialization.
 """

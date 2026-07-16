@@ -55,8 +55,8 @@ class CatalystCanvasReleaseIntegrityTests(unittest.TestCase):
         self.assertIn("generate_canvas", wrapper)
 
     def test_shared_fixture_files_exist(self):
-        self.assertTrue((ROOT / "fixtures" / "canvas_contract_1_3.input.json").exists())
-        self.assertTrue((ROOT / "fixtures" / "canvas_contract_1_3.expected.json").exists())
+        self.assertTrue((ROOT / "fixtures" / "canvas_contract_1_4.input.json").exists())
+        self.assertTrue((ROOT / "fixtures" / "canvas_contract_1_4.expected.json").exists())
         self.assertTrue((ROOT / "tests" / "js" / "test_contract_fixture.js").exists())
         self.assertTrue((ROOT / "tests" / "js" / "test_workspace.js").exists())
         self.assertTrue((ROOT / "wordpress" / "catalyst-canvas-demo" / "assets" / "catalyst-canvas-workspace.js").exists())

@@ -1,4 +1,4 @@
-"""Canvas Contract 1.3 normalization and JSON Schema validation."""
+"""Canvas Contract 1.4 normalization and JSON Schema validation."""
 
 from __future__ import annotations
 
@@ -31,6 +31,14 @@ from .ideation import (
     normalize_ideation_sessions,
     normalize_prompt_packs,
 )
+from .prioritization import (
+    normalize_criteria,
+    normalize_decision_options,
+    normalize_sensitivity_views,
+    normalize_decision_notes,
+    normalize_decision_handoffs,
+    prioritization_summary,
+)
 from .research import (
     normalize_behavioral_signals,
     normalize_journeys,
@@ -40,7 +48,7 @@ from .research import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA_PATH = ROOT / "schemas" / "catalyst_canvas_contract_1_3.schema.json"
+SCHEMA_PATH = ROOT / "schemas" / "catalyst_canvas_contract_1_4.schema.json"
 
 
 class CanvasContractError(ValueError):
@@ -315,7 +323,7 @@ def normalize_provenance(value: Any, *, source_surface: str, migrated_from: str 
 
 
 def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: str = "python") -> Dict[str, Any]:
-    """Normalize a compact or partially structured payload into Canvas Contract 1.3."""
+    """Normalize a compact or partially structured payload into Canvas Contract 1.4."""
     from .frameworks import framework_record
 
     source: Mapping[str, Any] = payload or {}
@@ -412,6 +420,23 @@ def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: 
         if cluster_id and cluster_id in cluster_map and idea["idea_id"] not in cluster_map[cluster_id]["idea_ids"]:
             cluster_map[cluster_id]["idea_ids"].append(idea["idea_id"])
 
+    decision_criteria = normalize_criteria(source.get("decision_criteria", source.get("criteria_library")))
+    decision_options = normalize_decision_options(
+        source.get("decision_options", source.get("prioritization_evaluations")),
+        criteria=decision_criteria,
+        ideas=ideas,
+        prototypes=prototypes,
+        generated_at=updated_at,
+    )
+    sensitivity_views = normalize_sensitivity_views(
+        source.get("sensitivity_views"),
+        options=decision_options,
+        criteria=decision_criteria,
+        generated_at=updated_at,
+    )
+    decision_notes = normalize_decision_notes(source.get("decision_notes"), generated_at=updated_at)
+    decision_handoffs = normalize_decision_handoffs(source.get("decision_handoffs"), generated_at=updated_at)
+
     contract = {
         "schema_version": CONTRACT_VERSION,
         "canvas_id": clean_text(source.get("canvas_id"), new_id("canvas")),
@@ -440,6 +465,12 @@ def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: 
         "ideas": ideas,
         "idea_clusters": list(cluster_map.values()),
         "ideation_summary": ideation_summary(sessions, ideas, list(cluster_map.values()), generated_at=updated_at),
+        "decision_criteria": decision_criteria,
+        "decision_options": decision_options,
+        "sensitivity_views": sensitivity_views,
+        "decision_notes": decision_notes,
+        "decision_handoffs": decision_handoffs,
+        "prioritization_summary": prioritization_summary(decision_criteria, decision_options, sensitivity_views, generated_at=updated_at),
         "sources": sources,
         "evidence": evidence,
         "claims": claims,

@@ -3,7 +3,7 @@
  * Plugin Name: Catalyst Canvas Demo
  * Plugin URI: https://sustainablecatalyst.com/catalyst-canvas/
  * Description: Adds a persistent, client-side Catalyst Canvas project workspace via the [catalyst_canvas_demo] shortcode.
- * Version: 1.6.0
+ * Version: 1.7.0
  * Author: Content Catalyst LLC
  * License: MIT
  * Text Domain: catalyst-canvas-demo
@@ -14,8 +14,8 @@ if (!defined('ABSPATH')) {
 }
 
 final class Catalyst_Canvas_Demo_Plugin {
-    private const VERSION = '1.6.0';
-    private const CONTRACT_VERSION = 'catalyst-canvas/1.3';
+    private const VERSION = '1.7.0';
+    private const CONTRACT_VERSION = 'catalyst-canvas/1.4';
     private const SHORTCODE = 'catalyst_canvas_demo';
 
     public function __construct() {
@@ -215,6 +215,16 @@ final class Catalyst_Canvas_Demo_Plugin {
                             <button type="button" class="ccanvasdemo-btn" data-action="reset">Reset</button>
                         </div>
                     </div>
+
+                    <div class="ccanvasdemo-panel">
+                        <p class="ccanvasdemo-section-label">Prioritization and decision readiness</p>
+                        <p class="ccanvasdemo-help">Scores preserve inputs, basis, confidence, rationale, and evidence. Sensitivity scenarios change weights without overwriting raw values.</p>
+                        <details open><summary>Decision criteria JSON</summary><textarea data-field="decisionCriteriaJson" rows="12">[]</textarea></details>
+                        <details open><summary>Decision options JSON</summary><textarea data-field="decisionOptionsJson" rows="18">[]</textarea></details>
+                        <details><summary>Sensitivity scenarios JSON</summary><textarea data-field="sensitivityViewsJson" rows="10">[]</textarea></details>
+                        <details><summary>Decision notes JSON</summary><textarea data-field="decisionNotesJson" rows="8">[]</textarea></details>
+                        <details><summary>Decision Studio and Workbench handoffs JSON</summary><textarea data-field="decisionHandoffsJson" rows="10">[]</textarea></details>
+                    </div>
                 </form>
 
                 <div class="ccanvasdemo-output" aria-live="polite">
@@ -247,6 +257,18 @@ final class Catalyst_Canvas_Demo_Plugin {
                             <h4>Stakeholder engagement</h4><ul data-output="stakeholderSummary"></ul>
                             <h4>Journey stages</h4><ul data-output="journeySummary"></ul>
                         </div>
+                    </div>
+
+                    <div class="ccanvasdemo-panel">
+                        <p class="ccanvasdemo-section-label">Decision readiness</p>
+                        <div class="ccanvasdemo-grid ccanvasdemo-grid-three">
+                            <article class="ccanvasdemo-mini"><strong>Readiness</strong><p data-output="decisionReadiness">Needs review</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Alternatives</strong><p data-output="decisionOptionCount">0 options</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Input gaps</strong><p data-output="decisionGapCount">0 input gaps</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Top baseline option</strong><p data-output="topDecisionOption">No ranked option</p></article>
+                        </div>
+                        <h4>Baseline ranking</h4><ol data-output="decisionRanking"></ol>
+                        <p class="ccanvasdemo-help">Rankings reflect recorded values and weights. They do not establish certainty, approval, or objective quality.</p>
                     </div>
 
                     <div class="ccanvasdemo-panel">

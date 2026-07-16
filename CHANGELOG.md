@@ -2,6 +2,31 @@
 
 All notable changes to Catalyst Canvas are documented here.
 
+## 1.7.0 — 2026-07-16
+
+### Canvas Contract 1.4 and prioritization model
+
+- Upgraded the canonical document contract to `catalyst-canvas/1.4` with explicit migration from Contracts 1.0, 1.1, 1.2, and 1.3.
+- Added a data-driven decision-criteria registry with impact, evidence confidence, feasibility, urgency, strategic alignment, equity and harm, resource efficiency, and reversibility.
+- Added transparent ICE and RICE records that retain formula definitions, inputs, units, basis, confidence, rationale, evidence, assumptions, and calculated scores.
+- Added weighted criterion scores that distinguish measured values, estimates, opinions, and unknown inputs.
+
+### Prioritization and Decision Readiness Studio
+
+- Added decision alternatives with owners, dependencies, blockers, resource needs, deadlines, recommendation states, evidence, assumptions, and research questions.
+- Added impact–effort, confidence–risk, urgency–importance, and reversibility–commitment matrices.
+- Added gate criteria that remain visible outside aggregate rankings and can block readiness.
+- Added baseline rankings and sensitivity scenarios that change weights without overwriting raw values.
+- Added decision notes, option comparison, readiness indicators, Flask `/prioritize`, prioritization APIs, and browser-local WordPress decision records.
+
+### Institutional handoffs and release hardening
+
+- Added `catalyst-canvas-decision-handoff/1.0` packages for Decision Studio and Workbench.
+- Decision Studio handoffs preserve alternatives, criteria, assumptions, evidence, unresolved questions, governance questions, and recommendation states.
+- Workbench handoffs preserve formula inputs, calculation requirements, modeling questions, and sensitivity context.
+- Added exact Contract 1.4 Python, Flask, and browser conformance plus dedicated prioritization, route, sensitivity, gate, and handoff tests.
+- Expanded the maintained suite to 67 pytest tests and 67 unittest tests before final packaging.
+
 ## 1.6.0 — 2026-07-16
 
 ### Canvas Contract 1.3 and framework registry

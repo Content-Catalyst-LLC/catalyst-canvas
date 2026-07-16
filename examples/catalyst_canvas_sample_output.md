@@ -1,103 +1,106 @@
-# Community impact evidence canvas
+# Community Heat Resilience Canvas
 
-Contract: catalyst-canvas/1.3  
-Canvas ID: canvas-sample-community-impact  
-Revision ID: revision-sample-v160  
+Contract: catalyst-canvas/1.4  
+Canvas ID: canvas-fixture-001  
+Revision ID: revision-fixture-001  
 Status: active  
 Updated: 2026-07-16T12:00:00+00:00  
 Research readiness: review_ready  
 Evidence coverage: all_material_claims_linked  
 Assumption exposure: high_criticality_open  
-Ideas: 3 · Clusters: 1 · Votes: 5
+Ideas: 3 · Clusters: 1 · Votes: 5  
+Decision readiness: needs_review · Options: 3 · Incomplete scores: 0
 
 ## Publication and Review Warning
 
-- claim-003: The new workflow will guarantee stronger funder confidence. [unsupported]
+- claim-002: The available indicators identify individual vulnerability. [unsupported]
 
 Coverage indicators describe recorded links and workflow gaps; they do not measure truth or research quality.
 
 ## Challenge
 
-A nonprofit needs a clearer way to explain program impact to funders without overstating certainty.
+Neighborhood heat-response planning is fragmented across agencies and community organizations.
 
 ## Audience
 
-- **Primary:** Program director at a community nonprofit
-- **Secondary:** Evaluation partner
-- **Affected:** Program participants
-- **Excluded:** Individual-level targeting
+- **Primary:** Municipal resilience coordinator
+- **Secondary:** Public-health program lead
+- **Affected:** Residents in high-heat neighborhoods
+- **Excluded:** None recorded
 
 ## Goal
 
-Build a defensible impact story with traceable indicators
+Create a reviewable pilot that connects heat-risk evidence to neighborhood action.
 
 ## Constraints
 
-- Limited data, small team capacity, and stakeholder pressure for simple results
+- Data coverage and community capacity vary by neighborhood.
 
 ## Primary Persona
 
-**Maya Chen** — Leads delivery and reporting for a small community nonprofit.
+**Municipal Resilience Coordinator** — Needs a practical way to connect uneven evidence, community priorities, and operational decisions.
 
-- **Role:** Program director
-- **Context:** Balances frontline service, funder reporting, and a limited evaluation budget.
-- **Jobs:** Coordinate delivery and reporting, Translate evidence into a defensible funder update
-- **Goals:** Explain outcomes honestly, Reduce reporting burden
-- **Needs:** Traceable indicators, Reusable evidence language
-- **Pains:** Fragmented data, Pressure to simplify uncertainty
-- **Gains:** A shared evidence trail, Faster review cycles
-- **Behaviors:** Builds reports in spreadsheets, Consults staff before publishing claims
-- **Barriers:** Inconsistent measures, Limited evaluation capacity
-- **Motivations:** Protect program credibility, Keep reporting useful to frontline staff
-- **Accessibility:** Plain-language summaries
+- **Role:** Coordinates heat preparedness across departments and partners.
+- **Context:** Coordinates municipal departments, public-health teams, and neighborhood partners under time pressure.
+- **Jobs:** Connect heat-risk evidence to a clear neighborhood action, Coordinate decisions across agencies and community partners
+- **Goals:** Connect risk evidence to a clear neighborhood action, Create shared ownership across agencies
+- **Needs:** A shared evidence-to-action workflow
+- **Pains:** Fragmented ownership and inconsistent data
+- **Gains:** A shared decision trail that all partners can review, Faster alignment without hiding evidence gaps
+- **Behaviors:** Reviews multiple dashboards before convening partners, Uses printable briefs during cross-agency meetings
+- **Barriers:** Uneven neighborhood data coverage, Different evidence standards across partner organizations
+- **Motivations:** Protect residents while using public resources responsibly, Build durable trust with neighborhood partners
+- **Accessibility:** Plain-language summaries for mixed technical audiences
 - **Source / confidence / validation:** mixed / medium / researching
-- **Source notes:** Combined workflow observation and workshop synthesis.
-- **Confidence notes:** Behavioral claims are stronger than motivation claims.
+- **Source notes:** Synthesized from workshop observations and the current pilot dataset.
+- **Confidence notes:** Operational behaviors are better supported than motivational claims.
 
 ### Empathy Map
 
-- **Says:** We need a claim we can defend.
-- **Thinks:** Which limitation will a reviewer question?
-- **Does:** Checks source notes before drafting
-- **Feels:** Accountable for accuracy and timeliness
-- **Sees:** Multiple spreadsheets with inconsistent definitions
-- **Hears:** Funders asking for simple outcomes
-- **Pains:** Pressure to simplify uncertainty
-- **Gains:** A shared evidence trail
+- **Says:** We need a decision everyone can explain and defend.
+- **Thinks:** Which evidence gap could undermine this pilot later?
+- **Does:** Compares dashboards, workshop notes, and operational constraints.
+- **Feels:** Responsible for moving quickly without overstating certainty.
+- **Sees:** Different teams using different definitions of priority.
+- **Hears:** Community partners asking how decisions will affect their neighborhoods.
+- **Pains:** Fragmented ownership and inconsistent data.
+- **Gains:** A shared decision trail that all partners can review.
 
 ### Attribute Basis
 
-- behavior: Checks source notes before drafting claims. [observed, medium]
-- motivation: Prefers defensible claims over more persuasive language. [assumed, low]
+- behavior: Uses printable briefs during cross-agency meetings. [observed, medium]
+- motivation: Values defensible decisions over rapid public claims. [assumed, low]
 
 ## Stakeholder Map
 
-- Foundation program officer — influence 5/5, interest 4/5, impact 3/5, supportive; responsibilities: Review evidence definitions; Approve renewal recommendation; tensions: Preference for simple outcomes may conflict with evidence limitations; strategy: Review indicator definitions and uncertainty language before publication
+- Neighborhood partner coalition — influence 3/5, interest 5/5, impact 5/5, supportive; responsibilities: Review neighborhood feasibility; Surface implementation risks; tensions: Community urgency may conflict with municipal procurement timelines; strategy: Review assumptions and neighborhood feasibility before pilot approval.
 
 ## Journey Maps
 
-### Quarterly impact reporting
+### Neighborhood heat-action planning journey
 
-Prepare a funder update from incomplete program data.
+The resilience coordinator moves from detecting a neighborhood heat-risk signal to agreeing on an operational pilot with community partners.
 
-- **1. Collect:** Request data from program staff | questions: Are measures defined consistently? | friction: Measures are inconsistent | opportunity: Use a shared indicator glossary | experiments: none | owner: Program director
-- **2. Interpret:** Compare results with prior periods | questions: What conclusion is supported? | friction: Unclear confidence | opportunity: Attach confidence and source notes | experiments: test-001 | owner: Evaluation partner
-- **3. Publish:** Draft and review the funder narrative | questions: Can every claim be traced? | friction: Late changes | opportunity: Export approved claims and limitations | experiments: test-001 | owner: Program director
+- **1. Detect:** Review heat and vulnerability indicators | questions: Which signal is actionable? | friction: Coverage gaps obscure neighborhood differences | opportunity: Show confidence and missingness beside each signal | experiments: none | owner: Resilience coordinator
+- **2. Align:** Convene agency and community partners | questions: Do we agree on the problem and constraints? | friction: Different organizations use different evidence standards | opportunity: Use one shared evidence-to-action brief | experiments: none | owner: Program design team
+- **3. Commit:** Select a pilot action and accountable owner | questions: Can we test this without overstating impact? | friction: Pressure to communicate before evidence is complete | opportunity: Add explicit claims, assumptions, and review dates | experiments: test-003 | owner: Pilot sponsor
 
 ## Behavioral Signals
 
 Analytics remain evidence hints and do not establish intent, identity, motivation, or demographic attributes.
 
-- report_template_downloads (all visitors): 28 — Repeated downloads suggest the report format warrants qualitative follow-up. [evidence hint; Download activity indicates behavior but does not prove intent, identity, motivation, or demographic attributes.]
+- brief_downloads (all visitors): 42 — Printable briefs receive repeated use and may warrant further qualitative study. [evidence hint; Download activity indicates engagement but does not prove user intent, identity, motivation, or demographic attributes.]
 
 ## Point of View
 
-Maya Chen needs a practical way to address 'A nonprofit needs a clearer way to explain program impact to funders without overstating certainty.' so they can build a defensible impact story with traceable indicators without ignoring the constraint: Limited data, small team capacity, and stakeholder pressure for simple results.
+Municipal Resilience Coordinator needs a practical way to address 'Neighborhood heat-response planning is fragmented across agencies and community organizations.' so they can create a reviewable pilot that connects heat-risk evidence to neighborhood action without ignoring the constraint: Data coverage and community capacity vary by neighborhood.
 
 ## How Might We
 
-- How might we make evidence, limitations, and next actions understandable in one reviewable artifact?
-- How might we test a clearer impact narrative without overstating certainty?
+- How might we help Municipal Resilience Coordinator make the challenge concrete enough to act on?
+- How might we turn the goal — Create a reviewable pilot that connects heat-risk evidence to neighborhood action — into a small testable experiment?
+- How might we make the constraint visible without letting it stop progress?
+- How might we document assumptions so the next decision can be reviewed?
 
 ## Ideation Framework: Jobs To Be Done
 
@@ -113,90 +116,119 @@ Frame the progress a person is trying to make in a specific situation.
 
 ## Custom Framework Library
 
-- EvidenceStory — Evidence Story [organizational]
+- EquityLens — Equity Lens [organizational]
 
 ## Reusable Prompt Packs
 
-- prompt-pack-impact-001 — Impact narrative prompts: 1 prompts
+- prompt-pack-001 — Heat pilot prompts: 1 prompts
 
 ## Ideation Sessions
 
-- Evidence-aware impact concept workshop [divergent/complete] — framework: JTBD; facilitator: Program Design Team
+- Heat-response concept workshop [divergent/complete] — framework: JTBD; facilitator: Program Design Team
 
 ## Idea Cards and Lineage
 
-- idea-001 — Evidence-to-claim review card [selected; 3 votes] — lineage: challenge-primary → hmw-001 → impact-pack-prompt-001 → prototype-001; author: Program Design Team; rationale: Keeps uncertainty visible where narrative decisions are made.
-- idea-002 — Reviewer confidence legend [clustered; 2 votes] — lineage: challenge-primary → hmw-001 → prompt-001 → prototype not linked; author: Evaluation partner; rationale: Creates a shared interpretation guide for mixed-confidence evidence.
-- idea-003 — Evidence summary strip [merged; 0 votes] — lineage: challenge-primary → hmw-001 → prompt-002 → prototype not linked; author: Program director; rationale: Preserve the originating concept and merge decision.
+- idea-001 — Evidence-gap action card [selected; 3 votes] — lineage: challenge-primary → hmw-001 → prompt-002 → prototype-001; author: Program Design Team; rationale: Makes the key evidence limitation visible at the point of action.
+- idea-002 — Neighborhood confidence legend [clustered; 2 votes] — lineage: challenge-primary → hmw-001 → prompt-001 → prototype not linked; author: Neighborhood partner coalition; rationale: Partners need a shared way to interpret uneven data quality.
+- idea-003 — Merged evidence note [merged; 0 votes] — lineage: challenge-primary → hmw-001 → prompt-002 → prototype not linked; author: Municipal resilience coordinator; rationale: Preserve the originating concept and merge decision.
 
 Ideation indicators describe recorded activity and lineage. Votes and selections represent participant judgment, not objective quality.
 
 ## Idea Clusters
 
-- 1. Visible evidence and uncertainty — ideas: idea-001, idea-002; rationale: Both concepts reduce false certainty in impact communication.
+- 1. Visible evidence gaps — ideas: idea-001, idea-002; rationale: Both concepts reduce false certainty during pilot selection.
+
+## Decision Criteria
+
+- criterion-impact — Expected impact [weight 20.0; higher_better; weighted] — Expected contribution to the stated goal and affected groups.
+- criterion-evidence-confidence — Evidence confidence [weight 15.0; higher_better; weighted] — Strength and relevance of evidence supporting the option and its assumptions.
+- criterion-feasibility — Feasibility [weight 15.0; higher_better; weighted] — Practical ability to deliver the option with available capabilities, time, and dependencies.
+- criterion-urgency — Urgency [weight 10.0; higher_better; weighted] — Time sensitivity, consequence of delay, and relevance of the decision deadline.
+- criterion-strategic-alignment — Strategic alignment [weight 15.0; higher_better; weighted] — Fit with the declared goal, scope, institutional commitments, and decision context.
+- criterion-equity-and-harm — Equity and harm review [weight 15.0; higher_better; gate] — Distribution of benefits, burdens, exclusion risks, foreseeable harms, and mitigation readiness.
+- criterion-resource-efficiency — Resource efficiency [weight 5.0; higher_better; weighted] — Expected value relative to financial, staffing, time, and operational requirements.
+- criterion-reversibility — Reversibility [weight 5.0; higher_better; weighted] — Ability to stop, revise, or recover from the decision without disproportionate cost or harm.
+
+## Decision Alternatives and Scores
+
+- option-001 — Evidence-gap action card [ready_for_decision_review; weighted 90.00; ICE 336.00; RICE 7.20] — basis/confidence: estimate/medium; owner: Program Design Team; deadline: 2026-08-01; rationale: Advance to formal decision review because the option is reversible, time-sensitive, and evidence-aware.; blockers: none
+- option-002 — Neighborhood confidence legend [test; weighted 73.00; ICE 175.00; RICE 2.00] — basis/confidence: estimate/medium; owner: Municipal analytics team; deadline: 2026-08-10; rationale: Run a terminology test before committing to system-wide adoption.; blockers: Current dashboards use incompatible confidence labels
+- option-003 — Merged evidence note [defer; weighted 66.00; ICE 192.00; RICE 6.00] — basis/confidence: opinion/low; owner: Program Design Team; deadline: not recorded; rationale: Defer until a clearer user need is demonstrated.; blockers: Long notes may reduce scanability
+
+Scores and rankings summarize recorded inputs and weights. They do not remove judgment, resolve ethical constraints, or establish certainty.
+
+## Sensitivity Views
+
+- Baseline weights: #1 option-001 (90.00, delta 0); #2 option-002 (73.00, delta 0); #3 option-003 (66.00, delta 0)
+- Equity emphasis: #1 option-001 (87.27, delta 0); #2 option-002 (73.64, delta 0); #3 option-003 (67.27, delta 0)
+- Delivery constraint: #1 option-001 (87.69, delta 0); #2 option-003 (71.54, delta 1); #3 option-002 (70.00, delta -1)
+
+## Decision Notes
+
+- [comparison/open] Option 1 remains top-ranked across the baseline and both sensitivity scenarios. — options: option-001, option-002, option-003
+- [governance/accepted] Formal approval must preserve the prohibition against individual vulnerability claims. — options: option-001
+
+## Decision Handoffs
+
+- decision_studio [ready] — Compare the three alternatives and record formal pilot approval.; options: option-001, option-002, option-003
+- workbench [draft] — Validate the sensitivity calculations and compare alternative weighting assumptions.; options: option-001, option-002, option-003
 
 ## Source Register
 
-- source-001 — Quarterly reporting workflow review [document]
-- source-002 — Program director interview [interview]
+- source-001 — Neighborhood heat indicators [dataset] https://example.org/heat-indicators
+- source-002 — Neighborhood partner planning interview [interview]
 
 ## Evidence Register
 
-- evidence-001 — Fragmented reporting workflow: Current reporting uses multiple spreadsheets and manual source-note checks. (source: source-001)
-- evidence-002 — Need for defensible claims: The program director wants uncertainty to remain visible during review. (source: source-002)
+- evidence-001 — Neighborhood heat indicators: Available heat, vulnerability, and service-access indicators with known coverage gaps. (source: source-001)
+- evidence-002 — Partner statement about shared evidence: Partners need evidence gaps to remain visible during pilot selection. (source: source-002)
 
 ## Claim Register
 
-- [supported] The current reporting workflow requires manual reconciliation across multiple files. — evidence: evidence-001; assumptions: none; uncertainty: Extent varies by reporting cycle.
-- [partially_supported] A shared evidence-to-claim workflow will reduce reporting revisions. — evidence: evidence-001, evidence-002; assumptions: assumption-001; uncertainty: No before-and-after comparison has been completed.
-- [unsupported] The new workflow will guarantee stronger funder confidence. — evidence: none; assumptions: none; uncertainty: Confidence is not measured and cannot be guaranteed.
+- [partially_supported] A shared one-page pilot brief can improve cross-agency decision clarity. — evidence: evidence-002; assumptions: assumption-001; uncertainty: No before-and-after comparison has been completed.
+- [unsupported] The available indicators identify individual vulnerability. — evidence: evidence-001; assumptions: none; uncertainty: Indicators are neighborhood-level and incomplete.
 
 ## Assumption Register
 
-- [high/planned] A shared evidence-to-claim workflow will reduce reporting revisions. — owner: Program director; test: Compare revision counts and reviewer comprehension before and after the pilot.; consequence: If false, the workflow may add process without improving review.
+- [high/planned] A shared one-page pilot brief will improve cross-agency decision clarity. — owner: Program Design Team; test: Compare reviewer interpretation before and after using the brief.; consequence: If false, the format may add work without improving alignment.
 
 ## Research Questions
 
-- [high/investigating] Where do reviewers lose confidence or context in the current reporting process? — owner: Research lead
+- [high/investigating] Which evidence gaps most often block a shared pilot decision? — owner: Program Design Team
 
 ## Interview Guides
 
-- Reporting review interview guide (ready): Which claim is hardest to verify?; Where do you look for source context?; What limitation must remain visible?
+- Cross-agency decision clarity interview (ready): What evidence do you trust?; Where does ownership become unclear?; What would make the next action reviewable?
 
 ## Observation Notes
 
-- Source-note lookup during report review: The program director moved between three files to verify one material claim. — observer: Evaluation partner
+- Pilot planning workshop: Participants used different definitions of neighborhood priority and asked for visible confidence notes. — observer: Program Design Team
 
 ## Synthesis Tags
 
-- decision clarity
-- traceable claims
-- visible limitations
-- reporting workflow
+- heat-resilience
+- evidence-gap
+- cross-agency-alignment
 
 ## Research Handoffs
 
-- knowledge_library [ready]: Register the workflow review and interview as structured research sources.
-- research_librarian [draft]: Find comparable evidence-to-claim review methods for small nonprofits.
+- knowledge_library [ready]: Register the pilot dataset and interview record.
 
 ## Prototype
 
-**Reviewable Canvas Brief** — A one-page working artifact that captures the challenge, audience, goal, constraints, point of view, HMW prompts, prototype concept, assumptions, and test plan.
+**Neighborhood heat-action brief** — A printable brief linking one neighborhood risk signal to one operational response and one review checkpoint.
 
 ## Test Plan
 
-- **Title:** Evidence-to-claim review
-- **Signal:** Reviewers trace each material claim to a source and limitation.
-- **Method:** Run a reporting review with program staff and a funder-facing reviewer.
-- **Learning goal:** Determine whether the workflow improves clarity without hiding uncertainty.
+- **Title:** Cross-agency clarity review
+- **Signal:** Reviewers independently identify the same next action and evidence gap.
+- **Method:** Run a 30-minute review with municipal and community partners.
+- **Learning goal:** Determine whether the brief supports a shared pilot decision.
 
 ## Review Notes
 
-- What claim in this brief needs stronger evidence?
-- What assumption would most change the next step if it proved false?
-- What user signal would show that the prototype is worth continuing?
-- What should be rewritten to avoid overpromising?
+- Do not treat incomplete neighborhood indicators as proof of individual vulnerability.
 
 ## Provenance
 
-Generated by Catalyst Canvas 1.6.0 from the cli surface.
+Generated by Catalyst Canvas 1.7.0 from the fixture surface.

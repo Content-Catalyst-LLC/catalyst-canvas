@@ -1,21 +1,20 @@
-# Catalyst Canvas Demo v1.6.0
+# Catalyst Canvas Demo v1.7.0
 
-The `[catalyst_canvas_demo]` shortcode provides a private browser-local project, design-research, and evidence-ledger workspace.
+The shortcode `[catalyst_canvas_demo]` provides a browser-local Catalyst Canvas workspace.
 
-## Capabilities
+It can:
 
-- generate Canvas Contract 1.3 documents through the shared browser engine;
-- capture structured personas, empathy maps, stakeholder maps, and journeys;
-- register sources, evidence excerpts, claims, assumptions, research questions, synthesis tags, and handoff plans;
-- display descriptive evidence-coverage, claim-state, and assumption-exposure indicators;
-- surface unsupported, disputed, and outdated claims before export;
-- create, switch, duplicate, archive, manually save, and autosave local projects;
-- migrate Canvas Contract 1.0 and 1.1 records;
-- export canonical JSON and research-aware Markdown or print the report;
-- retain all inputs in localStorage without transmitting them to Sustainable Catalyst.
+- generate and validate Canvas Contract 1.4 documents;
+- save local projects and revisions in localStorage;
+- edit research, evidence, assumptions, frameworks, ideas, and clusters;
+- edit criteria, decision alternatives, ICE/RICE inputs, matrices, gates, sensitivity scenarios, decision notes, and handoff plans;
+- show research, ledger, ideation, and decision-readiness indicators;
+- export canonical JSON, Markdown, and print reports.
 
-## Install
+Visitor inputs are not transmitted to Sustainable Catalyst by the plugin. Browser storage is specific to the current browser, origin, and device.
 
-Upload `catalyst-canvas-demo-v1.6.0.zip`, activate it, and place `[catalyst_canvas_demo]` on a page.
+Upload `catalyst-canvas-demo-v1.7.0.zip`, activate it, and place `[catalyst_canvas_demo]` on a page.
 
-Browser projects are device- and browser-specific. Clearing site data removes the workspace. Ledger indicators describe recorded links and gaps; they do not certify evidence or research quality.
+## Decision workspace
+
+The browser-local workspace includes editable decision criteria, alternatives, sensitivity scenarios, decision notes, and Decision Studio or Workbench handoff plans. Rankings expose recorded values and weights and never replace ethical, governance, or technical review.

@@ -1,4 +1,4 @@
-"""Command-line interface for Canvas Contract 1.3."""
+"""Command-line interface for Canvas Contract 1.4."""
 
 from __future__ import annotations
 
@@ -12,6 +12,7 @@ from .exporters import export_json, export_markdown, export_print_html
 from .migrations import migrate_payload
 from .contract import validate_contract
 from .frameworks import export_framework_package, import_framework_package
+from .prioritization import build_decision_handoff_package
 
 
 def load_json(path: Path) -> Dict[str, Any]:
@@ -47,7 +48,7 @@ def command_generate(args: argparse.Namespace) -> int:
 def command_validate(args: argparse.Namespace) -> int:
     payload = load_json(args.input)
     validate_contract(payload)
-    print(f"PASS: {args.input} is a valid Canvas Contract 1.3 payload.")
+    print(f"PASS: {args.input} is a valid Canvas Contract 1.4 payload.")
     return 0
 
 
@@ -86,22 +87,30 @@ def command_framework_import(args: argparse.Namespace) -> int:
     write(args.output, export_json(updated))
     return 0
 
+def command_decision_handoff(args: argparse.Namespace) -> int:
+    payload = load_json(args.input)
+    contract = migrate_payload(payload, source_surface="cli").contract
+    package = build_decision_handoff_package(contract, args.target)
+    write(args.output, json.dumps(package, indent=2, ensure_ascii=False) + "\n")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Generate, validate, migrate, and export Catalyst Canvas contracts.")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    generate = subparsers.add_parser("generate", help="Generate Canvas Contract 1.3 from compact JSON input.")
+    generate = subparsers.add_parser("generate", help="Generate Canvas Contract 1.4 from compact JSON input.")
     generate.add_argument("--input", type=Path, required=True)
     generate.add_argument("--json", dest="json_output", type=Path)
     generate.add_argument("--markdown", type=Path)
     generate.add_argument("--html", type=Path)
     generate.set_defaults(func=command_generate)
 
-    validate = subparsers.add_parser("validate", help="Validate a Canvas Contract 1.3 JSON document.")
+    validate = subparsers.add_parser("validate", help="Validate a Canvas Contract 1.4 JSON document.")
     validate.add_argument("--input", type=Path, required=True)
     validate.set_defaults(func=command_validate)
 
-    migrate = subparsers.add_parser("migrate", help="Migrate a recognized legacy or Canvas Contract 1.0-1.2 export.")
+    migrate = subparsers.add_parser("migrate", help="Migrate a recognized legacy or Canvas Contract 1.0-1.3 export.")
     migrate.add_argument("--input", type=Path, required=True)
     migrate.add_argument("--output", type=Path, required=True)
     migrate.set_defaults(func=command_migrate)
@@ -117,6 +126,12 @@ def build_parser() -> argparse.ArgumentParser:
     framework_import.add_argument("--package", type=Path, required=True)
     framework_import.add_argument("--output", type=Path, required=True)
     framework_import.set_defaults(func=command_framework_import)
+
+    decision_handoff = subparsers.add_parser("decision-handoff", help="Export a Decision Studio or Workbench handoff package.")
+    decision_handoff.add_argument("--input", type=Path, required=True)
+    decision_handoff.add_argument("--target", choices=["decision_studio", "workbench"], required=True)
+    decision_handoff.add_argument("--output", type=Path, required=True)
+    decision_handoff.set_defaults(func=command_decision_handoff)
     return parser
 
 

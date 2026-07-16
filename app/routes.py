@@ -22,6 +22,7 @@ from catalyst_canvas.ledger import build_handoff_package
 from catalyst_canvas.persona_templates import list_persona_templates
 from catalyst_canvas.frameworks import export_framework_package, framework_registry, import_framework_package
 from catalyst_canvas.ideation import merge_idea_records
+from catalyst_canvas.prioritization import build_decision_handoff_package, normalize_sensitivity_views
 from catalyst_canvas.workspaces import DEFAULT_WORKSPACE_ID, load_workspace_schema
 
 from .models import SAMPLE_PERSONAS
@@ -551,6 +552,68 @@ def idea_merge():
     save_canvas(db_path(), updated, project_id=canvas.get("_project_id"), workspace_id=workspace_id(), change_note="Ideas merged")
     merged = updated["ideas"][-1]
     return jsonify({"merged_idea": merged, "ideation_summary": updated["ideation_summary"]})
+
+
+@bp.route("/prioritize", methods=["GET", "POST"])
+def prioritize():
+    canvas = current_canvas()
+    if request.method == "POST":
+        try:
+            save_from_form(canvas, change_note="Prioritization and decision readiness updated")
+        except ValueError as exc:
+            return Response(str(exc) + "\n", status=400, mimetype="text/plain")
+        return redirect(url_for("canvas.prioritize"))
+    contract = strip_internal_fields(canvas)
+    return render_template(
+        "prioritize/prioritize.html",
+        canvas=view_model(canvas),
+        contract=contract,
+        baseline=(contract.get("sensitivity_views") or [{}])[0],
+    )
+
+
+@bp.route("/api/prioritization")
+def prioritization_api():
+    canvas = current_canvas()
+    return jsonify({
+        "workspace_id": workspace_id(),
+        "project_id": canvas.get("_project_id", ""),
+        "decision_criteria": canvas.get("decision_criteria", []),
+        "decision_options": canvas.get("decision_options", []),
+        "sensitivity_views": canvas.get("sensitivity_views", []),
+        "decision_notes": canvas.get("decision_notes", []),
+        "decision_handoffs": canvas.get("decision_handoffs", []),
+        "prioritization_summary": canvas.get("prioritization_summary", {}),
+    })
+
+
+@bp.route("/api/prioritization/sensitivity", methods=["POST"])
+def prioritization_sensitivity_api():
+    canvas = current_canvas()
+    payload = request.get_json(silent=True) or {}
+    scenario = {
+        "scenario_id": clean_text(payload.get("scenario_id"), "sensitivity-preview"),
+        "name": clean_text(payload.get("name"), "Sensitivity preview"),
+        "description": clean_text(payload.get("description")),
+        "weight_overrides": payload.get("weight_overrides") if isinstance(payload.get("weight_overrides"), list) else [],
+    }
+    views = normalize_sensitivity_views(
+        [scenario],
+        options=canvas.get("decision_options", []),
+        criteria=canvas.get("decision_criteria", []),
+        generated_at=utc_now(),
+    )
+    return jsonify({"baseline": views[0], "scenario": views[1]})
+
+
+@bp.route("/projects/<project_id>/decision-handoff/<target>.json")
+def decision_handoff_export(project_id: str, target: str):
+    if target not in {"decision_studio", "workbench"}:
+        return jsonify({"error": "unsupported target"}), 404
+    if not _project_in_workspace(project_id):
+        return jsonify({"error": "not found"}), 404
+    canvas = get_project_canvas(db_path(), project_id)
+    return jsonify(build_decision_handoff_package(strip_internal_fields(canvas), target))
 
 
 @bp.route("/ideate/heros")

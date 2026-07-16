@@ -1,8 +1,8 @@
 # Catalyst Canvas Submission
 
-**Catalyst Canvas v1.6.0 — Framework and Ideation Studio**
+**Catalyst Canvas v1.7.0 — Prioritization and Decision Readiness**
 
-This release adds Canvas Contract 1.3, ten data-driven built-in framework packs, portable custom frameworks, reusable prompt packs, divergent and convergent ideation sessions, traceable idea cards, clustering, voting, merging, accessible reordering, prototype lineage, matching Python/Flask/browser engines, and framework-package import/export.
+This release adds Canvas Contract 1.4, transparent ICE and RICE scoring, editable weighted criteria, four decision matrices, ethical gates, sensitivity analysis, dependencies, blockers, resources, deadlines, recommendation states, decision notes, and provenance-preserving Decision Studio and Workbench handoffs.
 
 Run the release gate before submission:
 

@@ -1,6 +1,6 @@
 # Catalyst Canvas Export Specification
 
-Catalyst Canvas v1.6.0 exports the same validated `catalyst-canvas/1.3` document through JSON, Markdown, and standalone print HTML. It also exports a research handoff package for supported institutional targets.
+Catalyst Canvas v1.7.0 exports the same validated `catalyst-canvas/1.4` document through JSON, Markdown, and standalone print HTML. It also exports research and decision handoff packages for supported institutional targets.
 
 ## JSON
 
@@ -19,3 +19,7 @@ The HTML exporter is dependency-free, self-contained, and print-safe. It is inte
 `catalyst-canvas-research-handoff/1.0` packages the current Canvas context, complete research ledger, ledger summary, and provenance for `knowledge_library` or `research_librarian`.
 
 All exporters validate or normalize before writing. Invalid contracts fail rather than producing partial artifacts.
+
+## Decision exports
+
+Markdown and print HTML include decision criteria, alternatives, ICE/RICE and weighted scores, sensitivity views, decision notes, readiness indicators, and handoff plans. JSON preserves the complete Contract 1.4 records. Decision handoff endpoints emit `catalyst-canvas-decision-handoff/1.0` packages for Decision Studio and Workbench.

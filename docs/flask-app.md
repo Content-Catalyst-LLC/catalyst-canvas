@@ -1,6 +1,6 @@
 # Flask Application
 
-The Flask application is a local workspace adapter over Canvas Contract 1.3 and Workspace Project Contract 1.0.
+The Flask application is a local workspace adapter over Canvas Contract 1.4 and Workspace Project Contract 1.0.
 
 - Forms are mapped into the canonical contract by `catalyst_canvas.adapters.flask`.
 - SQLite writes validate the complete contract before persistence.

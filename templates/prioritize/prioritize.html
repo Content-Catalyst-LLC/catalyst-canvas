@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% block title %}Prioritization · Catalyst Canvas{% endblock %}
+{% block content %}
+<section class="panel">
+  <p class="label">Prioritization and Decision Readiness</p>
+  <div class="split-heading">
+    <div>
+      <h2>Compare alternatives without hiding judgment</h2>
+      <p class="muted">Every ranking preserves its raw inputs, value basis, confidence, rationale, evidence links, assumptions, weights, blockers, dependencies, and ethical gate results.</p>
+    </div>
+    <div class="stats">
+      <span><strong>{{ contract.prioritization_summary.option_count }}</strong><br>options</span>
+      <span><strong>{{ contract.prioritization_summary.criterion_count }}</strong><br>criteria</span>
+      <span><strong>{{ contract.prioritization_summary.sensitivity_view_count }}</strong><br>weight views</span>
+      <span><strong>{{ contract.prioritization_summary.readiness|replace('_',' ') }}</strong><br>readiness</span>
+    </div>
+  </div>
+  <div class="trace">{{ contract.prioritization_summary.indicator_note }}</div>
+</section>
+
+<section class="panel">
+  <p class="label">Baseline ranking</p>
+  <div class="table-wrap">
+    <table class="decision-table">
+      <thead><tr><th>Rank</th><th>Alternative</th><th>Weighted score</th><th>ICE</th><th>RICE</th><th>Recommendation</th><th>Deadline</th></tr></thead>
+      <tbody>
+      {% for ranking in baseline.rankings %}
+        {% set option = contract.decision_options|selectattr('option_id','equalto',ranking.option_id)|first %}
+        <tr>
+          <td>{{ ranking.rank }}</td><td><strong>{{ option.title }}</strong><br><span class="muted">{{ option.option_id }}</span></td>
+          <td>{{ '%.2f'|format(ranking.score) }}</td><td>{{ '%.2f'|format(option.ice.score) }}</td><td>{{ '%.2f'|format(option.rice.score) }}</td>
+          <td>{{ option.recommendation_state|replace('_',' ') }}</td><td>{{ option.decision_deadline or 'Not set' }}</td>
+        </tr>
+      {% else %}<tr><td colspan="7">No alternatives are recorded.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <p class="label">Criteria library and recorded weights</p>
+  <div class="comparison-grid">
+    {% for criterion in contract.decision_criteria %}
+    <article class="comparison-card">
+      <p class="project-meta">{{ criterion.category|replace('_',' ') }} · weight {{ criterion.weight }}{% if criterion.is_gate %} · decision gate{% endif %}</p>
+      <h3>{{ criterion.name }}</h3>
+      <p>{{ criterion.description }}</p>
+      {% if criterion.gate_requirement %}<p><strong>Gate:</strong> {{ criterion.gate_requirement }}</p>{% endif %}
+      <p><strong>Direction:</strong> {{ criterion.direction|replace('_',' ') }}</p>
+      {% if criterion.limitations %}<p class="muted"><strong>Limits:</strong> {{ criterion.limitations|join('; ') }}</p>{% endif %}
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="panel">
+  <p class="label">Alternatives, scores, constraints, and matrices</p>
+  <div class="record-list">
+    {% for option in contract.decision_options %}
+    <article class="record-row">
+      <p class="project-meta">{{ option.recommendation_state|replace('_',' ') }} · weighted {{ '%.2f'|format(option.weighted_score) }} · {{ option.confidence }} confidence · {{ option.value_basis }}</p>
+      <h3>{{ option.title }}</h3>
+      <p>{{ option.description }}</p>
+      <p><strong>Decision rationale:</strong> {{ option.decision_rationale or 'Not recorded' }}</p>
+      <div class="grid two">
+        <div><strong>Dependencies</strong><ul>{% for item in option.dependencies %}<li>{{ item }}</li>{% else %}<li>None recorded</li>{% endfor %}</ul></div>
+        <div><strong>Blockers</strong><ul>{% for item in option.blockers %}<li>{{ item }}</li>{% else %}<li>None recorded</li>{% endfor %}</ul></div>
+        <div><strong>Resource needs</strong><ul>{% for item in option.resource_needs %}<li>{{ item }}</li>{% else %}<li>None recorded</li>{% endfor %}</ul></div>
+        <div><strong>Lineage</strong><p>Ideas: {{ option.idea_ids|join(', ') or 'none' }}<br>Prototypes: {{ option.prototype_ids|join(', ') or 'none' }}<br>Evidence: {{ option.evidence_ids|join(', ') or 'none' }}</p></div>
+      </div>
+      <div class="table-wrap">
+        <table class="decision-table compact-table">
+          <thead><tr><th>Criterion</th><th>Raw</th><th>Weight</th><th>Weighted</th><th>Basis</th><th>Confidence</th><th>Rationale</th></tr></thead>
+          <tbody>{% for score in option.criterion_scores %}{% set criterion = contract.decision_criteria|selectattr('criterion_id','equalto',score.criterion_id)|first %}<tr><td>{{ criterion.name if criterion else score.criterion_id }}</td><td>{{ score.raw_value }}</td><td>{{ score.weight }}</td><td>{{ '%.2f'|format(score.weighted_value) }}</td><td>{{ score.basis }}</td><td>{{ score.confidence }}</td><td>{{ score.rationale or 'Not recorded' }}</td></tr>{% endfor %}</tbody>
+        </table>
+      </div>
+      <div class="matrix-grid">
+        {% for key, matrix in option.matrices.items() %}
+        <div class="matrix-card"><p class="project-meta">{{ key|replace('_',' ') }}</p><strong>{{ matrix.quadrant|replace('_',' ') }}</strong><p>{{ matrix.x_axis }} {{ matrix.x_value }} · {{ matrix.y_axis }} {{ matrix.y_value }}</p><p class="muted">{{ matrix.rationale or 'No rationale recorded' }} · {{ matrix.basis }} / {{ matrix.confidence }}</p></div>
+        {% endfor %}
+      </div>
+      {% for gate in option.gate_results %}
+      <div class="gate gate-{{ gate.result }}"><strong>Gate {{ gate.criterion_id }}: {{ gate.result|upper }}</strong><p>{{ gate.rationale or 'No gate rationale recorded.' }}</p></div>
+      {% endfor %}
+    </article>
+    {% else %}<p>No decision alternatives are recorded. Selected ideas become draft alternatives automatically.</p>{% endfor %}
+  </div>
+</section>
+
+<section class="panel">
+  <p class="label">Sensitivity views</p>
+  <p class="muted">Weight overrides recalculate rankings from preserved raw criterion values. Original values and baseline weights are not overwritten.</p>
+  <div class="comparison-grid">
+    {% for view in contract.sensitivity_views %}
+    <article class="comparison-card">
+      <p class="project-meta">{{ view.scenario_id }}</p><h3>{{ view.name }}</h3><p>{{ view.description }}</p>
+      <ol>{% for item in view.rankings %}{% set option = contract.decision_options|selectattr('option_id','equalto',item.option_id)|first %}<li><strong>{{ option.title if option else item.option_id }}</strong> — {{ '%.2f'|format(item.score) }}{% if item.delta_from_baseline %} · rank change {{ '%+d'|format(item.delta_from_baseline) }}{% endif %}</li>{% endfor %}</ol>
+      {% if view.weight_overrides %}<p class="muted">Overrides: {% for override in view.weight_overrides %}{{ override.criterion_id }}={{ override.weight }}{% if not loop.last %}; {% endif %}{% endfor %}</p>{% endif %}
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<form method="post" class="panel">
+  <p class="label">Decision record editors</p>
+  <p class="muted">These portable JSON records are normalized and recalculated by the shared engine on save. Computed scores and rankings in submitted JSON are never trusted over their recorded inputs.</p>
+  <details open><summary>Decision criteria</summary><textarea name="decision_criteria_json" rows="18">{{ canvas.decision_criteria_json }}</textarea></details>
+  <details open><summary>Decision alternatives</summary><textarea name="decision_options_json" rows="28">{{ canvas.decision_options_json }}</textarea></details>
+  <details><summary>Sensitivity scenarios</summary><textarea name="sensitivity_views_json" rows="14">{{ canvas.sensitivity_views_json }}</textarea></details>
+  <details><summary>Decision notes</summary><textarea name="decision_notes_json" rows="12">{{ canvas.decision_notes_json }}</textarea></details>
+  <details><summary>Decision Studio and Workbench handoffs</summary><textarea name="decision_handoffs_json" rows="16">{{ canvas.decision_handoffs_json }}</textarea></details>
+  <div class="actions">
+    <button class="btn" type="submit">Save decision revision</button>
+    {% if canvas.project_id %}
+      <a class="btn" href="{{ url_for('canvas.decision_handoff_export', project_id=canvas.project_id, target='decision_studio') }}">Export Decision Studio handoff</a>
+      <a class="btn" href="{{ url_for('canvas.decision_handoff_export', project_id=canvas.project_id, target='workbench') }}">Export Workbench handoff</a>
+    {% endif %}
+    <a class="btn" href="{{ url_for('canvas.prototype') }}">Continue to prototype →</a>
+  </div>
+</form>
+
+<section class="panel">
+  <p class="label">Decision notes</p>
+  <div class="record-list">{% for note in contract.decision_notes %}<article class="record-row"><p class="project-meta">{{ note.note_type }} · {{ note.status }}</p><p>{{ note.note }}</p><p class="muted">Options: {{ note.option_ids|join(', ') or 'none' }} · Author: {{ note.author or 'not recorded' }}</p></article>{% else %}<p>No decision notes recorded.</p>{% endfor %}</div>
+</section>
+{% endblock %}

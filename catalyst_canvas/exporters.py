@@ -1,4 +1,4 @@
-"""Stable Canvas Contract 1.3 JSON, Markdown, and print-report exporters."""
+"""Stable Canvas Contract 1.4 JSON, Markdown, and print-report exporters."""
 
 from __future__ import annotations
 
@@ -37,6 +37,11 @@ def export_markdown(contract: Mapping[str, Any]) -> str:
     clusters = _bullets([f"{item['sequence']}. {item['name']} — ideas: {', '.join(item['idea_ids']) or 'none'}; rationale: {item['rationale'] or 'not recorded'}" for item in data["idea_clusters"]])
     custom_frameworks = _bullets([f"{item['key']} — {item['name']} [{item['category']}]" for item in data["custom_frameworks"]])
     prompt_packs = _bullets([f"{item['prompt_pack_id']} — {item['name']}: {len(item['prompts'])} prompts" for item in data["prompt_packs"]])
+    decision_criteria = _bullets([f"{item['criterion_id']} — {item['name']} [weight {item['weight']}; {item['direction']}; {'gate' if item['is_gate'] else 'weighted'}] — {item['description']}" for item in data["decision_criteria"]])
+    decision_options = _bullets([f"{item['option_id']} — {item['title']} [{item['recommendation_state']}; weighted {item['weighted_score']:.2f}; ICE {item['ice']['score']:.2f}; RICE {item['rice']['score']:.2f}] — basis/confidence: {item['value_basis']}/{item['confidence']}; owner: {item['owner'] or 'unassigned'}; deadline: {item['decision_deadline'] or 'not recorded'}; rationale: {item['decision_rationale'] or 'not recorded'}; blockers: {'; '.join(item['blockers']) or 'none'}" for item in data["decision_options"]])
+    sensitivity_views = _bullets([f"{item['name']}: " + "; ".join(f"#{rank['rank']} {rank['option_id']} ({rank['score']:.2f}, delta {rank['delta_from_baseline']})" for rank in item['rankings']) for item in data["sensitivity_views"]])
+    decision_notes = _bullets([f"[{item['note_type']}/{item['status']}] {item['note']} — options: {', '.join(item['option_ids']) or 'none'}" for item in data["decision_notes"]])
+    decision_handoffs = _bullets([f"{item['target']} [{item['status']}] — {item['purpose'] or 'No purpose recorded'}; options: {', '.join(item['option_ids']) or 'all recorded alternatives'}" for item in data["decision_handoffs"]])
     sources = _bullets([f"{item['source_id']} — {item['title']} [{item['source_type']}] {item['url']}".strip() for item in data["sources"]])
     evidence = _bullets([f"{item['evidence_id']} — {item['title']}: {item['summary'] or item['quote']} (source: {item['source_id'] or 'unlinked'})" for item in data["evidence"]])
     claims = _bullets([f"[{item['state']}] {item['statement']} — evidence: {', '.join(item['evidence_ids']) or 'none'}; assumptions: {', '.join(item['assumption_ids']) or 'none'}; uncertainty: {item['uncertainty'] or 'not recorded'}" for item in data["claims"]])
@@ -104,7 +109,8 @@ Updated: {data['updated_at']}
 Research readiness: {data['research_summary']['readiness']}  
 Evidence coverage: {data['ledger_summary']['evidence_coverage']}  
 Assumption exposure: {data['ledger_summary']['assumption_exposure']}  
-Ideas: {data['ideation_summary']['idea_count']} · Clusters: {data['ideation_summary']['cluster_count']} · Votes: {data['ideation_summary']['vote_count']}
+Ideas: {data['ideation_summary']['idea_count']} · Clusters: {data['ideation_summary']['cluster_count']} · Votes: {data['ideation_summary']['vote_count']}  
+Decision readiness: {data['prioritization_summary']['readiness']} · Options: {data['prioritization_summary']['option_count']} · Incomplete scores: {data['prioritization_summary']['incomplete_score_count']}
 
 ## Publication and Review Warning
 
@@ -207,6 +213,28 @@ Analytics remain evidence hints and do not establish intent, identity, motivatio
 ## Idea Clusters
 
 {clusters}
+
+## Decision Criteria
+
+{decision_criteria}
+
+## Decision Alternatives and Scores
+
+{decision_options}
+
+{data['prioritization_summary']['indicator_note']}
+
+## Sensitivity Views
+
+{sensitivity_views}
+
+## Decision Notes
+
+{decision_notes}
+
+## Decision Handoffs
+
+{decision_handoffs}
 
 ## Source Register
 

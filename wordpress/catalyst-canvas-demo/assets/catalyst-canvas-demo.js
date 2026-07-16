@@ -95,6 +95,11 @@
       custom_frameworks:parseJsonList(field(root,'customFrameworksJson')), prompt_packs:parseJsonList(field(root,'promptPacksJson')),
       ideation_sessions:[Object.assign({},(existing.ideation_sessions||[])[0]||{},{title:field(root,'ideationSessionTitle')||'Primary ideation session',mode:field(root,'ideationMode')||'divergent',framework_key:field(root,'framework')||'AIDA',challenge_ids:[existing.challenge_id||'challenge-primary'],hmw_ids:(existing.how_might_we||[]).map(item=>item.hmw_id),facilitator:field(root,'ideationFacilitator'),participants:lines(field(root,'ideationParticipants')),status:field(root,'ideationStatus')||'planned',notes:field(root,'ideationNotes')})],
       ideas:parseIdeas(field(root,'ideaLines'),existing), idea_clusters:parseClusters(field(root,'clusterLines')),
+      decision_criteria:parseJsonList(field(root,'decisionCriteriaJson')),
+      decision_options:parseJsonList(field(root,'decisionOptionsJson')),
+      sensitivity_views:parseJsonList(field(root,'sensitivityViewsJson')),
+      decision_notes:parseJsonList(field(root,'decisionNotesJson')),
+      decision_handoffs:parseJsonList(field(root,'decisionHandoffsJson')),
       prototypes:existing.prototypes||[], tests:existing.tests||[], review_notes:existing.review_notes||[],
       framework: field(root, 'framework'),
       provenance: { source_surface: 'wordpress', source_version: root.dataset.version || Engine.RELEASE_VERSION, warnings: [] }
@@ -160,6 +165,14 @@
     setText(root, 'claimRiskCount', contract.ledger_summary.unsupported_or_disputed_count + ' visible');
     setText(root, 'evidenceCoverage', contract.ledger_summary.evidence_coverage.replace(/_/g, ' '));
     setText(root, 'assumptionExposure', contract.ledger_summary.assumption_exposure.replace(/_/g, ' '));
+    setText(root, 'decisionReadiness', contract.prioritization_summary.readiness.replace(/_/g, ' '));
+    setText(root, 'decisionOptionCount', contract.prioritization_summary.option_count + ' options');
+    setText(root, 'decisionGapCount', contract.prioritization_summary.incomplete_score_count + ' input gaps');
+    const baseline = contract.sensitivity_views[0] || {rankings:[]};
+    const topRank = baseline.rankings[0];
+    const topOption = topRank ? contract.decision_options.find(item => item.option_id === topRank.option_id) : null;
+    setText(root, 'topDecisionOption', topOption ? `${topOption.title} · ${topRank.score.toFixed(2)}` : 'No ranked option');
+    setList(root, 'decisionRanking', baseline.rankings.map(rank => { const option=contract.decision_options.find(item=>item.option_id===rank.option_id); return `#${rank.rank} ${option?option.title:rank.option_id} — ${rank.score.toFixed(2)}`; }));
     setList(root, 'stakeholderSummary', contract.stakeholders.map(item => `${item.name}: influence ${item.influence}/5, interest ${item.interest}/5 — ${item.engagement_strategy || item.stance}`));
     const journey = contract.journeys[0];
     setList(root, 'journeySummary', journey ? journey.stages.map(stage => `${stage.sequence}. ${stage.name}: ${stage.actions.join('; ') || 'No action recorded'} (emotion ${stage.emotion})`) : []);
@@ -203,6 +216,11 @@
     setField(root,'ideaLines',(contract.ideas||[]).map(i=>[i.title,i.description,i.author,i.rationale,i.hmw_id,i.prompt_id,(i.tags||[]).join(', '),i.cluster_id,i.status,i.vote_count,(i.prototype_ids||[]).join(', '),(i.assumption_ids||[]).join(', '),(i.evidence_ids||[]).join(', '),(i.parent_idea_ids||[]).join(', '),i.merged_into_id].join(' | ')).join('\n'));
     setField(root,'clusterLines',(contract.idea_clusters||[]).map(i=>[i.name,i.description,(i.idea_ids||[]).join(', '),(i.tags||[]).join(', '),i.rationale,i.sequence].join(' | ')).join('\n'));
     setField(root,'customFrameworksJson',JSON.stringify(contract.custom_frameworks||[],null,2)); setField(root,'promptPacksJson',JSON.stringify(contract.prompt_packs||[],null,2));
+    setField(root,'decisionCriteriaJson',JSON.stringify(contract.decision_criteria||[],null,2));
+    setField(root,'decisionOptionsJson',JSON.stringify(contract.decision_options||[],null,2));
+    setField(root,'sensitivityViewsJson',JSON.stringify((contract.sensitivity_views||[]).slice(1),null,2));
+    setField(root,'decisionNotesJson',JSON.stringify(contract.decision_notes||[],null,2));
+    setField(root,'decisionHandoffsJson',JSON.stringify(contract.decision_handoffs||[],null,2));
     const title = root.querySelector('[data-workspace-field="title"]');
     if (title) title.value = contract.title || 'Untitled Canvas Project';
     render(root, contract);

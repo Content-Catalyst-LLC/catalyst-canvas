@@ -2,7 +2,7 @@
 
 Before a Canvas is used for a decision, prototype, handoff, or publication, confirm:
 
-- the document declares `catalyst-canvas/1.3` and has stable Canvas and revision IDs;
+- the document declares `catalyst-canvas/1.4` and has stable Canvas and revision IDs;
 - the primary audience, affected stakeholders, and exclusions are explicit;
 - material sources have usable provenance, rights, limitations, and ownership notes where applicable;
 - evidence excerpts preserve source links, locators, citations, confidence, and limitations;

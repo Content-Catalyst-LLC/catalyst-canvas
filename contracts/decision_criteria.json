@@ -1,0 +1,90 @@
+{
+  "impact": {
+    "criterion_id": "criterion-impact",
+    "name": "Expected impact",
+    "category": "outcome",
+    "description": "Expected contribution to the stated goal and affected groups.",
+    "default_weight": 20,
+    "direction": "higher_better",
+    "is_gate": false,
+    "gate_requirement": "",
+    "limitations": ["Expected impact is not observed impact.", "Distributional effects should be recorded separately."]
+  },
+  "evidence_confidence": {
+    "criterion_id": "criterion-evidence-confidence",
+    "name": "Evidence confidence",
+    "category": "evidence",
+    "description": "Strength and relevance of evidence supporting the option and its assumptions.",
+    "default_weight": 15,
+    "direction": "higher_better",
+    "is_gate": false,
+    "gate_requirement": "",
+    "limitations": ["High confidence does not guarantee a desirable outcome."]
+  },
+  "feasibility": {
+    "criterion_id": "criterion-feasibility",
+    "name": "Feasibility",
+    "category": "delivery",
+    "description": "Practical ability to deliver the option with available capabilities, time, and dependencies.",
+    "default_weight": 15,
+    "direction": "higher_better",
+    "is_gate": false,
+    "gate_requirement": "",
+    "limitations": ["Current feasibility can change as resources and constraints change."]
+  },
+  "urgency": {
+    "criterion_id": "criterion-urgency",
+    "name": "Urgency",
+    "category": "timing",
+    "description": "Time sensitivity, consequence of delay, and relevance of the decision deadline.",
+    "default_weight": 10,
+    "direction": "higher_better",
+    "is_gate": false,
+    "gate_requirement": "",
+    "limitations": ["Urgency should not automatically override importance or safety."]
+  },
+  "strategic_alignment": {
+    "criterion_id": "criterion-strategic-alignment",
+    "name": "Strategic alignment",
+    "category": "strategy",
+    "description": "Fit with the declared goal, scope, institutional commitments, and decision context.",
+    "default_weight": 15,
+    "direction": "higher_better",
+    "is_gate": false,
+    "gate_requirement": "",
+    "limitations": ["Alignment can reinforce a flawed strategy and should remain reviewable."]
+  },
+  "equity_and_harm": {
+    "criterion_id": "criterion-equity-and-harm",
+    "name": "Equity and harm review",
+    "category": "ethical_constraint",
+    "description": "Distribution of benefits, burdens, exclusion risks, foreseeable harms, and mitigation readiness.",
+    "default_weight": 15,
+    "direction": "higher_better",
+    "is_gate": true,
+    "gate_requirement": "No unresolved severe harm or exclusion risk may be hidden by an aggregate score.",
+    "limitations": ["A numeric value cannot replace affected-group review or formal safeguards."]
+  },
+  "resource_efficiency": {
+    "criterion_id": "criterion-resource-efficiency",
+    "name": "Resource efficiency",
+    "category": "resources",
+    "description": "Expected value relative to financial, staffing, time, and operational requirements.",
+    "default_weight": 5,
+    "direction": "higher_better",
+    "is_gate": false,
+    "gate_requirement": "",
+    "limitations": ["Efficiency should not erase absolute resource constraints or externalized costs."]
+  },
+  "reversibility": {
+    "criterion_id": "criterion-reversibility",
+    "name": "Reversibility",
+    "category": "risk",
+    "description": "Ability to stop, revise, or recover from the decision without disproportionate cost or harm.",
+    "default_weight": 5,
+    "direction": "higher_better",
+    "is_gate": false,
+    "gate_requirement": "",
+    "limitations": ["Some effects may remain irreversible even when implementation is technically reversible."]
+  }
+}
