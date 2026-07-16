@@ -1,4 +1,4 @@
-"""Stable Canvas Contract 1.4 JSON, Markdown, and print-report exporters."""
+"""Stable Canvas Contract 1.5 JSON, Markdown, and print-report exporters."""
 
 from __future__ import annotations
 
@@ -42,6 +42,13 @@ def export_markdown(contract: Mapping[str, Any]) -> str:
     sensitivity_views = _bullets([f"{item['name']}: " + "; ".join(f"#{rank['rank']} {rank['option_id']} ({rank['score']:.2f}, delta {rank['delta_from_baseline']})" for rank in item['rankings']) for item in data["sensitivity_views"]])
     decision_notes = _bullets([f"[{item['note_type']}/{item['status']}] {item['note']} — options: {', '.join(item['option_ids']) or 'none'}" for item in data["decision_notes"]])
     decision_handoffs = _bullets([f"{item['target']} [{item['status']}] — {item['purpose'] or 'No purpose recorded'}; options: {', '.join(item['option_ids']) or 'all recorded alternatives'}" for item in data["decision_handoffs"]])
+    prototypes = _bullets([f"{item['prototype_id']} — {item['title']} v{item['version']} [{item['prototype_type']}/{item['fidelity']}/{item['status']}] — owner: {item['owner'] or 'unassigned'}; success: {item['success_definition'] or 'not recorded'}; limitations: {'; '.join(item['known_limitations']) or 'none'}" for item in data["prototypes"]])
+    hypotheses = _bullets([f"{item['hypothesis_id']} [{item['hypothesis_type']}/{item['status']}/{item['confidence']}] — {item['statement']} — falsification: {item['falsification_condition'] or 'not recorded'}" for item in data["hypotheses"]])
+    experiment_plans = _bullets([f"{item['experiment_id']} — {item['title']} [{item['status']}] — objective: {item['objective']}; method: {item['method']}; participants: {item['participant_plan']['target_count']}; metrics: {', '.join(metric['name'] for metric in item['metrics']) or 'none'}; blockers: {'; '.join(item['blockers']) or 'none'}" for item in data["experiment_plans"]])
+    experiment_runs = _bullets([f"{item['run_id']} — {item['experiment_id']} [{item['status']}/{item['result_state']}] — participants: {item['participant_count']}; {item['summary'] or 'No summary recorded'}" for item in data["experiment_runs"]])
+    learning_decisions = _bullets([f"{item['learning_decision_id']} [{item['outcome']}] — {item['rationale'] or 'No rationale recorded'}; next: {'; '.join(item['next_actions']) or 'none'}" for item in data["learning_decisions"]])
+    iteration_history = _bullets([f"{item['iteration_id']} — {item['prototype_id']} {item['from_version'] or '?'} → {item['to_version'] or '?'}: {item['change_summary'] or 'No change summary'} — {item['reason'] or 'No reason recorded'}" for item in data["iteration_history"]])
+    experiment_handoffs = _bullets([f"{item['target']} [{item['status']}] — {item['purpose'] or 'No purpose recorded'}; experiments: {', '.join(item['experiment_ids']) or 'none'}" for item in data["experiment_handoffs"]])
     sources = _bullets([f"{item['source_id']} — {item['title']} [{item['source_type']}] {item['url']}".strip() for item in data["sources"]])
     evidence = _bullets([f"{item['evidence_id']} — {item['title']}: {item['summary'] or item['quote']} (source: {item['source_id'] or 'unlinked'})" for item in data["evidence"]])
     claims = _bullets([f"[{item['state']}] {item['statement']} — evidence: {', '.join(item['evidence_ids']) or 'none'}; assumptions: {', '.join(item['assumption_ids']) or 'none'}; uncertainty: {item['uncertainty'] or 'not recorded'}" for item in data["claims"]])
@@ -110,7 +117,8 @@ Research readiness: {data['research_summary']['readiness']}
 Evidence coverage: {data['ledger_summary']['evidence_coverage']}  
 Assumption exposure: {data['ledger_summary']['assumption_exposure']}  
 Ideas: {data['ideation_summary']['idea_count']} · Clusters: {data['ideation_summary']['cluster_count']} · Votes: {data['ideation_summary']['vote_count']}  
-Decision readiness: {data['prioritization_summary']['readiness']} · Options: {data['prioritization_summary']['option_count']} · Incomplete scores: {data['prioritization_summary']['incomplete_score_count']}
+Decision readiness: {data['prioritization_summary']['readiness']} · Options: {data['prioritization_summary']['option_count']} · Incomplete scores: {data['prioritization_summary']['incomplete_score_count']}  
+Experiment readiness: {data['experiment_summary']['readiness']} · Experiments: {data['experiment_summary']['experiment_count']} · Completed runs: {data['experiment_summary']['completed_run_count']}
 
 ## Publication and Review Warning
 
@@ -272,11 +280,41 @@ Analytics remain evidence hints and do not establish intent, identity, motivatio
 
 {handoffs}
 
-## Prototype
+## Prototype Portfolio
+
+{prototypes}
+
+## Hypotheses
+
+{hypotheses}
+
+## Experiment Plans
+
+{experiment_plans}
+
+{data['experiment_summary']['indicator_note']}
+
+## Experiment Runs and Results
+
+{experiment_runs}
+
+## Learning Decisions
+
+{learning_decisions}
+
+## Prototype Iteration History
+
+{iteration_history}
+
+## Experiment Handoffs
+
+{experiment_handoffs}
+
+## Legacy Prototype Summary
 
 {prototype_text}
 
-## Test Plan
+## Legacy Test Plan
 
 {test_text}
 

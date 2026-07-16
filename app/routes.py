@@ -23,6 +23,7 @@ from catalyst_canvas.persona_templates import list_persona_templates
 from catalyst_canvas.frameworks import export_framework_package, framework_registry, import_framework_package
 from catalyst_canvas.ideation import merge_idea_records
 from catalyst_canvas.prioritization import build_decision_handoff_package, normalize_sensitivity_views
+from catalyst_canvas.experiments import build_experiment_handoff_package
 from catalyst_canvas.workspaces import DEFAULT_WORKSPACE_ID, load_workspace_schema
 
 from .models import SAMPLE_PERSONAS
@@ -614,6 +615,71 @@ def decision_handoff_export(project_id: str, target: str):
         return jsonify({"error": "not found"}), 404
     canvas = get_project_canvas(db_path(), project_id)
     return jsonify(build_decision_handoff_package(strip_internal_fields(canvas), target))
+
+
+
+
+@bp.route("/experiment", methods=["GET", "POST"])
+def experiment_studio():
+    canvas = current_canvas()
+    if request.method == "POST":
+        try:
+            save_from_form(canvas, change_note="Prototype and experiment studio updated")
+        except ValueError as exc:
+            return Response(str(exc) + "\n", status=400, mimetype="text/plain")
+        return redirect(url_for("canvas.experiment_studio"))
+    contract = strip_internal_fields(canvas)
+    return render_template(
+        "experiment/studio.html",
+        canvas=view_model(canvas),
+        contract=contract,
+    )
+
+
+@bp.route("/api/experiments")
+def experiments_api():
+    canvas = current_canvas()
+    return jsonify({
+        "workspace_id": workspace_id(),
+        "project_id": canvas.get("_project_id", ""),
+        "prototypes": canvas.get("prototypes", []),
+        "hypotheses": canvas.get("hypotheses", []),
+        "experiment_plans": canvas.get("experiment_plans", []),
+        "experiment_runs": canvas.get("experiment_runs", []),
+        "learning_decisions": canvas.get("learning_decisions", []),
+        "iteration_history": canvas.get("iteration_history", []),
+        "experiment_handoffs": canvas.get("experiment_handoffs", []),
+        "experiment_summary": canvas.get("experiment_summary", {}),
+    })
+
+
+@bp.route("/api/experiments/runs", methods=["POST"])
+def experiment_run_create():
+    canvas = current_canvas()
+    payload = request.get_json(silent=True) or {}
+    if not clean_text(payload.get("experiment_id")):
+        return jsonify({"error": "experiment_id is required"}), 400
+    updated = strip_internal_fields(canvas)
+    updated.setdefault("experiment_runs", []).append(payload)
+    updated["revision_id"] = new_id("revision")
+    updated["updated_at"] = utc_now()
+    from catalyst_canvas.engine import generate_canvas
+    updated = generate_canvas(updated, source_surface="flask")
+    save_canvas(
+        db_path(), updated, project_id=canvas.get("_project_id"), workspace_id=workspace_id(),
+        change_note=f"Experiment run recorded for {payload.get('experiment_id')}",
+    )
+    return jsonify({"run": updated["experiment_runs"][-1], "experiment_summary": updated["experiment_summary"]}), 201
+
+
+@bp.route("/projects/<project_id>/experiment-handoff/<target>.json")
+def experiment_handoff_export(project_id: str, target: str):
+    if target not in {"research_lab", "workbench"}:
+        return jsonify({"error": "unsupported target"}), 404
+    if not _project_in_workspace(project_id):
+        return jsonify({"error": "not found"}), 404
+    canvas = get_project_canvas(db_path(), project_id)
+    return jsonify(build_experiment_handoff_package(strip_internal_fields(canvas), target))
 
 
 @bp.route("/ideate/heros")

@@ -100,7 +100,14 @@
       sensitivity_views:parseJsonList(field(root,'sensitivityViewsJson')),
       decision_notes:parseJsonList(field(root,'decisionNotesJson')),
       decision_handoffs:parseJsonList(field(root,'decisionHandoffsJson')),
-      prototypes:existing.prototypes||[], tests:existing.tests||[], review_notes:existing.review_notes||[],
+      prototypes:parseJsonList(field(root,'prototypesJson')),
+      hypotheses:parseJsonList(field(root,'hypothesesJson')),
+      experiment_plans:parseJsonList(field(root,'experimentPlansJson')),
+      experiment_runs:parseJsonList(field(root,'experimentRunsJson')),
+      learning_decisions:parseJsonList(field(root,'learningDecisionsJson')),
+      iteration_history:parseJsonList(field(root,'iterationHistoryJson')),
+      experiment_handoffs:parseJsonList(field(root,'experimentHandoffsJson')),
+      tests:existing.tests||[], review_notes:existing.review_notes||[],
       framework: field(root, 'framework'),
       provenance: { source_surface: 'wordpress', source_version: root.dataset.version || Engine.RELEASE_VERSION, warnings: [] }
     };
@@ -150,6 +157,9 @@
     const persona = contract.personas[0];
     const prototype = contract.prototypes[0] || {};
     const test = contract.tests[0] || {};
+    const experimentPlan = contract.experiment_plans[0] || {};
+    const latestRun = contract.experiment_runs[contract.experiment_runs.length - 1] || {};
+    const latestDecision = contract.learning_decisions[contract.learning_decisions.length - 1] || {};
     const risk = contract.review_notes.find(item => item.type === 'risk') || contract.review_notes[0] || {};
 
     setText(root, 'briefTitle', contract.title);
@@ -172,6 +182,12 @@
     const topRank = baseline.rankings[0];
     const topOption = topRank ? contract.decision_options.find(item => item.option_id === topRank.option_id) : null;
     setText(root, 'topDecisionOption', topOption ? `${topOption.title} · ${topRank.score.toFixed(2)}` : 'No ranked option');
+    setText(root, 'experimentReadiness', contract.experiment_summary.readiness.replace(/_/g, ' '));
+    setText(root, 'prototypeCount', contract.experiment_summary.prototype_count + ' prototypes');
+    setText(root, 'experimentCount', contract.experiment_summary.experiment_count + ' plans');
+    setText(root, 'completedRunCount', contract.experiment_summary.completed_run_count + ' completed');
+    setText(root, 'learningDecisionCount', contract.experiment_summary.learning_decision_count + ' decisions');
+    setText(root, 'iterationCount', contract.experiment_summary.iteration_count + ' iterations');
     setList(root, 'decisionRanking', baseline.rankings.map(rank => { const option=contract.decision_options.find(item=>item.option_id===rank.option_id); return `#${rank.rank} ${option?option.title:rank.option_id} — ${rank.score.toFixed(2)}`; }));
     setList(root, 'stakeholderSummary', contract.stakeholders.map(item => `${item.name}: influence ${item.influence}/5, interest ${item.interest}/5 — ${item.engagement_strategy || item.stance}`));
     const journey = contract.journeys[0];
@@ -180,9 +196,14 @@
     setList(root, 'hmw', contract.how_might_we.map(item => item.question));
     setText(root, 'prototypeTitle', prototype.title || 'Prototype concept');
     setText(root, 'prototypeBody', prototype.description || 'No prototype recorded.');
-    setText(root, 'signal', test.signal || 'No signal recorded.');
-    setText(root, 'test', test.method || 'No test method recorded.');
-    setText(root, 'risk', risk.note || 'Review assumptions and evidence gaps before relying on this brief.');
+    setText(root, 'signal', (experimentPlan.metrics && experimentPlan.metrics[0] && experimentPlan.metrics[0].success_threshold) || test.signal || 'No success threshold recorded.');
+    setText(root, 'test', experimentPlan.method || test.method || 'No experiment method recorded.');
+    setText(root, 'risk', (experimentPlan.safeguards && experimentPlan.safeguards.risks && experimentPlan.safeguards.risks[0]) || risk.note || 'Review assumptions, safeguards, and evidence gaps before relying on this test.');
+    setList(root, 'experimentPlanSummary', contract.experiment_plans.map(item => `${item.title} [${item.status}] — ${item.method}`));
+    setList(root, 'experimentRunSummary', contract.experiment_runs.map(item => `${item.run_id}: ${item.result_state} with ${item.participant_count} participants — ${item.summary || 'No summary recorded'}`));
+    setList(root, 'learningSummary', contract.learning_decisions.map(item => `${item.outcome}: ${item.rationale || 'No rationale recorded'}`));
+    setText(root, 'latestExperimentResult', latestRun.summary || 'No run recorded.');
+    setText(root, 'latestLearningDecision', latestDecision.rationale || 'No learning decision recorded.');
     setList(root, 'ideas', contract.ideas.length ? contract.ideas.map(item => `${item.title} [${item.status}; ${item.vote_count} votes] — ${item.rationale}`) : contract.framework.prompts.map(item => `${item.label}: ${item.question} — apply this to: ${contract.challenge}`));
   }
 
@@ -221,6 +242,13 @@
     setField(root,'sensitivityViewsJson',JSON.stringify((contract.sensitivity_views||[]).slice(1),null,2));
     setField(root,'decisionNotesJson',JSON.stringify(contract.decision_notes||[],null,2));
     setField(root,'decisionHandoffsJson',JSON.stringify(contract.decision_handoffs||[],null,2));
+    setField(root,'prototypesJson',JSON.stringify(contract.prototypes||[],null,2));
+    setField(root,'hypothesesJson',JSON.stringify(contract.hypotheses||[],null,2));
+    setField(root,'experimentPlansJson',JSON.stringify(contract.experiment_plans||[],null,2));
+    setField(root,'experimentRunsJson',JSON.stringify(contract.experiment_runs||[],null,2));
+    setField(root,'learningDecisionsJson',JSON.stringify(contract.learning_decisions||[],null,2));
+    setField(root,'iterationHistoryJson',JSON.stringify(contract.iteration_history||[],null,2));
+    setField(root,'experimentHandoffsJson',JSON.stringify(contract.experiment_handoffs||[],null,2));
     const title = root.querySelector('[data-workspace-field="title"]');
     if (title) title.value = contract.title || 'Untitled Canvas Project';
     render(root, contract);

@@ -1,4 +1,4 @@
-"""Flask form and view adapters for Canvas Contract 1.4."""
+"""Flask form and view adapters for Canvas Contract 1.5."""
 
 from __future__ import annotations
 
@@ -213,6 +213,13 @@ def contract_to_form(contract: Mapping[str, Any], *, storage_id: int | None = No
         "sensitivity_views_json": json.dumps(data.get("sensitivity_views", [])[1:], ensure_ascii=False, indent=2),
         "decision_notes_json": json.dumps(data.get("decision_notes", []), ensure_ascii=False, indent=2),
         "decision_handoffs_json": json.dumps(data.get("decision_handoffs", []), ensure_ascii=False, indent=2),
+        "prototypes_json": json.dumps(data.get("prototypes", []), ensure_ascii=False, indent=2),
+        "hypotheses_json": json.dumps(data.get("hypotheses", []), ensure_ascii=False, indent=2),
+        "experiment_plans_json": json.dumps(data.get("experiment_plans", []), ensure_ascii=False, indent=2),
+        "experiment_runs_json": json.dumps(data.get("experiment_runs", []), ensure_ascii=False, indent=2),
+        "learning_decisions_json": json.dumps(data.get("learning_decisions", []), ensure_ascii=False, indent=2),
+        "iteration_history_json": json.dumps(data.get("iteration_history", []), ensure_ascii=False, indent=2),
+        "experiment_handoffs_json": json.dumps(data.get("experiment_handoffs", []), ensure_ascii=False, indent=2),
         "research_readiness": data.get("research_summary", {}).get("readiness", "hypothesis"),
         "evidence": evidence.get("summary", ""),
         "assumption": assumption.get("statement", ""),
@@ -477,6 +484,13 @@ def form_to_contract(form: Mapping[str, Any], existing: Mapping[str, Any] | None
         ("sensitivity_views_json", "sensitivity_views"),
         ("decision_notes_json", "decision_notes"),
         ("decision_handoffs_json", "decision_handoffs"),
+        ("prototypes_json", "prototypes"),
+        ("hypotheses_json", "hypotheses"),
+        ("experiment_plans_json", "experiment_plans"),
+        ("experiment_runs_json", "experiment_runs"),
+        ("learning_decisions_json", "learning_decisions"),
+        ("iteration_history_json", "iteration_history"),
+        ("experiment_handoffs_json", "experiment_handoffs"),
     ):
         if form_key in form:
             raw_json = clean_text(form.get(form_key), "[]")

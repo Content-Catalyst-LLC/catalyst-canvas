@@ -1,6 +1,6 @@
 """Workspace-aware SQLite persistence for Catalyst Canvas.
 
-Version 1.7.0 stores immutable Canvas revisions beneath durable workspace
+Version 1.8.0 stores immutable Canvas revisions beneath durable workspace
 projects. The legacy ``canvas_briefs`` table remains readable and is migrated
 into the default workspace during initialization.
 """
@@ -332,23 +332,30 @@ def _sync_research_assets_conn(
     workspace_id = str(project["workspace_id"])
     now = str(payload.get("updated_at") or utc_now())
     collections = {
-        "persona": payload.get("personas", []),
-        "stakeholder": payload.get("stakeholders", []),
-        "journey": payload.get("journeys", []),
-        "source": payload.get("sources", []),
-        "evidence": payload.get("evidence", []),
-        "claim": payload.get("claims", []),
-        "assumption": payload.get("assumptions", []),
-        "research_question": payload.get("research_questions", []),
-        "interview_guide": payload.get("interview_guides", []),
-        "observation_note": payload.get("observation_notes", []),
+        "persona": (payload.get("personas", []), "persona_id"),
+        "stakeholder": (payload.get("stakeholders", []), "stakeholder_id"),
+        "journey": (payload.get("journeys", []), "journey_id"),
+        "source": (payload.get("sources", []), "source_id"),
+        "evidence": (payload.get("evidence", []), "evidence_id"),
+        "claim": (payload.get("claims", []), "claim_id"),
+        "assumption": (payload.get("assumptions", []), "assumption_id"),
+        "research_question": (payload.get("research_questions", []), "research_question_id"),
+        "interview_guide": (payload.get("interview_guides", []), "interview_guide_id"),
+        "observation_note": (payload.get("observation_notes", []), "observation_note_id"),
+        "prototype": (payload.get("prototypes", []), "prototype_id"),
+        "hypothesis": (payload.get("hypotheses", []), "hypothesis_id"),
+        "experiment_plan": (payload.get("experiment_plans", []), "experiment_id"),
+        "experiment_run": (payload.get("experiment_runs", []), "run_id"),
+        "learning_decision": (payload.get("learning_decisions", []), "learning_decision_id"),
+        "iteration": (payload.get("iteration_history", []), "iteration_id"),
     }
     active_keys: set[str] = set()
-    for asset_type, records in collections.items():
+    for asset_type, collection in collections.items():
+        records, id_key = collection
         for record in records if isinstance(records, list) else []:
             if not isinstance(record, Mapping):
                 continue
-            record_id = str(record.get(f"{asset_type}_id") or "").strip()
+            record_id = str(record.get(id_key) or "").strip()
             if not record_id:
                 continue
             asset_key = _research_asset_key(project_id, asset_type, record_id)
@@ -893,7 +900,7 @@ def list_research_assets(
 ) -> List[Dict[str, Any]]:
     clauses = ["workspace_id=?"]
     params: List[Any] = [workspace_id]
-    if asset_type in {"persona", "stakeholder", "journey", "source", "evidence", "claim", "assumption", "research_question", "interview_guide", "observation_note"}:
+    if asset_type in {"persona", "stakeholder", "journey", "source", "evidence", "claim", "assumption", "research_question", "interview_guide", "observation_note", "prototype", "hypothesis", "experiment_plan", "experiment_run", "learning_decision", "iteration"}:
         clauses.append("asset_type=?")
         params.append(asset_type)
     if not include_archived:
@@ -926,7 +933,7 @@ def get_research_asset(db_path: str, asset_key: str) -> Dict[str, Any] | None:
 
 
 def research_asset_counts(db_path: str, workspace_id: str = DEFAULT_WORKSPACE_ID) -> Dict[str, int]:
-    result = {kind: 0 for kind in ["persona", "stakeholder", "journey", "source", "evidence", "claim", "assumption", "research_question", "interview_guide", "observation_note"]}
+    result = {kind: 0 for kind in ["persona", "stakeholder", "journey", "source", "evidence", "claim", "assumption", "research_question", "interview_guide", "observation_note", "prototype", "hypothesis", "experiment_plan", "experiment_run", "learning_decision", "iteration"]}
     result["total"] = 0
     with closing(connect(db_path)) as conn:
         rows = conn.execute(
@@ -958,12 +965,16 @@ def reuse_research_asset(
         "persona": "personas", "stakeholder": "stakeholders", "journey": "journeys",
         "source": "sources", "evidence": "evidence", "claim": "claims", "assumption": "assumptions",
         "research_question": "research_questions", "interview_guide": "interview_guides", "observation_note": "observation_notes",
+        "prototype": "prototypes", "hypothesis": "hypotheses", "experiment_plan": "experiment_plans",
+        "experiment_run": "experiment_runs", "learning_decision": "learning_decisions", "iteration": "iteration_history",
     }
     if kind not in collection_map:
         raise ValueError("Unsupported research asset type.")
     collection = collection_map[kind]
     record = json.loads(json.dumps(asset["payload"]))
-    id_key = f"{kind}_id"
+    id_key = {
+        "experiment_plan": "experiment_id", "experiment_run": "run_id", "iteration": "iteration_id",
+    }.get(kind, f"{kind}_id")
     existing_ids = {str(item.get(id_key, "")) for item in payload.get(collection, [])}
     if str(record.get(id_key, "")) in existing_ids:
         record[id_key] = new_id(kind)

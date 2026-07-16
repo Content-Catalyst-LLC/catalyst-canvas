@@ -1,5 +1,5 @@
 {
-  "schema_version": "catalyst-canvas/1.4",
+  "schema_version": "catalyst-canvas/1.5",
   "canvas_id": "canvas-fixture-001",
   "challenge_id": "challenge-primary",
   "revision_id": "revision-fixture-001",
@@ -2179,7 +2179,7 @@
       "test_method": "Compare reviewer interpretation before and after using the brief.",
       "status": "planned",
       "experiment_ids": [
-        "test-001"
+        "experiment-001"
       ],
       "evidence_ids": [
         "evidence-002"
@@ -2313,10 +2313,340 @@
     {
       "prototype_id": "prototype-001",
       "title": "Neighborhood heat-action brief",
-      "description": "A printable brief linking one neighborhood risk signal to one operational response and one review checkpoint.",
-      "status": "planned"
+      "description": "A printable brief linking one neighborhood risk signal to one operational response, one confidence statement, and one review checkpoint.",
+      "prototype_type": "paper",
+      "fidelity": "medium",
+      "status": "iterating",
+      "version": "0.2",
+      "owner": "Program Design Team",
+      "idea_ids": [
+        "idea-001"
+      ],
+      "option_ids": [
+        "option-001"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "artifact_refs": [
+        "artifact://heat-action-brief/v0.2"
+      ],
+      "success_definition": "Partners independently identify the intended action, evidence limitation, and accountable owner.",
+      "known_limitations": [
+        "The prototype does not validate the underlying heat indicators."
+      ],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
     }
   ],
+  "hypotheses": [
+    {
+      "hypothesis_id": "hypothesis-001",
+      "statement": "A one-page evidence-gap action card enables municipal and neighborhood partners to identify the same next action and material evidence limitation.",
+      "hypothesis_type": "usability",
+      "status": "partially_supported",
+      "confidence": "medium",
+      "owner": "Program Design Team",
+      "prototype_ids": [
+        "prototype-001"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "evidence_ids": [
+        "evidence-002"
+      ],
+      "falsification_condition": "Fewer than four of five reviewers identify both the intended action and the evidence limitation without facilitator interpretation.",
+      "limitations": [
+        "The first run uses a small purposive sample."
+      ],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
+    }
+  ],
+  "experiment_plans": [
+    {
+      "experiment_id": "experiment-001",
+      "title": "Cross-agency clarity experiment",
+      "objective": "Determine whether the brief supports a shared pilot interpretation without hiding evidence gaps.",
+      "method": "Run a 30-minute task-based review with municipal and neighborhood partners, followed by independent recall and a facilitated debrief.",
+      "status": "complete",
+      "owner": "Program Design Team",
+      "prototype_ids": [
+        "prototype-001"
+      ],
+      "hypothesis_ids": [
+        "hypothesis-001"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "research_question_ids": [
+        "research-question-001"
+      ],
+      "participant_plan": {
+        "target_count": 5,
+        "segments": [
+          "municipal resilience staff",
+          "neighborhood partner representatives"
+        ],
+        "recruitment_method": "Purposive invitation through the pilot working group",
+        "inclusion_criteria": [
+          "Direct involvement in pilot selection"
+        ],
+        "exclusion_criteria": [
+          "No direct role in the pilot decision"
+        ],
+        "consent_required": true,
+        "compensation": "No compensation for staff; community participants follow institutional policy.",
+        "accessibility_accommodations": [
+          "Large-print brief",
+          "Remote participation option"
+        ]
+      },
+      "metrics": [
+        {
+          "metric_id": "metric-001",
+          "name": "Shared next-action identification",
+          "metric_type": "quantitative",
+          "success_threshold": "At least 4 of 5 participants identify the same next action",
+          "unit": "participants",
+          "collection_method": "Independent post-task response",
+          "baseline": "2 of 5 in the unstructured review",
+          "target": "4 of 5",
+          "basis": "estimate",
+          "confidence": "medium",
+          "evidence_ids": [
+            "evidence-002"
+          ]
+        },
+        {
+          "metric_id": "metric-002",
+          "name": "Evidence-gap visibility",
+          "metric_type": "guardrail",
+          "success_threshold": "All participants can identify the primary evidence limitation",
+          "unit": "participants",
+          "collection_method": "Post-task question",
+          "baseline": "Not recorded",
+          "target": "5 of 5",
+          "basis": "estimate",
+          "confidence": "low",
+          "evidence_ids": [
+            "evidence-001"
+          ]
+        }
+      ],
+      "safeguards": {
+        "risks": [
+          "Participants may interpret the prototype as a final funding commitment",
+          "Discussion may expose sensitive neighborhood information"
+        ],
+        "mitigations": [
+          "Label the brief as provisional",
+          "Use only aggregated or de-identified examples"
+        ],
+        "stop_conditions": [
+          "Stop if personally identifiable or sensitive service data are introduced"
+        ],
+        "data_handling": "Store de-identified notes and aggregate counts only.",
+        "ethics_review_status": "not_required"
+      },
+      "start_date": "2026-07-14",
+      "end_date": "2026-07-16",
+      "dependencies": [
+        "Pilot working-group availability"
+      ],
+      "blockers": [],
+      "artifact_refs": [
+        "artifact://experiment-guide/cross-agency-clarity-v1"
+      ],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00"
+    }
+  ],
+  "experiment_runs": [
+    {
+      "run_id": "experiment-run-001",
+      "experiment_id": "experiment-001",
+      "prototype_ids": [
+        "prototype-001"
+      ],
+      "status": "complete",
+      "started_at": "2026-07-16T14:00:00+00:00",
+      "completed_at": "2026-07-16T14:30:00+00:00",
+      "participant_count": 5,
+      "result_state": "partially_supported",
+      "summary": "Four participants identified the intended next action, but only three independently named the primary evidence limitation.",
+      "metric_results": [
+        {
+          "metric_id": "metric-001",
+          "observed_value": "4 of 5",
+          "met_threshold": true,
+          "sample_size": 5,
+          "analysis_note": "The intended next action was consistently interpreted.",
+          "confidence": "medium",
+          "evidence_ids": [
+            "evidence-002"
+          ]
+        },
+        {
+          "metric_id": "metric-002",
+          "observed_value": "3 of 5",
+          "met_threshold": false,
+          "sample_size": 5,
+          "analysis_note": "The evidence limitation needs stronger visual prominence and plain-language wording.",
+          "confidence": "medium",
+          "evidence_ids": [
+            "evidence-001"
+          ]
+        }
+      ],
+      "observations": [
+        "Participants understood ownership faster when the owner appeared beside the action.",
+        "The confidence legend was overlooked by two participants."
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "limitations": [
+        "Small purposive sample",
+        "Facilitator was also part of the design team"
+      ],
+      "incidents": [],
+      "artifact_refs": [
+        "artifact://deidentified-notes/experiment-run-001"
+      ],
+      "recorded_by": "Research facilitator",
+      "recorded_at": "2026-07-16T15:00:00+00:00"
+    }
+  ],
+  "learning_decisions": [
+    {
+      "learning_decision_id": "learning-decision-001",
+      "experiment_id": "experiment-001",
+      "run_ids": [
+        "experiment-run-001"
+      ],
+      "outcome": "iterate",
+      "rationale": "The action structure is usable, but evidence limitations need stronger placement and wording before a larger pilot.",
+      "hypothesis_ids": [
+        "hypothesis-001"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "next_actions": [
+        "Move the confidence statement beside the proposed action",
+        "Retest the revised brief with at least five additional reviewers"
+      ],
+      "owner": "Program Design Team",
+      "decided_at": "2026-07-16T16:00:00+00:00"
+    }
+  ],
+  "iteration_history": [
+    {
+      "iteration_id": "iteration-001",
+      "prototype_id": "prototype-001",
+      "from_version": "0.1",
+      "to_version": "0.2",
+      "change_summary": "Moved the confidence statement next to the action and simplified the evidence-gap language.",
+      "reason": "The first run showed that two participants overlooked the evidence limitation.",
+      "experiment_run_ids": [
+        "experiment-run-001"
+      ],
+      "learning_decision_id": "learning-decision-001",
+      "author": "Program Design Team",
+      "created_at": "2026-07-16T16:00:00+00:00"
+    }
+  ],
+  "experiment_handoffs": [
+    {
+      "experiment_handoff_id": "experiment-handoff-001",
+      "target": "research_lab",
+      "status": "ready",
+      "purpose": "Run a larger controlled clarity study and preserve de-identified result data.",
+      "prototype_ids": [
+        "prototype-001"
+      ],
+      "experiment_ids": [
+        "experiment-001"
+      ],
+      "run_ids": [
+        "experiment-run-001"
+      ],
+      "dataset_refs": [
+        "dataset://heat-brief-clarity-pilot"
+      ],
+      "calculation_requirements": [
+        "Estimate confidence intervals for task-completion proportions"
+      ],
+      "modeling_questions": [],
+      "compute_requirements": [
+        "Reproducible notebook",
+        "Versioned de-identified dataset"
+      ],
+      "created_by": "Program Design Team",
+      "created_at": "2026-07-16T16:00:00+00:00"
+    },
+    {
+      "experiment_handoff_id": "experiment-handoff-002",
+      "target": "workbench",
+      "status": "draft",
+      "purpose": "Validate metric definitions and prepare a reusable experiment scorecard.",
+      "prototype_ids": [
+        "prototype-001"
+      ],
+      "experiment_ids": [
+        "experiment-001"
+      ],
+      "run_ids": [
+        "experiment-run-001"
+      ],
+      "dataset_refs": [
+        "dataset://heat-brief-clarity-pilot"
+      ],
+      "calculation_requirements": [
+        "Calculate threshold attainment and uncertainty by participant segment"
+      ],
+      "modeling_questions": [
+        "How sensitive is the conclusion to a one-participant change in this small sample?"
+      ],
+      "compute_requirements": [
+        "Unit-aware metric calculations"
+      ],
+      "created_by": "Program Design Team",
+      "created_at": "2026-07-16T16:00:00+00:00"
+    }
+  ],
+  "experiment_summary": {
+    "prototype_count": 1,
+    "hypothesis_count": 1,
+    "experiment_count": 1,
+    "active_experiment_count": 0,
+    "completed_run_count": 1,
+    "learning_decision_count": 1,
+    "iteration_count": 1,
+    "untested_hypothesis_count": 0,
+    "missing_metric_count": 0,
+    "missing_safeguard_count": 0,
+    "blocked_experiment_count": 0,
+    "readiness": "learning_recorded",
+    "indicator_note": "Experiment readiness is a workflow coverage indicator. It does not establish safety, causal validity, statistical power, desirability, feasibility, or impact.",
+    "generated_at": "2026-07-16T12:00:00+00:00"
+  },
   "tests": [
     {
       "test_id": "test-001",
@@ -2337,9 +2667,9 @@
   ],
   "provenance": {
     "generator": "catalyst-canvas",
-    "generator_version": "1.7.0",
+    "generator_version": "1.8.0",
     "source_surface": "fixture",
-    "source_version": "1.7.0",
+    "source_version": "1.8.0",
     "migrated_from": "",
     "warnings": []
   }

@@ -2,6 +2,31 @@
 
 All notable changes to Catalyst Canvas are documented here.
 
+## 1.8.0 — 2026-07-16
+
+### Canvas Contract 1.5 and governed experimentation
+
+- Upgraded the canonical document contract to `catalyst-canvas/1.5` with explicit migration from Contracts 1.0 through 1.4.
+- Expanded prototypes into versioned portfolio records with type, fidelity, status, ownership, source links, artifacts, success definitions, and known limitations.
+- Added falsifiable hypotheses covering desirability, usability, feasibility, viability, equity, safety, adoption, and impact.
+- Added structured experiment plans with participant and recruitment plans, inclusion and exclusion criteria, consent, accessibility accommodations, metrics, thresholds, safeguards, stop conditions, data handling, ethics-review status, dependencies, and blockers.
+- Added experiment runs, metric results, participant counts, observations, incidents, evidence, limitations, and recorded result states.
+- Added learning decisions and versioned iteration history linking experiment runs back to prototypes, assumptions, evidence, and next actions.
+
+### Experiment Studio and platform handoffs
+
+- Added Flask `/experiment`, `GET /api/experiments`, and `POST /api/experiments/runs` workflows with immutable revision saves.
+- Added workspace indexing and reuse for prototypes, hypotheses, experiment plans, runs, learning decisions, and iterations.
+- Added Research Lab and Workbench packages using `catalyst-canvas-experiment-handoff/1.0`.
+- Added browser-local WordPress editors and summaries for the complete prototype and experiment lifecycle.
+- Expanded JSON, Markdown, and print reports with experiment readiness, safeguards, results, learning decisions, and iteration history.
+
+### Conformance and release hardening
+
+- Added deterministic Python, Flask, and Node conformance for the Contract 1.5 experiment fixture.
+- Added migration, safeguards, metrics, result, learning, storage-indexing, route, and handoff tests.
+- Expanded the maintained suite to 74 pytest tests and 74 unittest tests before final packaging.
+
 ## 1.7.0 — 2026-07-16
 
 ### Canvas Contract 1.4 and prioritization model

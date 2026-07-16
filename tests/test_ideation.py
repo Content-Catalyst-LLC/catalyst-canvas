@@ -79,7 +79,7 @@ class IdeationContractTests(unittest.TestCase):
         payload = json.loads((ROOT / "fixtures" / "canvas_contract_1_2.expected.json").read_text())
         result = migrate_payload(payload)
         self.assertEqual(result.migrated_from, "catalyst-canvas/1.2")
-        self.assertEqual(result.contract["schema_version"], "catalyst-canvas/1.4")
+        self.assertEqual(result.contract["schema_version"], "catalyst-canvas/1.5")
         self.assertIn("ideation_summary", result.contract)
 
 

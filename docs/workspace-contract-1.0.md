@@ -1,15 +1,9 @@
 # Workspace Project Contract 1.0
 
-Catalyst Canvas v1.3.0 introduced `catalyst-canvas-workspace/1.0` as the stable project-registry record surrounding immutable Canvas revisions.
+The Workspace Project Contract describes project metadata around a versioned Canvas document.
 
-A project record contains:
+It records stable workspace and project identifiers, title, description, tags, lifecycle status, current Canvas and revision identifiers, revision count, and timestamps.
 
-- `workspace_id` and stable `project_id`;
-- title, description, status, and tags;
-- created, updated, and archived timestamps;
-- the current Canvas and revision identities;
-- total immutable revision count.
+The workspace contract does not duplicate the full Canvas. In v1.8.0, Canvas payloads validate against `catalyst-canvas/1.5`; Contracts 1.0–1.4 migrate on read, import, save, or reuse.
 
-The authoritative schema is `schemas/catalyst_canvas_workspace_1_0.schema.json`.
-
-The workspace contract does not duplicate the full Canvas. In v1.7.0, Canvas payloads validate against `catalyst-canvas/1.4`; Contracts 1.0–1.3 migrate on read, import, save, or reuse. Research and ledger assets are stored separately and linked back to contributing projects and revisions.
+The workspace research-asset library indexes personas, stakeholders, journeys, sources, evidence, claims, assumptions, research questions, interview guides, observations, prototypes, hypotheses, experiment plans, experiment runs, learning decisions, and iterations. Reusing an asset creates a new immutable Canvas revision rather than modifying the source project.

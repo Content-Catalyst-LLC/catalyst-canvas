@@ -2,7 +2,7 @@
 {% block title %}Research Evidence Ledger · Catalyst Canvas{% endblock %}
 {% block content %}
 <section class="hero">
-  <p class="label">Catalyst Canvas v1.7.0</p>
+  <p class="label">Catalyst Canvas v1.8.0</p>
   <h1>Research, Evidence, and Assumption Ledger</h1>
   <p>Trace sources, excerpts, claims, assumptions, research questions, field notes, and handoffs without converting coverage into a truth score.</p>
   {% if project_id %}<div class="actions"><a class="btn" href="{{ url_for('canvas.research_handoff_export', project_id=project_id, target='knowledge_library') }}">Knowledge Library handoff</a><a class="btn" href="{{ url_for('canvas.research_handoff_export', project_id=project_id, target='research_librarian') }}">Research Librarian handoff</a></div>{% endif %}

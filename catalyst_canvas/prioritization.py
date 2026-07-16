@@ -1,4 +1,4 @@
-"""Transparent prioritization and decision-readiness models for Canvas Contract 1.4."""
+"""Transparent prioritization and decision-readiness models for Canvas Contract 1.5."""
 
 from __future__ import annotations
 

@@ -1,8 +1,8 @@
 # Catalyst Canvas Submission
 
-**Catalyst Canvas v1.7.0 — Prioritization and Decision Readiness**
+**Catalyst Canvas v1.8.0 — Prototype and Experiment Management**
 
-This release adds Canvas Contract 1.4, transparent ICE and RICE scoring, editable weighted criteria, four decision matrices, ethical gates, sensitivity analysis, dependencies, blockers, resources, deadlines, recommendation states, decision notes, and provenance-preserving Decision Studio and Workbench handoffs.
+This release adds Canvas Contract 1.5, versioned prototypes, falsifiable hypotheses, participant and metric plans, safeguards, structured experiment runs, observed results, learning decisions, iteration history, and provenance-preserving Research Lab and Workbench handoffs.
 
 Run the release gate before submission:
 

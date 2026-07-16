@@ -1,4 +1,4 @@
-"""Canvas Contract 1.4 normalization and JSON Schema validation."""
+"""Canvas Contract 1.5 normalization and JSON Schema validation."""
 
 from __future__ import annotations
 
@@ -39,6 +39,16 @@ from .prioritization import (
     normalize_decision_handoffs,
     prioritization_summary,
 )
+from .experiments import (
+    experiment_summary,
+    normalize_experiment_handoffs,
+    normalize_experiment_plans,
+    normalize_experiment_runs,
+    normalize_hypotheses,
+    normalize_iteration_history,
+    normalize_learning_decisions,
+    normalize_prototypes as normalize_managed_prototypes,
+)
 from .research import (
     normalize_behavioral_signals,
     normalize_journeys,
@@ -48,7 +58,7 @@ from .research import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA_PATH = ROOT / "schemas" / "catalyst_canvas_contract_1_4.schema.json"
+SCHEMA_PATH = ROOT / "schemas" / "catalyst_canvas_contract_1_5.schema.json"
 
 
 class CanvasContractError(ValueError):
@@ -323,7 +333,7 @@ def normalize_provenance(value: Any, *, source_surface: str, migrated_from: str 
 
 
 def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: str = "python") -> Dict[str, Any]:
-    """Normalize a compact or partially structured payload into Canvas Contract 1.4."""
+    """Normalize a compact or partially structured payload into Canvas Contract 1.5."""
     from .frameworks import framework_record
 
     source: Mapping[str, Any] = payload or {}
@@ -403,7 +413,7 @@ def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: 
     interview_guides = normalize_interview_guides(source.get("interview_guides"))
     observation_notes = normalize_observation_notes(source.get("observation_notes"))
     handoffs = normalize_handoffs(source.get("handoffs"))
-    prototypes = normalize_prototypes(source.get("prototypes", source.get("prototype")))
+    prototypes = normalize_managed_prototypes(source.get("prototypes", source.get("prototype")), generated_at=updated_at)
     sessions = normalize_ideation_sessions(source.get("ideation_sessions"), framework_key=framework["key"], created_at=created_at)
     clusters = normalize_idea_clusters(source.get("idea_clusters"))
     ideas = normalize_ideas(
@@ -436,6 +446,18 @@ def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: 
     )
     decision_notes = normalize_decision_notes(source.get("decision_notes"), generated_at=updated_at)
     decision_handoffs = normalize_decision_handoffs(source.get("decision_handoffs"), generated_at=updated_at)
+    hypotheses = normalize_hypotheses(source.get("hypotheses"), assumptions=assumptions, prototypes=prototypes, generated_at=updated_at)
+    experiment_plans = normalize_experiment_plans(
+        source.get("experiment_plans"),
+        legacy_tests=source.get("tests", source.get("test_plan")),
+        hypotheses=hypotheses,
+        prototypes=prototypes,
+        generated_at=updated_at,
+    )
+    experiment_runs = normalize_experiment_runs(source.get("experiment_runs"), generated_at=updated_at)
+    learning_decisions = normalize_learning_decisions(source.get("learning_decisions"), generated_at=updated_at)
+    iteration_history = normalize_iteration_history(source.get("iteration_history"), generated_at=updated_at)
+    experiment_handoffs = normalize_experiment_handoffs(source.get("experiment_handoffs"), generated_at=updated_at)
 
     contract = {
         "schema_version": CONTRACT_VERSION,
@@ -482,6 +504,15 @@ def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: 
         "ledger_summary": ledger_summary(sources, evidence, claims, assumptions, research_questions, generated_at=updated_at),
         "handoffs": handoffs,
         "prototypes": prototypes,
+        "hypotheses": hypotheses,
+        "experiment_plans": experiment_plans,
+        "experiment_runs": experiment_runs,
+        "learning_decisions": learning_decisions,
+        "iteration_history": iteration_history,
+        "experiment_handoffs": experiment_handoffs,
+        "experiment_summary": experiment_summary(
+            prototypes, hypotheses, experiment_plans, experiment_runs, learning_decisions, iteration_history, generated_at=updated_at
+        ),
         "tests": normalize_tests(source.get("tests", source.get("test_plan"))),
         "review_notes": normalize_review_notes(source.get("review_notes", source.get("review_note"))),
         "provenance": normalize_provenance(source.get("provenance"), source_surface=source_surface),

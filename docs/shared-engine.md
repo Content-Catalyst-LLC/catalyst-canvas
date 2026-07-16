@@ -1,15 +1,12 @@
-# Shared Engine Architecture
+# Shared Engine
 
-The authoritative domain implementation lives in `catalyst_canvas/`.
+Catalyst Canvas uses one canonical data model across Python, Flask, CLI, and WordPress.
 
-- `contract.py` normalizes and validates Canvas Contract 1.4.
-- `research.py` normalizes personas, stakeholders, journeys, stages, behavioral signals, and research readiness.
-- `ledger.py` normalizes source, evidence, claim, assumption, research-question, interview-guide, observation-note, summary, and handoff records.
-- `engine.py` exposes canonical generation.
-- `migrations.py` handles Contracts 1.0 and 1.1 plus recognized legacy payloads.
-- `exporters.py` produces JSON, Markdown, and print HTML.
-- `adapters/flask.py` maps Flask forms to and from the contract.
-- `workspaces.py` validates project registry records.
-- `cli.py` exposes generation, validation, and migration commands.
+- `contract.py` normalizes and validates Canvas Contract 1.5.
+- `ledger.py` governs sources, evidence, claims, assumptions, and research handoffs.
+- `ideation.py` governs framework sessions, ideas, clusters, votes, merges, and lineage.
+- `prioritization.py` governs score inputs, criteria, gates, sensitivity, and decision handoffs.
+- `experiments.py` governs prototypes, hypotheses, plans, runs, results, learning decisions, iterations, and experiment handoffs.
+- `migrations.py` upgrades recognized Contracts 1.0 through 1.4 and legacy payloads.
 
-The WordPress engine is implemented in JavaScript because it must run locally in the visitor's browser. Its release and framework registry are generated from repository sources, and its output is compared exactly with the Python Contract 1.4 fixture by Node tests.
+The WordPress engine is implemented in JavaScript because it runs locally in the visitor's browser. Its generated registry and exact Contract 1.5 fixture are compared with Python and Flask in Node conformance tests.

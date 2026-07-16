@@ -3,7 +3,7 @@
  * Plugin Name: Catalyst Canvas Demo
  * Plugin URI: https://sustainablecatalyst.com/catalyst-canvas/
  * Description: Adds a persistent, client-side Catalyst Canvas project workspace via the [catalyst_canvas_demo] shortcode.
- * Version: 1.7.0
+ * Version: 1.8.0
  * Author: Content Catalyst LLC
  * License: MIT
  * Text Domain: catalyst-canvas-demo
@@ -14,8 +14,8 @@ if (!defined('ABSPATH')) {
 }
 
 final class Catalyst_Canvas_Demo_Plugin {
-    private const VERSION = '1.7.0';
-    private const CONTRACT_VERSION = 'catalyst-canvas/1.4';
+    private const VERSION = '1.8.0';
+    private const CONTRACT_VERSION = 'catalyst-canvas/1.5';
     private const SHORTCODE = 'catalyst_canvas_demo';
 
     public function __construct() {
@@ -225,6 +225,18 @@ final class Catalyst_Canvas_Demo_Plugin {
                         <details><summary>Decision notes JSON</summary><textarea data-field="decisionNotesJson" rows="8">[]</textarea></details>
                         <details><summary>Decision Studio and Workbench handoffs JSON</summary><textarea data-field="decisionHandoffsJson" rows="10">[]</textarea></details>
                     </div>
+
+                    <div class="ccanvasdemo-panel">
+                        <p class="ccanvasdemo-section-label">Prototype and experiment management</p>
+                        <p class="ccanvasdemo-help">Record prototypes, hypotheses, participant plans, metrics, safeguards, runs, learning decisions, iterations, and Research Lab or Workbench handoffs. Readiness is a workflow indicator, not proof of causal validity or safety.</p>
+                        <details open><summary>Prototype portfolio JSON</summary><textarea data-field="prototypesJson" rows="12">[]</textarea></details>
+                        <details open><summary>Hypotheses JSON</summary><textarea data-field="hypothesesJson" rows="12">[]</textarea></details>
+                        <details open><summary>Experiment plans JSON</summary><textarea data-field="experimentPlansJson" rows="18">[]</textarea></details>
+                        <details><summary>Experiment runs JSON</summary><textarea data-field="experimentRunsJson" rows="16">[]</textarea></details>
+                        <details><summary>Learning decisions JSON</summary><textarea data-field="learningDecisionsJson" rows="12">[]</textarea></details>
+                        <details><summary>Iteration history JSON</summary><textarea data-field="iterationHistoryJson" rows="12">[]</textarea></details>
+                        <details><summary>Research Lab and Workbench handoffs JSON</summary><textarea data-field="experimentHandoffsJson" rows="12">[]</textarea></details>
+                    </div>
                 </form>
 
                 <div class="ccanvasdemo-output" aria-live="polite">
@@ -278,11 +290,26 @@ final class Catalyst_Canvas_Demo_Plugin {
                     </div>
 
                     <div class="ccanvasdemo-panel">
-                        <p class="ccanvasdemo-section-label">Experiment plan</p>
+                        <p class="ccanvasdemo-section-label">Prototype and experiment readiness</p>
                         <div class="ccanvasdemo-grid ccanvasdemo-grid-three">
-                            <article class="ccanvasdemo-mini"><strong>Signal</strong><p data-output="signal">What evidence would show whether this idea is working?</p></article>
-                            <article class="ccanvasdemo-mini"><strong>Test</strong><p data-output="test">What small test could be run next?</p></article>
-                            <article class="ccanvasdemo-mini"><strong>Risk</strong><p data-output="risk">What could be overclaimed or misunderstood?</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Readiness</strong><p data-output="experimentReadiness">Planning</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Prototypes</strong><p data-output="prototypeCount">0 prototypes</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Experiment plans</strong><p data-output="experimentCount">0 plans</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Completed runs</strong><p data-output="completedRunCount">0 completed</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Learning decisions</strong><p data-output="learningDecisionCount">0 decisions</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Iterations</strong><p data-output="iterationCount">0 iterations</p></article>
+                        </div>
+                        <div class="ccanvasdemo-grid ccanvasdemo-grid-three">
+                            <article class="ccanvasdemo-mini"><strong>Success threshold</strong><p data-output="signal">What evidence would show whether this idea is working?</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Method</strong><p data-output="test">What small test could be run next?</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Primary safeguard</strong><p data-output="risk">What could be overclaimed or misunderstood?</p></article>
+                        </div>
+                        <h4>Experiment plans</h4><ul data-output="experimentPlanSummary"></ul>
+                        <h4>Runs</h4><ul data-output="experimentRunSummary"></ul>
+                        <h4>Learning decisions</h4><ul data-output="learningSummary"></ul>
+                        <div class="ccanvasdemo-grid">
+                            <article class="ccanvasdemo-mini"><strong>Latest result</strong><p data-output="latestExperimentResult">No run recorded.</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Latest decision</strong><p data-output="latestLearningDecision">No learning decision recorded.</p></article>
                         </div>
                     </div>
 

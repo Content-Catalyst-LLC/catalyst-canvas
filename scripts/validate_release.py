@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-CONTRACT_VERSION = "catalyst-canvas/1.4"
+CONTRACT_VERSION = "catalyst-canvas/1.5"
 WORKSPACE_CONTRACT_VERSION = "catalyst-canvas-workspace/1.0"
 
 
@@ -54,7 +54,7 @@ def verify_version_markers() -> None:
         raise RuntimeError(f"Invalid semantic version: {VERSION!r}")
 
     manifest = load_json("canvas_manifest.json")
-    schema = load_json("schemas/catalyst_canvas_contract_1_4.schema.json")
+    schema = load_json("schemas/catalyst_canvas_contract_1_5.schema.json")
     workspace_schema = load_json("schemas/catalyst_canvas_workspace_1_0.schema.json")
     plugin = (ROOT / "wordpress/catalyst-canvas-demo/catalyst-canvas-demo.php").read_text(encoding="utf-8")
     package_version = (ROOT / "catalyst_canvas/version.py").read_text(encoding="utf-8")
@@ -89,7 +89,7 @@ def verify_version_markers() -> None:
     if f"private const VERSION = '{VERSION}';" not in plugin:
         raise RuntimeError("WordPress plugin release constant does not match VERSION")
     if f"private const CONTRACT_VERSION = '{CONTRACT_VERSION}';" not in plugin:
-        raise RuntimeError("WordPress contract constant does not match Canvas Contract 1.4")
+        raise RuntimeError("WordPress contract constant does not match Canvas Contract 1.5")
     if f'"releaseVersion":"{VERSION}"' not in contract_data:
         raise RuntimeError("Generated browser contract data has the wrong release version")
     if f'"contractVersion":"{CONTRACT_VERSION}"' not in contract_data:
@@ -132,7 +132,7 @@ def verify_source_tree() -> None:
 
 
 def validate_schemas() -> tuple[dict, dict]:
-    schema = load_json("schemas/catalyst_canvas_contract_1_4.schema.json")
+    schema = load_json("schemas/catalyst_canvas_contract_1_5.schema.json")
     workspace_schema = load_json("schemas/catalyst_canvas_workspace_1_0.schema.json")
     Draft202012Validator.check_schema(schema)
     Draft202012Validator.check_schema(workspace_schema)
@@ -157,9 +157,9 @@ def validate_generated_contract(temp_dir: Path, schema: dict) -> None:
     if errors:
         raise RuntimeError("Generated sample failed schema validation: " + "; ".join(error.message for error in errors))
     if contract.get("schema_version") != CONTRACT_VERSION:
-        raise RuntimeError("Generated JSON does not declare Canvas Contract 1.4")
+        raise RuntimeError("Generated JSON does not declare Canvas Contract 1.5")
     if f"Contract: {CONTRACT_VERSION}" not in markdown_output.read_text(encoding="utf-8"):
-        raise RuntimeError("Generated Markdown does not declare Canvas Contract 1.4")
+        raise RuntimeError("Generated Markdown does not declare Canvas Contract 1.5")
     if "<!doctype html>" not in html_output.read_text(encoding="utf-8").lower():
         raise RuntimeError("Generated print report is not standalone HTML")
 
@@ -176,7 +176,7 @@ def validate_demo_seed(temp_dir: Path) -> None:
     seed(database)
     canvas = get_canvas(str(database), 1)
     if not canvas or canvas.get("schema_version") != CONTRACT_VERSION:
-        raise RuntimeError("Demo seed did not create a Canvas Contract 1.4 record")
+        raise RuntimeError("Demo seed did not create a Canvas Contract 1.5 record")
 
 def validate_workspace_operations(temp_dir: Path, workspace_schema: dict) -> None:
     from catalyst_canvas import generate_canvas
@@ -256,7 +256,7 @@ def validate_workspace_operations(temp_dir: Path, workspace_schema: dict) -> Non
         raise RuntimeError("Decision readiness did not preserve incomplete review state")
 
 def validate_framework_package_cli(temp_dir: Path) -> None:
-    contract_source = ROOT / "fixtures/canvas_contract_1_4.expected.json"
+    contract_source = ROOT / "fixtures/canvas_contract_1_5.expected.json"
     package = temp_dir / "framework-package.json"
     imported = temp_dir / "framework-imported.json"
     invoke_cli("framework-export", "--input", str(contract_source), "--output", str(package), "--organization", "Release validation")
@@ -273,7 +273,7 @@ def validate_decision_handoff_cli(temp_dir: Path) -> None:
     # additional jsonschema-heavy Python interpreters inside the release gate.
     from catalyst_canvas.prioritization import build_decision_handoff_package
 
-    contract = load_json("fixtures/canvas_contract_1_4.expected.json")
+    contract = load_json("fixtures/canvas_contract_1_5.expected.json")
     decision = build_decision_handoff_package(contract, "decision_studio")
     workbench = build_decision_handoff_package(contract, "workbench")
     (temp_dir / "decision-studio-handoff.json").write_text(json.dumps(decision, indent=2) + "\n", encoding="utf-8")
@@ -294,7 +294,7 @@ def validate_migration_cli(temp_dir: Path, schema: dict) -> None:
         "generated_at": "2026-07-16T10:00:00+00:00",
         "challenge": "Migrate a legacy export",
         "audience": "Maintainer",
-        "goal": "Produce Canvas Contract 1.4",
+        "goal": "Produce Canvas Contract 1.5",
         "constraint": "Flat fields",
         "framework": "AIDA",
         "persona": {"name": "Maintainer", "description": "Needs safe migration."},
@@ -308,7 +308,7 @@ def validate_migration_cli(temp_dir: Path, schema: dict) -> None:
     payload = json.loads(output.read_text(encoding="utf-8"))
     errors = list(Draft202012Validator(schema).iter_errors(payload))
     if errors:
-        raise RuntimeError("Migrated CLI output failed Canvas Contract 1.4 validation")
+        raise RuntimeError("Migrated CLI output failed Canvas Contract 1.5 validation")
     if payload["provenance"]["migrated_from"] != "legacy-core/1.1.1":
         raise RuntimeError("Migration provenance was not recorded")
 
@@ -317,8 +317,8 @@ def validate_cross_surface_fixture() -> None:
     from catalyst_canvas.adapters.flask import compact_to_contract
     from catalyst_canvas.engine import generate_canvas
 
-    source = load_json("fixtures/canvas_contract_1_4.input.json")
-    expected = load_json("fixtures/canvas_contract_1_4.expected.json")
+    source = load_json("fixtures/canvas_contract_1_5.input.json")
+    expected = load_json("fixtures/canvas_contract_1_5.expected.json")
     if generate_canvas(source, source_surface="python") != expected:
         raise RuntimeError("Python engine diverges from the shared fixture")
     if compact_to_contract(source) != expected:
@@ -332,6 +332,7 @@ def validate_cross_surface_fixture() -> None:
         run(node, "tests/js/test_ledger.js")
         run(node, "tests/js/test_ideation.js")
         run(node, "tests/js/test_prioritization.js")
+        run(node, "tests/js/test_experiments.js")
     else:
         print("SKIP: Node.js is unavailable; browser fixture conformance will run in CI.")
 
@@ -342,7 +343,7 @@ def validate_prioritization_and_handoffs() -> None:
     from catalyst_canvas.engine import generate_canvas
     from catalyst_canvas.prioritization import build_decision_handoff_package, normalize_sensitivity_views
 
-    source = load_json("fixtures/canvas_contract_1_4.input.json")
+    source = load_json("fixtures/canvas_contract_1_5.input.json")
     contract = generate_canvas(source, source_surface="release-validation")
     summary = contract.get("prioritization_summary", {})
     if summary.get("option_count") != 3 or summary.get("criterion_count", 0) < 8:
@@ -384,6 +385,39 @@ def validate_prioritization_and_handoffs() -> None:
         raise RuntimeError("Workbench handoff omitted calculation inputs")
     if "governance" not in build_decision_handoff_package(contract, "decision_studio"):
         raise RuntimeError("Decision Studio handoff omitted governance context")
+
+def validate_experiments_and_handoffs() -> None:
+    from catalyst_canvas.engine import generate_canvas
+    from catalyst_canvas.experiments import build_experiment_handoff_package
+
+    source = load_json("fixtures/canvas_contract_1_5.input.json")
+    contract = generate_canvas(source, source_surface="release-validation")
+    summary = contract.get("experiment_summary", {})
+    if summary.get("readiness") != "learning_recorded":
+        raise RuntimeError("Experiment fixture did not preserve the recorded-learning state")
+    if summary.get("completed_run_count") != 1 or summary.get("learning_decision_count") != 1 or summary.get("iteration_count") != 1:
+        raise RuntimeError("Experiment fixture omitted run, learning-decision, or iteration records")
+    plan = contract.get("experiment_plans", [{}])[0]
+    if len(plan.get("metrics", [])) < 2 or not plan.get("safeguards", {}).get("stop_conditions"):
+        raise RuntimeError("Experiment plan omitted metrics or safeguards")
+    run_record = contract.get("experiment_runs", [{}])[0]
+    if run_record.get("participant_count") != 5 or run_record.get("result_state") != "partially_supported":
+        raise RuntimeError("Experiment run did not preserve participant or result context")
+    for target in ("research_lab", "workbench"):
+        package = build_experiment_handoff_package(contract, target)
+        if package.get("handoff_contract") != "catalyst-canvas-experiment-handoff/1.0":
+            raise RuntimeError("Experiment handoff contract marker is missing")
+        context = package.get("experiment_context", {})
+        for required in ("prototypes", "hypotheses", "experiment_plans", "experiment_runs", "learning_decisions", "iteration_history"):
+            if not context.get(required):
+                raise RuntimeError(f"Experiment handoff omitted {required}")
+    lab = build_experiment_handoff_package(contract, "research_lab").get("research_execution", {})
+    if not lab.get("participant_plans") or not lab.get("safeguards") or not lab.get("dataset_refs"):
+        raise RuntimeError("Research Lab handoff omitted execution context")
+    workbench = build_experiment_handoff_package(contract, "workbench").get("technical_validation", {})
+    if not workbench.get("metric_definitions") or not workbench.get("modeling_questions") or not workbench.get("prototype_artifacts"):
+        raise RuntimeError("Workbench experiment handoff omitted technical-validation context")
+
 
 def validate_optional_syntax_tools() -> None:
     php = shutil.which("php")
@@ -443,6 +477,7 @@ def main() -> int:
             ("decision handoffs", lambda: validate_decision_handoff_cli(temp_dir)),
             ("cross-surface conformance", validate_cross_surface_fixture),
             ("prioritization invariants", validate_prioritization_and_handoffs),
+            ("prototype and experiment invariants", validate_experiments_and_handoffs),
             ("optional syntax tools", validate_optional_syntax_tools),
             ("WordPress package", lambda: validate_plugin_package(temp_dir)),
         ]

@@ -21,11 +21,11 @@ class CanvasExportTests(unittest.TestCase):
     def test_json_export_is_canonical_and_newline_terminated(self):
         text = export_json(self.contract)
         self.assertTrue(text.endswith("\n"))
-        self.assertEqual(json.loads(text)["schema_version"], "catalyst-canvas/1.4")
+        self.assertEqual(json.loads(text)["schema_version"], "catalyst-canvas/1.5")
 
     def test_markdown_export_contains_contract_identity(self):
         text = export_markdown(self.contract)
-        self.assertIn("Contract: catalyst-canvas/1.4", text)
+        self.assertIn("Contract: catalyst-canvas/1.5", text)
         self.assertIn("Canvas ID: canvas-export-001", text)
         self.assertIn("## Provenance", text)
 

@@ -1,9 +1,9 @@
 'use strict';
 const assert = require('assert');
 const Engine = require('../../wordpress/catalyst-canvas-demo/assets/catalyst-canvas-engine.js');
-const source = require('../../fixtures/canvas_contract_1_4.input.json');
+const source = require('../../fixtures/canvas_contract_1_5.input.json');
 const contract = Engine.buildContract(source, 'wordpress');
-assert.strictEqual(contract.schema_version, 'catalyst-canvas/1.4');
+assert.strictEqual(contract.schema_version, 'catalyst-canvas/1.5');
 assert.strictEqual(contract.decision_options.length, 3);
 assert.strictEqual(contract.sensitivity_views[0].name, 'Baseline weights');
 const baseline = contract.sensitivity_views[0].rankings.map(item => item.option_id);

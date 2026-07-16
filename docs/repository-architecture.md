@@ -1,20 +1,13 @@
 # Repository Architecture
 
-Catalyst Canvas v1.7.0 is organized around one canonical domain package, explicit surface adapters, and workspace-scoped persistence.
+Catalyst Canvas v1.8.0 is organized around one canonical domain package, explicit surface adapters, and workspace-scoped persistence.
 
-- `VERSION` is the canonical release version.
-- `catalyst_canvas/contract.py` owns Contract 1.4 normalization and validation.
-- `catalyst_canvas/research.py` owns persona, stakeholder, journey, stage, behavioral-signal, and readiness normalization.
-- `catalyst_canvas/ledger.py` owns sources, evidence, claims, assumptions, research planning, ledger indicators, and handoff packages.
-- `catalyst_canvas/migrations.py` upgrades Contracts 1.0 and 1.1 plus recognized legacy formats.
-- `catalyst_canvas/exporters.py` produces stable JSON, Markdown, and print HTML.
-- `contracts/frameworks.json` is the authoritative framework registry.
-- `schemas/catalyst_canvas_contract_1_3.schema.json` is the current Canvas schema.
-- `schemas/catalyst_canvas_workspace_1_0.schema.json` is the project-registry schema.
-- `app/services/storage.py` owns projects, immutable revisions, reusable assets, and project links.
-- `fixtures/` supplies deterministic cross-surface conformance records.
-- `wordpress/catalyst-canvas-demo/` provides the browser-local workspace, research surface, and ledger.
-- `scripts/sync_contract_assets.py` derives browser contract data from repository sources.
-- `scripts/validate_release.py` is the authoritative release gate.
+- `catalyst_canvas/contract.py` owns Contract 1.5 normalization and validation.
+- `catalyst_canvas/experiments.py` owns prototype and experiment records and handoffs.
+- `catalyst_canvas/migrations.py` owns recognized historical migrations.
+- `app/` adapts the contract to Flask routes and SQLite workspaces.
+- `wordpress/catalyst-canvas-demo/` adapts the same contract to a browser-local shortcode workspace.
+- `scripts/` generates browser registries, validates releases, and builds the plugin.
+- `fixtures/` supplies exact cross-surface conformance inputs and outputs.
 
-Runtime databases, generated outputs, caches, and release ZIPs remain excluded from source control.
+Runtime databases, local environment files, and generated archives are not source artifacts and remain ignored.

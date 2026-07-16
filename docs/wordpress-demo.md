@@ -1,12 +1,13 @@
 # WordPress Demo Workflow
 
-1. Upload and activate `catalyst-canvas-demo-v1.7.0.zip`.
-2. Add `[catalyst_canvas_demo]` to the public Canvas page.
-3. Enter the challenge, audience, goal, constraint, and framework.
-4. Add personas, stakeholder map entries, and journey stages.
-5. Add source, evidence, claim, assumption, research-question, synthesis-tag, and handoff records.
-6. Generate and save the browser-local project.
-7. Review ledger indicators and unsupported-claim exposure.
-8. Copy Markdown, download Contract 1.4 JSON, or print the report.
+1. Upload and activate `catalyst-canvas-demo-v1.8.0.zip`.
+2. Add `[catalyst_canvas_demo]` to a page.
+3. Create or open a browser-local project.
+4. Record research, evidence, ideas, and decision alternatives.
+5. Edit versioned prototypes and falsifiable hypotheses.
+6. Define experiment participants, metrics, safeguards, and handoffs.
+7. Record runs, learning decisions, and iteration history.
+8. Save a revision or rely on debounced autosave.
+9. Copy Markdown, download Contract 1.5 JSON, or print the report.
 
-The demo does not transmit visitor inputs. Projects, revisions, research records, and ledger records are stored only in the current browser's localStorage.
+All project data remains in the current browser's localStorage. Clearing site data removes it.

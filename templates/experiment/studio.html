@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Experiment Studio — Catalyst Canvas{% endblock %}
+{% block content %}
+<section class="panel">
+  <div class="split-heading">
+    <div>
+      <p class="label">Prototype and Experiment Management</p>
+      <h2>Plan, run, learn, and iterate</h2>
+      <p class="muted">Preserve the full path from prototype and hypothesis through safeguards, results, learning decisions, and the next version.</p>
+    </div>
+    <div class="stats">
+      <span><strong>{{ contract.experiment_summary.prototype_count }}</strong><br>prototypes</span>
+      <span><strong>{{ contract.experiment_summary.hypothesis_count }}</strong><br>hypotheses</span>
+      <span><strong>{{ contract.experiment_summary.experiment_count }}</strong><br>experiments</span>
+      <span><strong>{{ contract.experiment_summary.readiness|replace('_',' ') }}</strong><br>readiness</span>
+    </div>
+  </div>
+  <div class="trace">{{ contract.experiment_summary.indicator_note }}</div>
+
+  <div class="grid two" style="margin-top:18px">
+    {% for prototype in contract.prototypes %}
+    <article class="card">
+      <p class="label">{{ prototype.prototype_type|replace('_',' ') }} · {{ prototype.fidelity }} fidelity</p>
+      <h3>{{ prototype.title }} <small>v{{ prototype.version }}</small></h3>
+      <p>{{ prototype.description }}</p>
+      <p><strong>Status:</strong> {{ prototype.status|replace('_',' ') }}<br><strong>Owner:</strong> {{ prototype.owner or 'unassigned' }}</p>
+      <p><strong>Success:</strong> {{ prototype.success_definition or 'not recorded' }}</p>
+    </article>
+    {% endfor %}
+    {% for hypothesis in contract.hypotheses %}
+    <article class="card">
+      <p class="label">Hypothesis · {{ hypothesis.hypothesis_type }}</p>
+      <h3>{{ hypothesis.status|replace('_',' ') }}</h3>
+      <p>{{ hypothesis.statement }}</p>
+      <p><strong>Falsification:</strong> {{ hypothesis.falsification_condition or 'not recorded' }}</p>
+    </article>
+    {% endfor %}
+  </div>
+
+  <div class="record-list" style="margin-top:18px">
+    {% for experiment in contract.experiment_plans %}
+    <article class="record-row">
+      <p class="label">Experiment · {{ experiment.status }}</p>
+      <h3>{{ experiment.title }}</h3>
+      <p>{{ experiment.objective }}</p>
+      <p><strong>Method:</strong> {{ experiment.method }}</p>
+      <p><strong>Participants:</strong> {{ experiment.participant_plan.target_count }} target · {{ experiment.participant_plan.segments|join(', ') or 'segments not recorded' }}</p>
+      <p><strong>Metrics:</strong> {{ experiment.metrics|map(attribute='name')|join(', ') or 'none' }}</p>
+      <p><strong>Safeguards:</strong> {{ experiment.safeguards.risks|join('; ') or 'no risks recorded' }}</p>
+    </article>
+    {% endfor %}
+  </div>
+
+  <form method="post" data-autosave-project="{{ canvas.project_id }}" style="margin-top:22px">
+    <label>Prototypes JSON</label><textarea name="prototypes_json" rows="14">{{ canvas.prototypes_json }}</textarea>
+    <label>Hypotheses JSON</label><textarea name="hypotheses_json" rows="14">{{ canvas.hypotheses_json }}</textarea>
+    <label>Experiment plans JSON</label><textarea name="experiment_plans_json" rows="18">{{ canvas.experiment_plans_json }}</textarea>
+    <label>Experiment runs JSON</label><textarea name="experiment_runs_json" rows="16">{{ canvas.experiment_runs_json }}</textarea>
+    <label>Learning decisions JSON</label><textarea name="learning_decisions_json" rows="12">{{ canvas.learning_decisions_json }}</textarea>
+    <label>Iteration history JSON</label><textarea name="iteration_history_json" rows="12">{{ canvas.iteration_history_json }}</textarea>
+    <label>Research Lab and Workbench handoffs JSON</label><textarea name="experiment_handoffs_json" rows="14">{{ canvas.experiment_handoffs_json }}</textarea>
+    <p class="field-help">Every manual save creates an immutable project revision. Experiment readiness remains a descriptive coverage signal, not a claim of validity.</p>
+    <div class="actions"><button class="btn" type="submit">Save experiment workspace</button></div>
+  </form>
+
+  {% if canvas.project_id %}
+  <div class="actions">
+    <a class="btn" href="{{ url_for('canvas.experiment_handoff_export', project_id=canvas.project_id, target='research_lab') }}">Research Lab handoff</a>
+    <a class="btn" href="{{ url_for('canvas.experiment_handoff_export', project_id=canvas.project_id, target='workbench') }}">Workbench handoff</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

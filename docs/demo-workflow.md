@@ -1,21 +1,19 @@
-# Catalyst Canvas Demo Workflow
+# Demo Workflow
 
-The v1.7.0 workflow follows:
+The v1.8.0 workflow follows:
 
 ```text
-challenge → research questions → sources → evidence → claims and assumptions → personas/stakeholders/journeys → POV/HMW → prototype → experiment → review → handoff/export
+Create or open a project
+→ frame the challenge and audiences
+→ record research, evidence, claims, and assumptions
+→ create HMW questions and ideas
+→ compare alternatives and review decision gates
+→ create a versioned prototype and falsifiable hypothesis
+→ define participants, metrics, safeguards, and stop conditions
+→ record experiment runs and observed results
+→ make a learning decision
+→ preserve the resulting prototype iteration
+→ export or hand off to the appropriate platform
 ```
 
-The WordPress plugin provides the public browser-local demonstration. The Flask workspace provides persistent projects, immutable revisions, reusable research assets, and the Evidence Ledger. The canonical Python package provides reproducible contracts, migrations, exports, and handoff packages.
-
-## Recommended CLI
-
-```bash
-python -m catalyst_canvas.cli generate \
-  --input data/catalyst_canvas_sample_input.json \
-  --json outputs/sample-canvas.json \
-  --markdown outputs/sample-canvas.md \
-  --html outputs/sample-canvas.html
-```
-
-Existing v1.x automation may continue to call `python/catalyst_canvas_core.py` or `python/catalyst_canvas_brief.py`; both are compatibility adapters over the canonical package.
+The Flask workspace persists projects and immutable revisions in SQLite. The WordPress shortcode uses browser-local storage. Both surfaces emit Canvas Contract 1.5 and preserve the same canonical fixture.
