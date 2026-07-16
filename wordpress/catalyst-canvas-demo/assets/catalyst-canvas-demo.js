@@ -31,7 +31,7 @@
     };
   }
 
-  function generate(state) {
+  function generate(state, version) {
     const personaName = state.audience.split(',')[0].trim() || 'Primary user';
     const hmw = [
       `How might we help ${personaName} make the challenge concrete enough to act on?`,
@@ -41,6 +41,8 @@
     ];
     const ideas = (FRAMEWORKS[state.framework] || FRAMEWORKS.AIDA).map(item => `${item} — apply this to: ${state.challenge}`);
     return {
+      tool: 'Catalyst Canvas Demo',
+      version: version || 'unknown',
       title: 'Catalyst Canvas Brief',
       summary: `For ${state.audience}, the working challenge is: ${state.challenge}. The goal is to ${state.goal.toLowerCase()} while accounting for ${state.constraint.toLowerCase()}.`,
       personaName,
@@ -135,25 +137,25 @@
       btn.addEventListener('click', function () {
         const action = btn.getAttribute('data-action');
         if (action === 'generate') {
-          render(root, generate(getState(root)));
+          render(root, generate(getState(root), root.dataset.version));
         }
         if (action === 'add-idea') {
           const state = getState(root);
-          const brief = root._canvasBrief || generate(state);
+          const brief = root._canvasBrief || generate(state, root.dataset.version);
           if (state.customIdea) brief.ideas.push(state.customIdea);
           render(root, brief);
         }
         if (action === 'reset') {
           const form = $('[data-canvas-form]', root);
           if (form) form.reset();
-          render(root, generate({ challenge: '', audience: '', goal: '', constraint: '', framework: 'AIDA' }));
+          render(root, generate({ challenge: '', audience: '', goal: '', constraint: '', framework: 'AIDA' }, root.dataset.version));
         }
         if (action === 'copy') {
-          const brief = root._canvasBrief || generate(getState(root));
+          const brief = root._canvasBrief || generate(getState(root), root.dataset.version);
           navigator.clipboard.writeText(briefToText(brief)).then(() => { btn.textContent = 'Copied'; setTimeout(() => { btn.textContent = 'Copy brief'; }, 1200); });
         }
         if (action === 'download') {
-          downloadJSON(root._canvasBrief || generate(getState(root)));
+          downloadJSON(root._canvasBrief || generate(getState(root), root.dataset.version));
         }
         if (action === 'print') {
           window.print();

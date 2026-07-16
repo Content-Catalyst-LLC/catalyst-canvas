@@ -3,7 +3,7 @@
  * Plugin Name: Catalyst Canvas Demo
  * Plugin URI: https://sustainablecatalyst.com/catalyst-canvas/
  * Description: Adds a guided, client-side Catalyst Canvas demo via the [catalyst_canvas_demo] shortcode.
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: Content Catalyst LLC
  * License: MIT
  * Text Domain: catalyst-canvas-demo
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 }
 
 final class Catalyst_Canvas_Demo_Plugin {
-    private const VERSION = '1.1.0';
+    private const VERSION = '1.1.1';
     private const SHORTCODE = 'catalyst_canvas_demo';
 
     public function __construct() {
@@ -59,7 +59,7 @@ final class Catalyst_Canvas_Demo_Plugin {
 
         ob_start();
         ?>
-        <section id="<?php echo esc_attr($instance_id); ?>" class="ccanvasdemo" data-canvas-demo>
+        <section id="<?php echo esc_attr($instance_id); ?>" class="ccanvasdemo" data-canvas-demo data-version="<?php echo esc_attr(self::VERSION); ?>">
             <header class="ccanvasdemo-hero">
                 <p class="ccanvasdemo-eyebrow">Interactive demo</p>
                 <h2><?php echo esc_html($atts['title']); ?></h2>

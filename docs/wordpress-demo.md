@@ -1,26 +1,27 @@
-# WordPress Demo Installation
+# WordPress Demo
 
-The WordPress plugin lives in:
+The public Catalyst Canvas demo lives in:
 
 ```text
 wordpress/catalyst-canvas-demo/
 ```
 
-## Build zip
+Build the versioned plugin package from the repository root:
 
 ```bash
-cd wordpress
-zip -r ../catalyst-canvas-demo.zip catalyst-canvas-demo -x "*/.DS_Store"
+python scripts/build_plugin.py
 ```
 
-## Install
+The generated artifact is:
 
-1. Open WordPress admin.
-2. Go to **Plugins → Add New → Upload Plugin**.
-3. Upload `catalyst-canvas-demo.zip`.
-4. Activate the plugin.
-5. Add `[catalyst_canvas_demo]` to the Catalyst Canvas page.
+```text
+dist/catalyst-canvas-demo-v1.1.1.zip
+```
 
-## Boundary
+Install it through **Plugins → Add New → Upload Plugin**, activate it, and add:
 
-The demo runs in the browser and does not submit visitor inputs to Sustainable Catalyst. It is an educational and research-oriented design-thinking aid, not a consulting or advisory service.
+```text
+[catalyst_canvas_demo]
+```
+
+The plugin runs client-side. Visitor form inputs are not submitted to Sustainable Catalyst. The generated JSON includes the plugin version supplied by the PHP render layer.

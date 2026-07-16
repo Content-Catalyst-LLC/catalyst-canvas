@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from contextlib import closing
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
@@ -21,7 +22,7 @@ def connect(db_path: str) -> sqlite3.Connection:
 
 def init_db(db_path: str) -> None:
     Path(db_path).parent.mkdir(parents=True, exist_ok=True)
-    with connect(db_path) as conn:
+    with closing(connect(db_path)) as conn:
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS canvas_briefs (
@@ -56,7 +57,7 @@ def save_canvas(db_path: str, canvas: Dict[str, Any], canvas_id: int | None = No
     canvas["updated_at"] = updated_at
     payload = json.dumps(canvas, ensure_ascii=False, indent=2)
     title = canvas.get("title") or "Untitled Catalyst Canvas Brief"
-    with connect(db_path) as conn:
+    with closing(connect(db_path)) as conn:
         if canvas_id:
             conn.execute(
                 "UPDATE canvas_briefs SET title=?, payload=?, updated_at=? WHERE id=?",
@@ -75,7 +76,7 @@ def save_canvas(db_path: str, canvas: Dict[str, Any], canvas_id: int | None = No
 
 
 def get_canvas(db_path: str, canvas_id: int) -> Dict[str, Any] | None:
-    with connect(db_path) as conn:
+    with closing(connect(db_path)) as conn:
         row = conn.execute("SELECT * FROM canvas_briefs WHERE id=?", (canvas_id,)).fetchone()
     if not row:
         return None
@@ -85,7 +86,7 @@ def get_canvas(db_path: str, canvas_id: int) -> Dict[str, Any] | None:
 
 
 def latest_canvas(db_path: str) -> Dict[str, Any] | None:
-    with connect(db_path) as conn:
+    with closing(connect(db_path)) as conn:
         row = conn.execute("SELECT * FROM canvas_briefs ORDER BY updated_at DESC, id DESC LIMIT 1").fetchone()
     if not row:
         return None
@@ -95,7 +96,7 @@ def latest_canvas(db_path: str) -> Dict[str, Any] | None:
 
 
 def list_canvases(db_path: str, limit: int = 12) -> List[Dict[str, Any]]:
-    with connect(db_path) as conn:
+    with closing(connect(db_path)) as conn:
         rows = conn.execute(
             "SELECT id, title, created_at, updated_at FROM canvas_briefs ORDER BY updated_at DESC, id DESC LIMIT ?",
             (limit,),

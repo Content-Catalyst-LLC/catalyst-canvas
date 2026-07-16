@@ -1,36 +1,37 @@
-import json
-import sys
-from pathlib import Path
+import unittest
 
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "python"))
-
-from catalyst_canvas_core import generate_brief
+from python.catalyst_canvas_core import generate_brief
+from python.catalyst_canvas_version import __version__
 
 
-def test_generate_brief_contains_core_fields():
-    brief = generate_brief({
-        "challenge": "Improve impact reporting",
-        "audience": "Program director",
-        "goal": "Create a reviewable brief",
-        "constraint": "Limited data",
-        "framework": "JTBD",
-    })
-    assert brief.challenge == "Improve impact reporting"
-    assert brief.framework == "JTBD"
-    assert "Program director" in brief.persona["name"]
-    assert len(brief.how_might_we) >= 3
-    assert len(brief.assumptions) >= 3
+class CatalystCanvasCoreTests(unittest.TestCase):
+    def test_generate_brief_contains_core_fields(self):
+        brief = generate_brief({
+            "challenge": "Improve impact reporting",
+            "audience": "Program director",
+            "goal": "Create a reviewable brief",
+            "constraint": "Limited data",
+            "framework": "JTBD",
+        })
+        self.assertEqual(brief.version, __version__)
+        self.assertEqual(brief.challenge, "Improve impact reporting")
+        self.assertEqual(brief.framework, "JTBD")
+        self.assertIn("Program director", brief.persona["name"])
+        self.assertGreaterEqual(len(brief.how_might_we), 3)
+        self.assertGreaterEqual(len(brief.assumptions), 3)
+
+    def test_unknown_framework_falls_back_to_aida(self):
+        brief = generate_brief({"framework": "Unknown"})
+        self.assertEqual(brief.framework, "AIDA")
+
+    def test_markdown_export_has_key_sections_and_version(self):
+        brief = generate_brief({"challenge": "Test challenge"})
+        markdown = brief.to_markdown()
+        self.assertIn("# Catalyst Canvas Brief", markdown)
+        self.assertIn(f"Version: {__version__}", markdown)
+        self.assertIn("## Challenge", markdown)
+        self.assertIn("## Review Questions", markdown)
 
 
-def test_unknown_framework_falls_back_to_aida():
-    brief = generate_brief({"framework": "Unknown"})
-    assert brief.framework == "AIDA"
-
-
-def test_markdown_export_has_key_sections():
-    brief = generate_brief({"challenge": "Test challenge"})
-    md = brief.to_markdown()
-    assert "# Catalyst Canvas Brief" in md
-    assert "## Challenge" in md
-    assert "## Review Questions" in md
+if __name__ == "__main__":
+    unittest.main()

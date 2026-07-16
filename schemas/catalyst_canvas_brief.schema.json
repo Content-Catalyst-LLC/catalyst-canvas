@@ -4,6 +4,7 @@
   "title": "Catalyst Canvas Brief",
   "type": "object",
   "required": [
+    "version",
     "generated_at",
     "challenge",
     "audience",
@@ -20,41 +21,104 @@
     "review_questions"
   ],
   "properties": {
-    "generated_at": {"type": "string"},
-    "challenge": {"type": "string"},
-    "audience": {"type": "string"},
-    "goal": {"type": "string"},
-    "constraint": {"type": "string"},
-    "framework": {"type": "string"},
+    "version": {
+      "type": "string",
+      "const": "1.1.1"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "challenge": {
+      "type": "string"
+    },
+    "audience": {
+      "type": "string"
+    },
+    "goal": {
+      "type": "string"
+    },
+    "constraint": {
+      "type": "string"
+    },
+    "framework": {
+      "type": "string"
+    },
     "persona": {
       "type": "object",
-      "required": ["name", "description"],
+      "required": [
+        "name",
+        "description"
+      ],
       "properties": {
-        "name": {"type": "string"},
-        "description": {"type": "string"}
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
       }
     },
-    "point_of_view": {"type": "string"},
-    "how_might_we": {"type": "array", "items": {"type": "string"}},
-    "ideation_prompts": {"type": "array", "items": {"type": "string"}},
+    "point_of_view": {
+      "type": "string"
+    },
+    "how_might_we": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ideation_prompts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "prototype": {
       "type": "object",
-      "required": ["title", "description"],
+      "required": [
+        "title",
+        "description"
+      ],
       "properties": {
-        "title": {"type": "string"},
-        "description": {"type": "string"}
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
       }
     },
     "test_plan": {
       "type": "object",
-      "required": ["signal", "method", "learning_goal"],
+      "required": [
+        "signal",
+        "method",
+        "learning_goal"
+      ],
       "properties": {
-        "signal": {"type": "string"},
-        "method": {"type": "string"},
-        "learning_goal": {"type": "string"}
+        "signal": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "learning_goal": {
+          "type": "string"
+        }
       }
     },
-    "assumptions": {"type": "array", "items": {"type": "string"}},
-    "review_questions": {"type": "array", "items": {"type": "string"}}
-  }
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "review_questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
 }

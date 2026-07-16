@@ -20,9 +20,20 @@ def create_app(test_config: dict | None = None) -> Flask:
     repo_root = Path(__file__).resolve().parents[1]
     app = Flask(__name__, template_folder=str(repo_root / "templates"))
 
+    runtime_env = os.environ.get("CATALYST_CANVAS_ENV", "development").strip().lower()
+    configured_secret = os.environ.get("CATALYST_CANVAS_SECRET", "").strip()
+    local_modes = {"development", "local", "test"}
+
+    if runtime_env not in local_modes and not configured_secret:
+        raise RuntimeError(
+            "CATALYST_CANVAS_SECRET is required when CATALYST_CANVAS_ENV is not "
+            "development, local, or test."
+        )
+
     app.config.update(
-        SECRET_KEY=os.environ.get("CATALYST_CANVAS_SECRET", "dev-only-change-me"),
-        CANVAS_DB=os.environ.get("CATALYST_CANVAS_DB", str(repo_root / "catalyst.sqlite3")),
+        CATALYST_CANVAS_ENV=runtime_env,
+        SECRET_KEY=configured_secret or "dev-only-change-me",
+        CANVAS_DB=os.environ.get("CATALYST_CANVAS_DB") or str(repo_root / "catalyst.sqlite3"),
         JSON_SORT_KEYS=False,
     )
 

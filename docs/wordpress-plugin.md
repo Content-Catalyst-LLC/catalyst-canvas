@@ -1,34 +1,38 @@
-# Catalyst Canvas WordPress Demo
+# Catalyst Canvas WordPress Plugin
 
-This repository includes a self-contained WordPress plugin for adding an interactive Catalyst Canvas demo to the Catalyst Canvas page.
-
-## Plugin folder
+## Location
 
 ```text
 wordpress/catalyst-canvas-demo/
 ```
 
-## Shortcode
+## Versioning
 
-```text
-[catalyst_canvas_demo]
+The repository `VERSION` file is canonical. The release validator confirms that the plugin header and internal asset version match it.
+
+## Build
+
+```bash
+python scripts/build_plugin.py
 ```
 
-Optional:
+Expected package:
 
 ```text
-[catalyst_canvas_demo title="Catalyst Canvas Demo" subtitle="Turn a messy problem into a structured design-thinking brief."]
+dist/catalyst-canvas-demo-v1.1.1.zip
 ```
 
-## WordPress installation
+## Install
 
-1. Upload `catalyst-canvas-demo.zip` in WordPress under **Plugins → Add New → Upload Plugin**.
-2. Activate the plugin.
-3. Edit the Catalyst Canvas page.
-4. Add the shortcode where the demo should appear.
-5. Update the page.
+1. Open **Plugins → Add New → Upload Plugin**.
+2. Upload the versioned ZIP.
+3. Activate **Catalyst Canvas Demo**.
+4. Add `[catalyst_canvas_demo]` to the desired page.
 
-## Boundary
+## Validation
 
-The demo runs in the browser and does not submit demo inputs to Sustainable Catalyst. It supports structured design thinking; it does not validate a business model, certify impact, replace research, or make professional recommendations.
+```bash
+python scripts/validate_release.py
+```
 
+When PHP and Node.js are available, the validator checks both the plugin PHP file and its JavaScript asset.

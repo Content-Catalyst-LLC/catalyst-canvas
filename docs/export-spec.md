@@ -1,7 +1,8 @@
-# Catalyst Canvas Export Spec
+# Catalyst Canvas Export Specification
 
-A Canvas export should preserve:
+A core Canvas export preserves:
 
+- canonical repository version;
 - generated timestamp;
 - challenge;
 - audience;
@@ -17,4 +18,4 @@ A Canvas export should preserve:
 - assumptions;
 - review questions.
 
-See `schemas/catalyst_canvas_brief.schema.json` for a machine-readable schema.
+The v1.1.1 JSON format is validated against `schemas/catalyst_canvas_brief.schema.json`. The schema version constant is synchronized with the root `VERSION` file during release validation.

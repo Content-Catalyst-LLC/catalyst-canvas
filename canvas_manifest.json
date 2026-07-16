@@ -18,5 +18,10 @@
     "not outcome guarantee",
     "not product-market fit validation",
     "requires human review"
-  ]
+  ],
+  "version": "1.1.1",
+  "release": "Repository Integrity and CI Repair",
+  "released_at": "2026-07-16",
+  "canonical_version_source": "VERSION",
+  "python_compatibility_note": "python/catalyst_canvas_brief.py is a deprecated v1.x adapter over catalyst_canvas_core.py"
 }

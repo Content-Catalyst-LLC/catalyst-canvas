@@ -15,6 +15,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
 
+try:
+    from .catalyst_canvas_version import __version__
+except ImportError:  # Direct script execution.
+    from catalyst_canvas_version import __version__
+
 FRAMEWORK_PROMPTS: Dict[str, List[str]] = {
     "AIDA": [
         "Attention: What concrete tension should the audience notice first?",
@@ -54,6 +59,7 @@ class CatalystCanvasInput:
 
 @dataclass
 class CatalystCanvasBrief:
+    version: str
     generated_at: str
     challenge: str
     audience: str
@@ -76,6 +82,7 @@ class CatalystCanvasBrief:
         review = "\n".join(f"- {item}" for item in self.review_questions)
         return f"""# Catalyst Canvas Brief
 
+Version: {self.version}  
 Generated: {self.generated_at}
 
 ## Challenge
@@ -198,6 +205,7 @@ def generate_brief(payload: Dict[str, Any]) -> CatalystCanvasBrief:
     ]
 
     return CatalystCanvasBrief(
+        version=__version__,
         generated_at=datetime.now(timezone.utc).isoformat(),
         challenge=inp.challenge,
         audience=inp.audience,

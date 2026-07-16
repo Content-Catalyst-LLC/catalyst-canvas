@@ -1,23 +1,16 @@
 # Repository Architecture
 
-Catalyst Canvas is structured as a multi-layer repository.
+Catalyst Canvas v1.1.1 is organized as a reproducible multi-surface repository.
 
-## Existing app layer
+- `VERSION` is the canonical release version.
+- `python/catalyst_canvas_core.py` is the maintained deterministic brief generator.
+- `python/catalyst_canvas_brief.py` is a deprecated v1.x compatibility adapter.
+- `app/` and `templates/` provide the local Flask workflow.
+- `demo/seed_demo.py` generates disposable local SQLite databases.
+- `schemas/` defines the validated core brief export.
+- `wordpress/catalyst-canvas-demo/` provides the public shortcode demo.
+- `scripts/validate_release.py` is the authoritative verification command.
+- `scripts/build_plugin.py` builds the versioned WordPress package.
+- `tests/` runs under both pytest and unittest from the repository root.
 
-The existing Flask application remains the full app-oriented implementation.
-
-## Python core layer
-
-`python/catalyst_canvas_core.py` provides a lightweight generator that can be tested and reused without the Flask app.
-
-## WordPress layer
-
-`wordpress/catalyst-canvas-demo/` provides an online demo for the public Catalyst Canvas page.
-
-## Data and schema layer
-
-`data/` stores sample inputs and `schemas/` stores output schemas for reviewable exports.
-
-## Documentation layer
-
-`docs/` explains methodology, installation, architecture, and exports.
+Runtime databases, generated output, and release ZIP files are intentionally excluded from source control.

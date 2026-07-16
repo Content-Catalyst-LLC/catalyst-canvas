@@ -1,22 +1,22 @@
 # Catalyst Canvas Demo Workflow
 
-The online demo mirrors the core Catalyst Canvas method:
+The current Canvas workflow follows:
 
 ```text
 challenge → audience → goal → constraint → persona → POV → HMW → ideas → prototype → test plan → export
 ```
 
-The WordPress plugin provides a public-facing guided demo. The Python companion provides a CLI/export layer for reproducible JSON briefs.
+The WordPress plugin provides the public guided demo. The maintained Python core provides reproducible JSON and Markdown exports.
 
-## CLI example
+## Recommended CLI
 
 ```bash
-python3 python/catalyst_canvas_brief.py \
-  --challenge "A nonprofit needs clearer impact reporting" \
-  --audience "Program director" \
-  --goal "build a defensible impact story" \
-  --constraint "limited data and stakeholder pressure" \
-  --framework JTBD \
-  --output outputs/sample-canvas-brief.json
+python python/catalyst_canvas_core.py \
+  --input data/catalyst_canvas_sample_input.json \
+  --output outputs/sample-canvas-brief.json \
+  --markdown outputs/sample-canvas-brief.md
 ```
 
+## Legacy-compatible CLI
+
+Existing v1.x automation may continue to call `python/catalyst_canvas_brief.py`. That module is now a compatibility adapter over the core engine and should not be used for new development.
