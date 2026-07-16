@@ -1,6 +1,6 @@
 # Catalyst Canvas Export Specification
 
-Catalyst Canvas v1.2.0 exports the same validated `catalyst-canvas/1.0` document through JSON, Markdown, and standalone print HTML.
+Catalyst Canvas v1.3.0 exports the same validated `catalyst-canvas/1.0` document through JSON, Markdown, and standalone print HTML.
 
 ## JSON
 

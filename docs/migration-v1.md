@@ -1,6 +1,6 @@
 # Canvas v1.x Migration
 
-Catalyst Canvas v1.2.0 recognizes three earlier payload families:
+Catalyst Canvas v1.3.0 recognizes three earlier payload families:
 
 1. original Python core exports containing `version`, `generated_at`, `persona`, and `test_plan`;
 2. legacy wrapper exports containing `inputs` and `canvas`;

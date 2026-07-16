@@ -6,9 +6,11 @@
   "layers": [
     "canonical catalyst_canvas domain package",
     "Canvas Contract 1.0 JSON Schema",
-    "Flask adapter and validated SQLite persistence",
+    "Workspace Project Contract 1.0 JSON Schema",
+    "workspace-scoped Flask project registry and immutable revision storage",
+    "legacy v1.2 SQLite migration",
     "Python and CLI adapters",
-    "WordPress shared browser engine",
+    "WordPress browser-local project workspace",
     "cross-surface fixtures and conformance tests",
     "stable JSON, Markdown, and print-report exporters"
   ],
@@ -20,8 +22,8 @@
     "not product-market fit validation",
     "requires human review"
   ],
-  "version": "1.2.0",
-  "release": "Canonical Canvas Contract and Shared Engine",
+  "version": "1.3.0",
+  "release": "Persistent Projects and Workspace Management",
   "released_at": "2026-07-16",
   "canonical_version_source": "VERSION",
   "contract_version": "catalyst-canvas/1.0",
@@ -33,5 +35,8 @@
     "legacy wrapper exports",
     "legacy Flask flat records"
   ],
-  "compatibility_note": "python/catalyst_canvas_core.py and python/catalyst_canvas_brief.py are deprecated adapters over the catalyst_canvas package"
+  "compatibility_note": "python/catalyst_canvas_core.py and python/catalyst_canvas_brief.py are deprecated adapters over the catalyst_canvas package",
+  "workspace_contract_version": "catalyst-canvas-workspace/1.0",
+  "workspace_schema": "schemas/catalyst_canvas_workspace_1_0.schema.json",
+  "storage_model": "workspaces -> projects -> immutable canvas revisions"
 }

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Revision History — Catalyst Canvas{% endblock %}
+{% block content %}
+<section class="panel">
+  <p class="label">Project management</p>
+  <h2>{{ project.title }}</h2>
+  <p class="muted">{{ project.description or 'No project description.' }}</p>
+  <div class="actions compact">
+    {% if project.status == 'active' %}<a class="small-link" href="{{ url_for('canvas.project_open', project_id=project.project_id) }}">Open project</a>{% endif %}
+    <a class="small-link" href="{{ url_for('canvas.project_json_export', project_id=project.project_id) }}">Current JSON</a>
+    <a class="small-link" href="{{ url_for('canvas.project_markdown_export', project_id=project.project_id) }}">Current Markdown</a>
+  </div>
+  <form method="post" action="{{ url_for('canvas.project_metadata', project_id=project.project_id) }}" class="metadata-form">
+    <div class="grid two">
+      <div><label>Project title</label><input name="title" value="{{ project.title }}"></div>
+      <div><label>Tags</label><input name="tags" value="{{ project.tags|join(', ') }}"></div>
+    </div>
+    <label>Description</label><textarea name="description">{{ project.description }}</textarea>
+    <div class="actions"><button class="btn" type="submit">Update metadata</button></div>
+  </form>
+</section>
+<section class="panel">
+  <p class="label">Immutable history</p>
+  <h2>{{ revisions|length }} stored revisions</h2>
+  <div class="revision-list">
+    {% for revision in revisions %}
+    <article class="revision-row">
+      <div>
+        <strong>{{ revision.change_note or ('Autosave' if revision.autosave else 'Canvas revision') }}</strong>
+        <p>{{ revision.created_at }} · {{ revision.revision_id }}</p>
+        {% if revision.restored_from_revision_id %}<p>Restored from {{ revision.restored_from_revision_id }}</p>{% endif %}
+      </div>
+      <div class="actions compact">
+        <a class="small-link" href="{{ url_for('canvas.canvas_json', canvas_id=revision.storage_id) }}">View JSON</a>
+        <a class="small-link" href="{{ url_for('canvas.canvas_markdown', canvas_id=revision.storage_id) }}">Markdown</a>
+        {% if project.status == 'active' and revision.revision_id != project.current_revision_id %}
+        <form method="post" action="{{ url_for('canvas.revision_restore', project_id=project.project_id, revision_id=revision.revision_id) }}"><button class="small-link" type="submit">Restore as new revision</button></form>
+        {% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

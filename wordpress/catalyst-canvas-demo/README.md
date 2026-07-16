@@ -1,13 +1,18 @@
-# Catalyst Canvas Demo WordPress Plugin
+# Catalyst Canvas Demo v1.3.0
 
-Version 1.2.0 implements the public `[catalyst_canvas_demo]` shortcode through the shared Canvas Contract 1.0 browser engine.
+The `[catalyst_canvas_demo]` shortcode now provides a private browser-local project workspace.
 
-The plugin:
+## Capabilities
 
-- generates validated `catalyst-canvas/1.0` documents;
-- uses framework data generated from the repository's canonical registry;
-- exports canonical JSON and contract-aware Markdown;
-- keeps all visitor inputs in the browser;
-- has Node-based fixture conformance tests against the Python engine.
+- generate Canvas Contract 1.0 documents through the shared browser engine;
+- create and switch saved projects;
+- save manual and autosave revisions;
+- duplicate and archive projects;
+- export canonical JSON and Markdown-compatible copied briefs;
+- retain all inputs in localStorage without transmitting them to Sustainable Catalyst.
 
-Upload `catalyst-canvas-demo-v1.2.0.zip`, activate the plugin, and place `[catalyst_canvas_demo]` on a WordPress page.
+## Install
+
+Upload `catalyst-canvas-demo-v1.3.0.zip`, activate it, and place `[catalyst_canvas_demo]` on a page.
+
+Browser projects are device- and browser-specific. Clearing site data removes the workspace.

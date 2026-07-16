@@ -4,7 +4,7 @@
 <section class="panel">
   <p class="label">Define</p>
   <h2>Frame the problem</h2>
-  <form method="post">
+  <form method="post" data-autosave-project="{{ canvas.get('project_id','') }}">
     <label>Brief title</label><input name="title" value="{{ canvas.get('title','') }}">
     <label>Challenge</label><textarea name="challenge">{{ canvas.get('challenge','') }}</textarea>
     <label>Audience</label><input name="audience" value="{{ canvas.get('audience','') }}">

@@ -1,3 +1,4 @@
+from contextlib import closing
 import json
 import sqlite3
 import tempfile
@@ -43,12 +44,13 @@ class CanvasStorageTests(unittest.TestCase):
                 "created_at": "2026-07-15T12:00:00+00:00",
                 "updated_at": "2026-07-15T12:00:00+00:00",
             }
-            with sqlite3.connect(db) as conn:
+            with closing(sqlite3.connect(db)) as conn:
                 cursor = conn.execute(
                     "INSERT INTO canvas_briefs (title, payload, created_at, updated_at) VALUES (?, ?, ?, ?)",
                     (legacy["title"], json.dumps(legacy), legacy["created_at"], legacy["updated_at"]),
                 )
                 storage_id = cursor.lastrowid
+                conn.commit()
             loaded = get_canvas(db, storage_id)
             self.assertEqual(loaded["schema_version"], "catalyst-canvas/1.0")
             self.assertEqual(loaded["challenge"], "Migrate a local record")

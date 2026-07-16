@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Catalyst Canvas Demo
  * Plugin URI: https://sustainablecatalyst.com/catalyst-canvas/
- * Description: Adds a guided, client-side Catalyst Canvas demo via the [catalyst_canvas_demo] shortcode.
- * Version: 1.2.0
+ * Description: Adds a persistent, client-side Catalyst Canvas project workspace via the [catalyst_canvas_demo] shortcode.
+ * Version: 1.3.0
  * Author: Content Catalyst LLC
  * License: MIT
  * Text Domain: catalyst-canvas-demo
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 }
 
 final class Catalyst_Canvas_Demo_Plugin {
-    private const VERSION = '1.2.0';
+    private const VERSION = '1.3.0';
     private const CONTRACT_VERSION = 'catalyst-canvas/1.0';
     private const SHORTCODE = 'catalyst_canvas_demo';
 
@@ -51,9 +51,17 @@ final class Catalyst_Canvas_Demo_Plugin {
         );
 
         wp_register_script(
+            'catalyst-canvas-workspace',
+            $base . 'assets/catalyst-canvas-workspace.js',
+            array(),
+            self::VERSION,
+            true
+        );
+
+        wp_register_script(
             'catalyst-canvas-demo',
             $base . 'assets/catalyst-canvas-demo.js',
-            array('catalyst-canvas-engine'),
+            array('catalyst-canvas-engine', 'catalyst-canvas-workspace'),
             self::VERSION,
             true
         );
@@ -72,6 +80,7 @@ final class Catalyst_Canvas_Demo_Plugin {
         wp_enqueue_style('catalyst-canvas-demo');
         wp_enqueue_script('catalyst-canvas-contract-data');
         wp_enqueue_script('catalyst-canvas-engine');
+        wp_enqueue_script('catalyst-canvas-workspace');
         wp_enqueue_script('catalyst-canvas-demo');
 
         $instance_id = function_exists('wp_unique_id') ? wp_unique_id('ccanvasdemo-') : 'ccanvasdemo-' . wp_rand(1000, 999999);
@@ -85,6 +94,22 @@ final class Catalyst_Canvas_Demo_Plugin {
                 <p class="ccanvasdemo-lede"><?php echo esc_html($atts['subtitle']); ?></p>
                 <p class="ccanvasdemo-note">This demo runs in the browser. It does not submit form inputs to Sustainable Catalyst. Export contract: <strong data-output="contractVersion"><?php echo esc_html(self::CONTRACT_VERSION); ?></strong>.</p>
             </header>
+
+            <div class="ccanvasdemo-workspace" data-workspace-toolbar>
+                <div>
+                    <p class="ccanvasdemo-section-label">Private browser workspace</p>
+                    <label><span>Project title</span><input data-workspace-field="title" type="text" value="Untitled Canvas Project"></label>
+                    <label><span>Saved projects</span><select data-workspace-project><option value="">New unsaved project</option></select></label>
+                </div>
+                <div class="ccanvasdemo-actions">
+                    <button type="button" class="ccanvasdemo-btn ccanvasdemo-btn-primary" data-action="save-project">Save project</button>
+                    <button type="button" class="ccanvasdemo-btn" data-action="new-project">New</button>
+                    <button type="button" class="ccanvasdemo-btn" data-action="duplicate-project">Duplicate</button>
+                    <button type="button" class="ccanvasdemo-btn" data-action="archive-project">Archive</button>
+                    <button type="button" class="ccanvasdemo-btn" data-action="restore-project">Restore</button>
+                </div>
+                <p class="ccanvasdemo-workspace-status" data-workspace-status>Projects and revisions stay in this browser.</p>
+            </div>
 
             <div class="ccanvasdemo-layout">
                 <form class="ccanvasdemo-inputs" data-canvas-form>
@@ -175,7 +200,7 @@ final class Catalyst_Canvas_Demo_Plugin {
             <h1>Catalyst Canvas Demo</h1>
             <p>Add the interactive Catalyst Canvas demo to a page with:</p>
             <pre><code>[catalyst_canvas_demo]</code></pre>
-            <p>The demo runs client-side in the browser and does not submit visitor inputs to Sustainable Catalyst.</p>
+            <p>The project workspace runs client-side, stores projects and revisions in this browser, and does not submit visitor inputs to Sustainable Catalyst.</p>
             <p>All generated downloads use <code><?php echo esc_html(self::CONTRACT_VERSION); ?></code> and the shared browser engine.</p>
         </div>
         <?php

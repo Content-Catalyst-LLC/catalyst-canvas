@@ -1,14 +1,14 @@
 # Catalyst Canvas
 
-**Current release: v1.2.0 — Canonical Canvas Contract and Shared Engine**
+**Current release: v1.3.0 — Persistent Projects and Workspace Management**
 
-Catalyst Canvas is the strategic-design and problem-framing workspace for Sustainable Catalyst. It turns ambiguous challenges into structured, reviewable work products covering audiences, personas, stakeholders, point-of-view statements, “How might we?” questions, ideation frameworks, evidence, assumptions, prototypes, tests, and review notes.
+Catalyst Canvas is the strategic-design and problem-framing workspace for Sustainable Catalyst. It turns ambiguous challenges into structured, reviewable projects covering audiences, personas, stakeholders, point-of-view statements, “How might we?” questions, ideation frameworks, evidence, assumptions, prototypes, tests, and review notes.
 
-Version 1.2.0 replaces the repository's divergent data shapes and generation paths with **Canvas Contract 1.0** and a shared engine architecture.
+Version 1.3.0 adds durable workspaces, projects, immutable revision history, autosave, search, duplication, archive/restore, and browser-local WordPress persistence while retaining Canvas Contract 1.0.
 
-## Canvas Contract 1.0
+## Contracts
 
-Every canonical saved or exported Canvas declares:
+Every saved Canvas declares:
 
 ```json
 {
@@ -18,50 +18,60 @@ Every canonical saved or exported Canvas declares:
 }
 ```
 
-The complete contract includes:
+Every project registry record declares:
 
-- title, lifecycle status, owner context, and timestamps;
-- challenge, structured audience context, goal, and constraints;
-- persona and stakeholder records;
-- POV and HMW records;
-- framework selection and generated prompts;
-- evidence and assumptions;
-- prototypes and tests;
-- review notes and provenance.
+```json
+{
+  "schema_version": "catalyst-canvas-workspace/1.0",
+  "workspace_id": "workspace-...",
+  "project_id": "project-..."
+}
+```
 
-The authoritative schema is `schemas/catalyst_canvas_contract_1_0.schema.json`.
+Authoritative schemas:
 
-## Shared engine architecture
+- `schemas/catalyst_canvas_contract_1_0.schema.json`
+- `schemas/catalyst_canvas_workspace_1_0.schema.json`
 
-The repository contains four contract-conformant surfaces:
+## Workspace model
 
-1. **Canonical Python package** — `catalyst_canvas/` owns normalization, generation, validation, migration, and exporters.
-2. **CLI and compatibility adapters** — generate, validate, migrate, and export without maintaining a second domain engine.
-3. **Flask adapter** — maps existing workflow forms to Contract 1.0 and validates every SQLite save and read/import migration.
-4. **WordPress browser adapter** — uses a shared JavaScript engine and generated framework registry to create equivalent canonical downloads without transmitting visitor inputs.
+```text
+Workspace
+└── Project
+    ├── metadata and lifecycle status
+    ├── current revision pointer
+    └── immutable Canvas Contract 1.0 revisions
+```
 
-`fixtures/canvas_contract_1_0.input.json` and its expected output are consumed by Python, Flask, and Node conformance tests.
+Manual saves, autosaves, imports, and revision restoration create new revision records. Historical payloads are never overwritten. Projects can be searched, duplicated, archived, restored, exported, and isolated by workspace.
+
+Existing v1.2 `canvas_briefs` rows migrate automatically into the default local workspace. The migration is idempotent and preserves old numeric export URLs.
+
+## Shared surfaces
+
+1. **Canonical Python package** — normalization, generation, validation, migration, workspace contracts, and exporters.
+2. **CLI and compatibility adapters** — canonical generation, validation, migration, JSON, Markdown, and print HTML.
+3. **Flask workspace** — SQLite projects, revisions, search, archive/restore, duplicate, autosave, and workspace-scoped APIs.
+4. **WordPress browser workspace** — localStorage-backed project and revision management without transmitting visitor inputs.
 
 ## Repository structure
 
 ```text
 VERSION                            Canonical release version
-catalyst_canvas/                   Canonical contract, engine, migration, adapters, exporters, CLI
-contracts/frameworks.json          Authoritative framework registry
-schemas/                           Canvas Contract 1.0 and legacy schema archive
-fixtures/                          Shared deterministic conformance fixtures
-app/                               Flask surface and validated SQLite persistence
-python/                            Deprecated v1.x Python adapters
-wordpress/catalyst-canvas-demo/    WordPress shortcode and shared browser engine
+catalyst_canvas/                   Canvas and workspace contracts, engine, migration, exporters
+schemas/                           Canvas Contract 1.0, Workspace Contract 1.0, legacy archive
+app/                               Flask workspace routes and SQLite persistence
+fixtures/                          Cross-surface deterministic Canvas fixtures
+wordpress/catalyst-canvas-demo/    Browser engine and local project workspace
 scripts/                           Asset sync, validation, and plugin packaging
-Tests/                             Python and browser conformance suites
+tests/                             Python, Flask, storage, route, and Node tests
 ```
 
 ## Requirements
 
 - Python 3.11, 3.12, or 3.13
 - PHP for local plugin syntax validation
-- Node.js for browser-engine syntax and conformance validation
+- Node.js for browser syntax and conformance validation
 
 ## Local setup
 
@@ -73,7 +83,18 @@ python -m pip install -r requirements-dev.txt
 cp .env.example .env
 ```
 
-## Generate a canonical Canvas
+Run the Flask workspace:
+
+```bash
+python demo/seed_demo.py
+python app.py
+```
+
+Open `http://127.0.0.1:5000`.
+
+## CLI
+
+Generate a canonical Canvas:
 
 ```bash
 python -m catalyst_canvas.cli generate \
@@ -83,84 +104,58 @@ python -m catalyst_canvas.cli generate \
   --html outputs/sample_canvas.html
 ```
 
-Validate an existing contract:
+Validate or migrate:
 
 ```bash
 python -m catalyst_canvas.cli validate --input outputs/sample_canvas.json
+python -m catalyst_canvas.cli migrate --input legacy-canvas.json --output canonical-canvas.json
 ```
 
-Migrate a recognized v1.0/v1.1 export:
-
-```bash
-python -m catalyst_canvas.cli migrate \
-  --input legacy-canvas.json \
-  --output canonical-canvas.json
-```
-
-Recognized legacy shapes include the original Python core export, the legacy wrapper export, and Flask's flat SQLite payload. Unknown or future contract versions are rejected with a migration message.
-
-## Flask application
-
-```bash
-python demo/seed_demo.py
-python app.py
-```
-
-Open <http://127.0.0.1:5000>.
-
-Flask writes only validated Contract 1.0 payloads. Existing flat v1.x SQLite records are migrated on read and become canonical when next saved. The import endpoint is:
+## Flask APIs
 
 ```text
+GET  /api/workspaces
+GET  /api/projects?q=&status=
+GET  /api/projects/<project_id>
+PATCH /api/projects/<project_id>
+GET  /api/projects/<project_id>/revisions
+POST /api/projects/<project_id>/autosave
 POST /api/canvas/import
+GET  /api/contract/schema.json
+GET  /api/workspace-contract/schema.json
 ```
 
-Stable exports are available as JSON, Markdown, and standalone print HTML.
+All project endpoints enforce the active workspace boundary.
 
 ## WordPress plugin
 
-Build the plugin:
+Build the client-side workspace plugin:
 
 ```bash
 python scripts/sync_contract_assets.py
 python scripts/build_plugin.py
 ```
 
-The package is written to:
-
-```text
-dist/catalyst-canvas-demo-v1.2.0.zip
-```
-
-Activate it and use:
+Install `dist/catalyst-canvas-demo-v1.3.0.zip`, activate it, and add:
 
 ```text
 [catalyst_canvas_demo]
 ```
 
-The browser experience creates and downloads Canvas Contract 1.0 JSON locally. Inputs are not submitted to Sustainable Catalyst.
+Projects and revisions are saved only in the current browser's localStorage. Clearing site data removes them.
 
-## Tests
-
-```bash
-python -m pytest tests
-python -m unittest discover -s tests -v
-node tests/js/test_contract_fixture.js
-```
-
-The authoritative release gate runs all tests, validates schemas and fixtures, checks generated assets, exercises CLI generation and migration, checks PHP and JavaScript syntax, and inspects the plugin ZIP:
+## Validation
 
 ```bash
 python scripts/validate_release.py
 ```
 
-## Compatibility
-
-`python/catalyst_canvas_core.py` and `python/catalyst_canvas_brief.py` remain available as deprecated v1.x adapters. They delegate to `catalyst_canvas/` and no longer contain independent generation logic.
+The release gate runs Python tests under pytest and unittest, schemas, v1.2 storage migration, Flask workspace workflows, cross-surface fixtures, Node browser tests, optional PHP/JavaScript syntax checks, sample exports, and WordPress package inspection.
 
 ## Boundaries
 
-Catalyst Canvas supports design thinking, research framing, and review. It does not certify strategy, adoption, impact, compliance, funding, product-market fit, or implementation success.
+Catalyst Canvas supports problem framing, structured review, and experimentation. It does not certify evidence, guarantee product-market fit, provide legal or compliance advice, or guarantee implementation outcomes.
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+MIT. See `LICENSE`.

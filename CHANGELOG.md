@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.3.0 — 2026-07-16
+
+### Persistent workspaces and projects
+
+- Added Workspace Project Contract 1.0 with stable workspace and project identities, lifecycle status, tags, current revision pointers, and revision counts.
+- Added workspace-scoped project creation, switching, search, metadata editing, duplication, archive, and restore workflows.
+- Added immutable Canvas revision storage, bounded autosave retention, historical export, and restore-as-new-revision behavior.
+- Added idempotent migration of v1.2 `canvas_briefs` rows into the default workspace while preserving old numeric export URLs.
+
+### Flask and WordPress surfaces
+
+- Added Flask project, revision, autosave, workspace, schema, and export APIs with active-workspace boundary checks.
+- Added a persistent dashboard, project history view, metadata controls, and debounced form autosave.
+- Added a dependency-free WordPress localStorage workspace with project save, autosave, switch, duplicate, archive, and revision retention.
+- Added browser workspace tests and plugin package validation for the new asset.
+
 All notable changes to Catalyst Canvas are documented here.
 
 ## 1.2.0 — 2026-07-16

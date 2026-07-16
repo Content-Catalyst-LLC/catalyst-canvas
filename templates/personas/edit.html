@@ -4,7 +4,7 @@
 <section class="panel">
   <p class="label">Persona</p>
   <h2>Edit current persona</h2>
-  <form method="post">
+  <form method="post" data-autosave-project="{{ canvas.get('project_id','') }}">
     <label>Persona name</label><input name="persona_name" value="{{ canvas.get('persona_name','') }}">
     <label>Role</label><textarea name="persona_role">{{ canvas.get('persona_role','') }}</textarea>
     <label>Needs</label><textarea name="persona_needs">{{ canvas.get('persona_needs','') }}</textarea>

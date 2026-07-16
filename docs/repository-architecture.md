@@ -1,6 +1,6 @@
 # Repository Architecture
 
-Catalyst Canvas v1.2.0 is organized around one canonical domain package and explicit surface adapters.
+Catalyst Canvas v1.3.0 is organized around one canonical domain package and explicit surface adapters.
 
 - `VERSION` is the canonical release version.
 - `catalyst_canvas/` owns Contract 1.0 generation, validation, migrations, exports, and adapters.

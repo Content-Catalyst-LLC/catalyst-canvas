@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from contextlib import closing
+
 import argparse
 import csv
 import sqlite3
@@ -28,7 +30,7 @@ def seed(path: Path) -> None:
 
     csv_path = ROOT / "demo" / "ga4_sample.csv"
     if csv_path.exists():
-        with sqlite3.connect(path) as conn, csv_path.open(newline="", encoding="utf-8") as handle:
+        with closing(sqlite3.connect(path)) as conn, csv_path.open(newline="", encoding="utf-8") as handle:
             for row in csv.DictReader(handle):
                 conn.execute(
                     "INSERT INTO demo_events (event_date, source, event_name, persona_hint, page_path, count) VALUES (?, ?, ?, ?, ?, ?)",

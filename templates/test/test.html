@@ -4,7 +4,7 @@
 <section class="panel">
   <p class="label">Test</p>
   <h2>Define the learning test</h2>
-  <form method="post">
+  <form method="post" data-autosave-project="{{ canvas.get('project_id','') }}">
     <label>Test plan</label><textarea name="test_plan">{{ canvas.get('test_plan','') }}</textarea>
     <label>Success signal</label><textarea name="success_signal">{{ canvas.get('success_signal','') }}</textarea>
     <label>Review note</label><textarea name="review_note">{{ canvas.get('review_note','') }}</textarea>

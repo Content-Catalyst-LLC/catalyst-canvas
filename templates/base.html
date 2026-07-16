@@ -5,15 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Catalyst Canvas{% endblock %}</title>
   <style>
-    :root{--black:#000;--red:#9b1111;--cream:#f7f3ea;--soft:#fbfaf6;--border:#d9d2c4;--text:#171717;--muted:#555;--white:#fff}
+    :root{--black:#000;--red:#7c1623;--cream:#f7f3ea;--soft:#fbfaf6;--border:#d9d2c4;--text:#171717;--muted:#555;--white:#fff;--green:#28613f}
     *{box-sizing:border-box} body{margin:0;background:var(--cream);color:var(--text);font-family:Helvetica,Arial,sans-serif;line-height:1.55}
-    a{color:inherit}.wrap{max-width:1120px;margin:0 auto;padding:28px 18px 60px}.hero,.panel{background:var(--white);border:1px solid var(--border);box-shadow:0 10px 26px rgba(0,0,0,.045)}
+    a{color:inherit}.wrap{max-width:1180px;margin:0 auto;padding:28px 18px 60px}.hero,.panel{background:var(--white);border:1px solid var(--border);box-shadow:0 10px 26px rgba(0,0,0,.045)}
     .hero{position:relative;border-top:7px solid var(--black);padding:34px}.hero:before{content:"";position:absolute;top:8px;left:34px;right:34px;height:3px;background:var(--red)}
     .kicker,.label{color:var(--red);font-size:.72rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;margin:0 0 10px}.hero h1{font-size:clamp(2.3rem,6vw,4.4rem);line-height:.96;letter-spacing:-.055em;margin:0 0 14px}.lede{font-size:1.15rem;font-weight:800;max-width:850px}.muted{color:var(--muted)}
+    .workspace-strip{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:18px;padding:12px 14px;border:1px solid var(--border);background:var(--soft)}.workspace-strip p{margin:0}.save-status{font-size:.78rem;font-weight:800;color:var(--muted)}.save-status[data-state="saved"]{color:var(--green)}.save-status[data-state="error"]{color:var(--red)}
     .nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.btn,.small-link{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--black);background:var(--white);min-height:38px;padding:9px 13px;text-decoration:none;text-transform:uppercase;letter-spacing:.075em;font-size:.72rem;font-weight:850}.btn:hover,.small-link:hover{background:var(--black);color:var(--white)}
-    .panel{margin-top:22px;padding:26px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.card{border:1px solid var(--border);border-top:4px solid var(--black);background:var(--soft);padding:18px}.card h3,.panel h2{margin-top:0}.card p{color:var(--muted)}
-    label{display:block;font-weight:900;margin:14px 0 5px} input,textarea,select{width:100%;padding:11px;border:1px solid var(--border);background:#fff;font:inherit} textarea{min-height:92px}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}button{cursor:pointer}.trace{margin-top:18px;padding:16px;border:1px solid var(--border);border-left:4px solid var(--red);background:var(--soft);color:var(--muted)}pre{white-space:pre-wrap;background:#111;color:#fff;padding:16px;overflow:auto}.footer{margin-top:24px;color:var(--muted);font-size:.85rem}
-    @media(max-width:850px){.grid,.grid.two{grid-template-columns:1fr}.hero,.panel{padding:22px}.hero:before{left:22px;right:22px}.btn{width:100%}}
+    button.small-link{cursor:pointer}.panel{margin-top:22px;padding:26px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.card{border:1px solid var(--border);border-top:4px solid var(--black);background:var(--soft);padding:18px}.card h3,.panel h2{margin-top:0}.card p{color:var(--muted)}
+    label{display:block;font-weight:900;margin:14px 0 5px} input,textarea,select{width:100%;padding:11px;border:1px solid var(--border);background:#fff;font:inherit} textarea{min-height:92px}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}.actions.compact{margin-top:8px}.actions form{margin:0}button{cursor:pointer}.trace{margin-top:18px;padding:16px;border:1px solid var(--border);border-left:4px solid var(--red);background:var(--soft);color:var(--muted)}pre{white-space:pre-wrap;background:#111;color:#fff;padding:16px;overflow:auto}.footer{margin-top:24px;color:var(--muted);font-size:.85rem}
+    .split-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}.stats{display:flex;gap:10px}.stats span{border:1px solid var(--border);padding:10px 13px;background:var(--soft);font-size:.82rem}.stats strong{font-size:1.2rem}.search-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin:18px 0}.project-meta{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em}.tag-row{display:flex;flex-wrap:wrap;gap:6px}.tag-row span{border:1px solid var(--border);background:#fff;padding:3px 7px;font-size:.75rem}.revision-list{display:grid;gap:10px}.revision-row{display:flex;justify-content:space-between;gap:20px;border:1px solid var(--border);background:var(--soft);padding:15px}.revision-row p{margin:4px 0;color:var(--muted);font-size:.82rem}.workspace-list{display:grid;gap:6px;margin-top:16px}.metadata-form{margin-top:20px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:850px){.grid,.grid.two{grid-template-columns:1fr}.hero,.panel{padding:22px}.hero:before{left:22px;right:22px}.btn{width:100%}.split-heading,.revision-row,.workspace-strip{align-items:stretch;flex-direction:column}.search-row{grid-template-columns:1fr}.stats{flex-wrap:wrap}}
   </style>
 </head>
 <body>
@@ -21,15 +23,20 @@
     <header class="hero">
       <p class="kicker">Sustainable Catalyst</p>
       <h1>Catalyst Canvas</h1>
-      <p class="lede">A local design-thinking workspace for turning messy problems into reviewable experiments, personas, POV statements, HMW prompts, prototypes, and test plans.</p>
+      <p class="lede">A persistent strategic-design workspace for turning messy problems into reviewable projects, revisions, experiments, personas, POV statements, HMW prompts, prototypes, and test plans.</p>
+      <div class="workspace-strip">
+        <p><strong>{{ active_workspace.name if active_workspace else 'Local Workspace' }}</strong>{% if active_project %} · {{ active_project.title }}{% endif %}</p>
+        <span id="autosave-status" class="save-status" data-state="idle">{% if active_project %}Autosave ready{% else %}Create or save a project to enable autosave{% endif %}</span>
+      </div>
       <nav class="nav" aria-label="Canvas navigation">
-        <a class="btn" href="{{ url_for('canvas.index') }}">Home</a>
+        <a class="btn" href="{{ url_for('canvas.index') }}">Workspace</a>
         <a class="btn" href="{{ url_for('canvas.define') }}">Define</a>
         <a class="btn" href="{{ url_for('canvas.empathy') }}">Empathize</a>
         <a class="btn" href="{{ url_for('canvas.ideate') }}">Ideate</a>
         <a class="btn" href="{{ url_for('canvas.prototype') }}">Prototype</a>
         <a class="btn" href="{{ url_for('canvas.test_plan') }}">Test</a>
         <a class="btn" href="{{ url_for('canvas.report') }}">Report</a>
+        {% if active_project %}<a class="btn" href="{{ url_for('canvas.project_revisions', project_id=active_project.project_id) }}">History</a>{% endif %}
       </nav>
     </header>
 
@@ -37,5 +44,37 @@
 
     <p class="footer">Boundary: Catalyst Canvas supports problem framing and experimentation. It does not guarantee product-market fit, funding, implementation success, compliance, or impact.</p>
   </main>
+  <script>
+  (function(){
+    'use strict';
+    const status = document.getElementById('autosave-status');
+    const forms = Array.from(document.querySelectorAll('form[data-autosave-project]'));
+    function setStatus(text, state){ if(!status) return; status.textContent=text; status.dataset.state=state || 'idle'; }
+    forms.forEach(function(form){
+      const projectId = form.dataset.autosaveProject;
+      if(!projectId) return;
+      let timer = null;
+      function queue(){
+        clearTimeout(timer);
+        setStatus('Unsaved changes', 'idle');
+        timer = setTimeout(async function(){
+          const payload = {};
+          new FormData(form).forEach(function(value, key){ payload[key] = value; });
+          setStatus('Saving…', 'idle');
+          try{
+            const response = await fetch('/api/projects/' + encodeURIComponent(projectId) + '/autosave', {
+              method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)
+            });
+            const result = await response.json();
+            if(!response.ok) throw new Error(result.error || 'Autosave failed');
+            setStatus('Saved ' + new Date(result.saved_at).toLocaleTimeString(), 'saved');
+          }catch(error){ setStatus(error.message || 'Autosave failed', 'error'); }
+        }, 900);
+      }
+      form.addEventListener('input', queue);
+      form.addEventListener('change', queue);
+    });
+  }());
+  </script>
 </body>
 </html>

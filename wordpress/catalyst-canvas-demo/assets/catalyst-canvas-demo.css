@@ -70,3 +70,5 @@
 .ccanvasdemo-export-actions { justify-content: flex-end; }
 @media (max-width: 900px) { .ccanvasdemo-layout { grid-template-columns: 1fr; } .ccanvasdemo-grid, .ccanvasdemo-grid-three { grid-template-columns: 1fr; } }
 @media print { .ccanvasdemo-inputs, .ccanvasdemo-export-actions { display: none !important; } .ccanvasdemo { color: #000; } .ccanvasdemo-panel, .ccanvasdemo-card, .ccanvasdemo-mini, .ccanvasdemo-hero { box-shadow: none; } }
+
+.ccanvasdemo-workspace{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:end;margin:18px 0;padding:18px;border:1px solid #d9d2c4;border-top:4px solid #000;background:#fbfaf6}.ccanvasdemo-workspace label{display:block;margin:8px 0}.ccanvasdemo-workspace input,.ccanvasdemo-workspace select{width:100%;padding:10px;border:1px solid #d9d2c4;background:#fff}.ccanvasdemo-workspace-status{grid-column:1/-1;margin:0;color:#555;font-size:.82rem;font-weight:700}.ccanvasdemo-workspace-status[data-state="saved"]{color:#28613f}.ccanvasdemo-workspace-status[data-state="error"]{color:#7c1623}@media(max-width:760px){.ccanvasdemo-workspace{grid-template-columns:1fr}}

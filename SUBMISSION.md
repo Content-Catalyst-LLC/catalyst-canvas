@@ -1,39 +1,23 @@
-# Catalyst Canvas v1.2.0 Submission Notes
+# Catalyst Canvas v1.3.0 Submission Notes
 
 ## Release
 
-**Catalyst Canvas v1.2.0 — Canonical Canvas Contract and Shared Engine**
+**Catalyst Canvas v1.3.0 — Persistent Projects and Workspace Management**
 
-This release establishes one authoritative data and generation model for Python, CLI, Flask, and WordPress.
+## Deliverables
 
-## Included
+- canonical repository ZIP;
+- versioned WordPress plugin ZIP;
+- macOS install, validate, commit, and push script;
+- SHA-256 checksum manifest;
+- full validation log.
 
-- Canvas Contract 1.0 and strict JSON Schema;
-- canonical generation, normalization, validation, migration, and export package;
-- Flask and WordPress adapters;
-- validated SQLite save/read/import/export boundaries;
-- stable JSON, Markdown, and print HTML exports;
-- legacy v1.0/v1.1 migration support;
-- deterministic Python, Flask, and browser conformance fixtures;
-- 31 pytest and 31 unittest checks plus Node conformance and package validation.
+## Release focus
 
-## Validate
+This release adds workspace-scoped projects, immutable revisions, autosave, search, duplication, archive/restore, v1.2 SQLite migration, workspace APIs, and browser-local WordPress persistence.
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements-dev.txt
-python scripts/validate_release.py
-```
-
-## Build WordPress
-
-```bash
-python scripts/build_plugin.py
-```
-
-Expected artifact:
+## Package
 
 ```text
-dist/catalyst-canvas-demo-v1.2.0.zip
+dist/catalyst-canvas-demo-v1.3.0.zip
 ```

@@ -15,8 +15,12 @@
   "challenge": "Neighborhood heat-response planning is fragmented across agencies and community organizations.",
   "audience": {
     "primary": "Municipal resilience coordinator",
-    "secondary": ["Public-health program lead"],
-    "affected": ["Residents in high-heat neighborhoods"],
+    "secondary": [
+      "Public-health program lead"
+    ],
+    "affected": [
+      "Residents in high-heat neighborhoods"
+    ],
     "excluded": []
   },
   "goal": "Create a reviewable pilot that connects heat-risk evidence to neighborhood action.",
@@ -33,8 +37,12 @@
       "name": "Municipal Resilience Coordinator",
       "role": "Coordinates heat preparedness across departments and partners.",
       "description": "Needs a practical way to connect uneven evidence, community priorities, and operational decisions.",
-      "needs": ["A shared evidence-to-action workflow"],
-      "pains": ["Fragmented ownership and inconsistent data"],
+      "needs": [
+        "A shared evidence-to-action workflow"
+      ],
+      "pains": [
+        "Fragmented ownership and inconsistent data"
+      ],
       "source_type": "mixed",
       "confidence": "medium"
     }
@@ -96,9 +104,9 @@
   ],
   "provenance": {
     "generator": "catalyst-canvas",
-    "generator_version": "1.2.0",
+    "generator_version": "1.3.0",
     "source_surface": "fixture",
-    "source_version": "1.2.0",
+    "source_version": "1.3.0",
     "migrated_from": "",
     "warnings": []
   }

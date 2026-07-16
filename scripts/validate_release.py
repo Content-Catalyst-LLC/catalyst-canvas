@@ -20,6 +20,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 CONTRACT_VERSION = "catalyst-canvas/1.0"
+WORKSPACE_CONTRACT_VERSION = "catalyst-canvas-workspace/1.0"
 
 
 def run(*args: str, env: dict[str, str] | None = None) -> None:
@@ -40,6 +41,7 @@ def verify_version_markers() -> None:
 
     manifest = load_json("canvas_manifest.json")
     schema = load_json("schemas/catalyst_canvas_contract_1_0.schema.json")
+    workspace_schema = load_json("schemas/catalyst_canvas_workspace_1_0.schema.json")
     plugin = (ROOT / "wordpress/catalyst-canvas-demo/catalyst-canvas-demo.php").read_text(encoding="utf-8")
     package_version = (ROOT / "catalyst_canvas/version.py").read_text(encoding="utf-8")
     contract_data = (ROOT / "wordpress/catalyst-canvas-demo/assets/catalyst-canvas-contract-data.js").read_text(encoding="utf-8")
@@ -49,12 +51,16 @@ def verify_version_markers() -> None:
         "manifest contract": manifest.get("contract_version"),
         "schema contract": schema.get("properties", {}).get("schema_version", {}).get("const"),
         "schema generator": schema.get("$defs", {}).get("provenance", {}).get("properties", {}).get("generator_version", {}).get("const"),
+        "workspace contract": manifest.get("workspace_contract_version"),
+        "workspace schema": workspace_schema.get("properties", {}).get("schema_version", {}).get("const"),
     }
     expected = {
         "manifest release": VERSION,
         "manifest contract": CONTRACT_VERSION,
         "schema contract": CONTRACT_VERSION,
         "schema generator": VERSION,
+        "workspace contract": WORKSPACE_CONTRACT_VERSION,
+        "workspace schema": WORKSPACE_CONTRACT_VERSION,
     }
     for label, value in checks.items():
         if value != expected[label]:
@@ -110,10 +116,12 @@ def verify_source_tree() -> None:
             raise RuntimeError(f"Runtime databases are still tracked by Git: {tracked}")
 
 
-def validate_schema() -> dict:
+def validate_schemas() -> tuple[dict, dict]:
     schema = load_json("schemas/catalyst_canvas_contract_1_0.schema.json")
+    workspace_schema = load_json("schemas/catalyst_canvas_workspace_1_0.schema.json")
     Draft202012Validator.check_schema(schema)
-    return schema
+    Draft202012Validator.check_schema(workspace_schema)
+    return schema, workspace_schema
 
 
 def validate_generated_contract(temp_dir: Path, schema: dict) -> None:
@@ -169,6 +177,37 @@ def validate_demo_seed(temp_dir: Path) -> None:
         raise RuntimeError("Demo seed did not create a Canvas Contract 1.0 record")
 
 
+
+def validate_workspace_operations(temp_dir: Path, workspace_schema: dict) -> None:
+    from catalyst_canvas import generate_canvas
+    from app.services.storage import (
+        archive_project, create_project, duplicate_project, get_project_canvas,
+        init_db, list_projects, list_revisions, restore_project, save_canvas,
+    )
+
+    database = str(temp_dir / "workspace-validation.sqlite3")
+    init_db(database)
+    canvas = generate_canvas({"title": "Release workspace", "challenge": "Validate persistence"})
+    project = create_project(database, canvas, title="Release workspace", tags="release,workspace")
+    errors = list(Draft202012Validator(workspace_schema).iter_errors({key: value for key, value in project.items() if not key.startswith("_")}))
+    if errors:
+        raise RuntimeError("Project record failed Workspace Contract 1.0 validation")
+    current = get_project_canvas(database, project["project_id"])
+    current["revision_id"] = "revision-release-autosave"
+    current["updated_at"] = "2026-07-16T22:00:00+00:00"
+    save_canvas(database, current, project_id=project["project_id"], autosave=True)
+    if len(list_revisions(database, project["project_id"])) != 2:
+        raise RuntimeError("Workspace revision ledger did not retain both revisions")
+    if len(list_projects(database, query="release")) != 1:
+        raise RuntimeError("Workspace project search failed")
+    archive_project(database, project["project_id"])
+    if list_projects(database, status="active"):
+        raise RuntimeError("Archived project remained in active registry")
+    restore_project(database, project["project_id"])
+    duplicate = duplicate_project(database, project["project_id"])
+    if not duplicate or duplicate["current_canvas_id"] == project["current_canvas_id"]:
+        raise RuntimeError("Project duplication did not create independent Canvas identity")
+
 def validate_migration_cli(temp_dir: Path, schema: dict) -> None:
     legacy = {
         "version": "1.1.1",
@@ -208,6 +247,7 @@ def validate_cross_surface_fixture() -> None:
     node = shutil.which("node")
     if node:
         run(node, "tests/js/test_contract_fixture.js")
+        run(node, "tests/js/test_workspace.js")
     else:
         print("SKIP: Node.js is unavailable; browser fixture conformance will run in CI.")
 
@@ -224,6 +264,7 @@ def validate_optional_syntax_tools() -> None:
         for relative in [
             "wordpress/catalyst-canvas-demo/assets/catalyst-canvas-contract-data.js",
             "wordpress/catalyst-canvas-demo/assets/catalyst-canvas-engine.js",
+            "wordpress/catalyst-canvas-demo/assets/catalyst-canvas-workspace.js",
             "wordpress/catalyst-canvas-demo/assets/catalyst-canvas-demo.js",
         ]:
             run(node, "--check", relative)
@@ -241,6 +282,7 @@ def validate_plugin_package(temp_dir: Path) -> None:
         "catalyst-canvas-demo/assets/catalyst-canvas-demo.css",
         "catalyst-canvas-demo/assets/catalyst-canvas-contract-data.js",
         "catalyst-canvas-demo/assets/catalyst-canvas-engine.js",
+        "catalyst-canvas-demo/assets/catalyst-canvas-workspace.js",
         "catalyst-canvas-demo/assets/catalyst-canvas-demo.js",
     }
     missing = sorted(required - names)
@@ -251,7 +293,7 @@ def validate_plugin_package(temp_dir: Path) -> None:
 def main() -> int:
     verify_version_markers()
     verify_source_tree()
-    schema = validate_schema()
+    schema, workspace_schema = validate_schemas()
     run(sys.executable, "-m", "compileall", "-q", "app", "catalyst_canvas", "python", "demo", "scripts")
     run(sys.executable, "-m", "pytest", "tests", env={"PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1"})
     run(sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v")
@@ -260,11 +302,12 @@ def main() -> int:
         verify_generated_contract_asset(temp_dir)
         validate_generated_contract(temp_dir, schema)
         validate_demo_seed(temp_dir)
+        validate_workspace_operations(temp_dir, workspace_schema)
         validate_migration_cli(temp_dir, schema)
         validate_cross_surface_fixture()
         validate_optional_syntax_tools()
         validate_plugin_package(temp_dir)
-    print(f"PASS: Catalyst Canvas v{VERSION} / {CONTRACT_VERSION} release validation completed.")
+    print(f"PASS: Catalyst Canvas v{VERSION} / {CONTRACT_VERSION} / {WORKSPACE_CONTRACT_VERSION} release validation completed.")
     return 0
 
 

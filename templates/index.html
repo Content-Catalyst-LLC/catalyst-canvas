@@ -1,32 +1,91 @@
 {% extends "base.html" %}
-{% block title %}Catalyst Canvas — Local Demo{% endblock %}
+{% block title %}Workspace — Catalyst Canvas{% endblock %}
 {% block content %}
 <section class="panel">
-  <p class="label">Local Flask Demo</p>
-  <h2>Start with a reviewable Canvas workflow</h2>
-  <p class="muted">Use the sequence below to move from ambiguous challenge to a structured brief. The WordPress page demo is public-facing; this Flask app is the local repository companion.</p>
-  <div class="grid">
-    <article class="card"><h3>Frame</h3><p>Define challenge, audience, goal, constraint, and known evidence.</p><a class="small-link" href="{{ url_for('canvas.define') }}">Start defining →</a></article>
-    <article class="card"><h3>Empathize</h3><p>Clarify the user, needs, pains, context, and friction.</p><a class="small-link" href="{{ url_for('canvas.empathy') }}">Map empathy →</a></article>
-    <article class="card"><h3>Export</h3><p>Create a JSON/Markdown brief that can be reviewed and revised.</p><a class="small-link" href="{{ url_for('canvas.report') }}">View report →</a></article>
+  <div class="split-heading">
+    <div>
+      <p class="label">Persistent workspace</p>
+      <h2>{{ active_workspace.name if active_workspace else 'Local Workspace' }}</h2>
+      <p class="muted">Projects persist in SQLite, retain immutable revisions, and remain isolated to the active workspace.</p>
+    </div>
+    <div class="stats" aria-label="Project counts">
+      <span><strong>{{ counts.active }}</strong> active</span>
+      <span><strong>{{ counts.archived }}</strong> archived</span>
+    </div>
+  </div>
+  <div class="grid two">
+    <article class="card">
+      <h3>Create a project</h3>
+      <form method="post" action="{{ url_for('canvas.project_create') }}">
+        <label>Project title</label><input name="title" required placeholder="Example: Community impact evidence canvas">
+        <label>Description</label><textarea name="description" placeholder="What is this project for?"></textarea>
+        <label>Tags</label><input name="tags" placeholder="impact, evidence, workshop">
+        <div class="actions"><button class="btn" type="submit">Create project</button></div>
+      </form>
+    </article>
+    <article class="card">
+      <h3>Workspace controls</h3>
+      <form method="post" action="{{ url_for('canvas.workspace_create') }}">
+        <label>New workspace name</label><input name="name" required placeholder="Program team workspace">
+        <label>Description</label><textarea name="description" placeholder="Private project boundary and purpose"></textarea>
+        <div class="actions"><button class="btn" type="submit">Create workspace</button></div>
+      </form>
+      {% if workspaces|length > 1 %}
+      <div class="workspace-list">
+        {% for workspace in workspaces %}
+          {% if not active_workspace or workspace.workspace_id != active_workspace.workspace_id %}
+          <form method="post" action="{{ url_for('canvas.workspace_open', workspace_identifier=workspace.workspace_id) }}">
+            <button class="small-link" type="submit">Open {{ workspace.name }} · {{ workspace.project_count }} projects</button>
+          </form>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+    </article>
   </div>
 </section>
+
 <section class="panel">
-  <p class="label">Recent Briefs</p>
-  <h2>Saved Canvas briefs</h2>
-  {% if canvases %}
+  <div class="split-heading">
+    <div><p class="label">Project registry</p><h2>{{ status|capitalize }} projects</h2></div>
+    <div class="actions compact">
+      <a class="small-link" href="{{ url_for('canvas.index', status='active') }}">Active</a>
+      <a class="small-link" href="{{ url_for('canvas.index', status='archived') }}">Archived</a>
+      <a class="small-link" href="{{ url_for('canvas.index', status='all') }}">All</a>
+    </div>
+  </div>
+  <form class="search-row" method="get">
+    <input type="hidden" name="status" value="{{ status }}">
+    <label class="sr-only" for="project-search">Search projects</label>
+    <input id="project-search" name="q" value="{{ query }}" placeholder="Search titles, descriptions, or tags">
+    <button class="btn" type="submit">Search</button>
+  </form>
+  {% if projects %}
     <div class="grid">
-      {% for item in canvases %}
-      <article class="card">
+      {% for item in projects %}
+      <article class="card project-card">
+        <p class="project-meta">{{ item.status }} · {{ item.revision_count }} revisions</p>
         <h3>{{ item.title }}</h3>
-        <p>{{ item.schema_version }} · {{ item.status }}</p><p>Updated {{ item.updated_at }}</p>
-        <a class="small-link" href="/api/canvas/{{ item.id }}.json">JSON →</a>
-        <a class="small-link" href="/export/{{ item.id }}.md">Markdown →</a>
+        <p>{{ item.description or 'No project description yet.' }}</p>
+        {% if item.tags %}<p class="tag-row">{% for tag in item.tags %}<span>{{ tag }}</span>{% endfor %}</p>{% endif %}
+        <p class="project-meta">Updated {{ item.updated_at }}</p>
+        <div class="actions compact">
+          {% if item.status == 'active' %}
+          <a class="small-link" href="{{ url_for('canvas.project_open', project_id=item.project_id) }}">Open</a>
+          <a class="small-link" href="{{ url_for('canvas.project_revisions', project_id=item.project_id) }}">History</a>
+          <a class="small-link" href="{{ url_for('canvas.project_json_export', project_id=item.project_id) }}">JSON</a>
+          <form method="post" action="{{ url_for('canvas.project_duplicate', project_id=item.project_id) }}"><button class="small-link" type="submit">Duplicate</button></form>
+          <form method="post" action="{{ url_for('canvas.project_archive', project_id=item.project_id) }}"><button class="small-link" type="submit">Archive</button></form>
+          {% else %}
+          <a class="small-link" href="{{ url_for('canvas.project_revisions', project_id=item.project_id) }}">History</a>
+          <form method="post" action="{{ url_for('canvas.project_restore', project_id=item.project_id) }}"><button class="small-link" type="submit">Restore</button></form>
+          {% endif %}
+        </div>
       </article>
       {% endfor %}
     </div>
   {% else %}
-    <p class="muted">No saved briefs yet.</p>
+    <p class="muted">No projects match this view.</p>
   {% endif %}
 </section>
 {% endblock %}

@@ -11,4 +11,10 @@ __all__ = [
     "__version__",
     "generate_canvas",
     "validate_contract",
+    "DEFAULT_WORKSPACE_ID",
+    "WORKSPACE_SCHEMA_VERSION",
+    "project_record",
+    "validate_project_record",
 ]
+
+from .workspaces import DEFAULT_WORKSPACE_ID, WORKSPACE_SCHEMA_VERSION, project_record, validate_project_record

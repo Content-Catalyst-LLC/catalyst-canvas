@@ -4,7 +4,7 @@
 <section class="panel">
   <p class="label">Prototype</p>
   <h2>Make the smallest useful version</h2>
-  <form method="post">
+  <form method="post" data-autosave-project="{{ canvas.get('project_id','') }}">
     <label>Prototype concept</label><textarea name="prototype">{{ canvas.get('prototype','') }}</textarea>
     <label>Risk note</label><textarea name="risk_note">{{ canvas.get('risk_note','') }}</textarea>
     <div class="actions"><button class="btn" type="submit">Save and test →</button><a class="btn" href="{{ url_for('canvas.storyboard') }}">Storyboard →</a></div>

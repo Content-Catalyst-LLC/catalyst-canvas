@@ -28,6 +28,6 @@ Use `demo/seed_demo.py` and `scripts/build_plugin.py` to reproduce these artifac
 
 ## Compatibility boundary
 
-`python/catalyst_canvas_brief.py` is a deprecated v1.x compatibility adapter. Bug fixes may preserve its existing interface, but new generation behavior belongs in `python/catalyst_canvas_core.py` until the canonical package planned for v1.2.0 is introduced.
+`python/catalyst_canvas_brief.py` is a deprecated v1.x compatibility adapter. Bug fixes may preserve its existing interface, but new behavior belongs in the canonical `catalyst_canvas/` package and explicit surface adapters.
 
 Avoid contributions that overpromise outcomes, imply professional advice, or make the tool appear to certify strategy, impact, compliance, or product-market fit.
