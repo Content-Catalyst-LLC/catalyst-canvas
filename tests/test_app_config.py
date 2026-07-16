@@ -41,7 +41,7 @@ class CatalystCanvasAppConfigTests(unittest.TestCase):
             })
             self.assertEqual(response.status_code, 201)
             payload = response.get_json()
-            self.assertEqual(payload["schema_version"], "catalyst-canvas/1.1")
+            self.assertEqual(payload["schema_version"], "catalyst-canvas/1.2")
             self.assertEqual(payload["migrated_from"], "legacy-flask/1.x")
 
     def test_import_api_rejects_unknown_payload(self):

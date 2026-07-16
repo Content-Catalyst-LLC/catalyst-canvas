@@ -2,41 +2,49 @@
 
 All notable changes to Catalyst Canvas are documented here.
 
+## 1.5.0 — 2026-07-16
+
+### Canvas Contract 1.2 and governed ledger
+
+- Upgraded the canonical document contract to `catalyst-canvas/1.2` with explicit migration from Contracts 1.0 and 1.1.
+- Added structured source records, evidence excerpts, claims, assumptions, research questions, interview guides, observation notes, synthesis tags, and institutional handoffs.
+- Added claim states for supported, partially supported, unsupported, disputed, and outdated assertions.
+- Added assumption ownership, confidence, criticality, consequence, test method, lifecycle status, due date, evidence links, and experiment links.
+- Added contradiction, limitation, missing-data, and review-state fields so uncertainty remains visible.
+- Added descriptive ledger indicators for source and evidence counts, claim-state exposure, material-claim linkage, and high-criticality open assumptions.
+
+### Evidence Ledger workspace
+
+- Added the Flask `/ledger` studio for editing sources, excerpts, claims, assumptions, research questions, synthesis tags, and handoff plans.
+- Added workspace-scoped indexing and reuse for source, evidence, claim, assumption, research-question, interview-guide, and observation-note assets.
+- Added `GET /api/ledger` and project-scoped research-handoff endpoints.
+- Added Knowledge Library and Research Librarian handoff packages using `catalyst-canvas-research-handoff/1.0`.
+- Added publication and review warnings before exported narrative content when claims remain unsupported, disputed, or outdated.
+
+### Shared browser engine and validation
+
+- Added browser-local ledger editing and descriptive indicator cards to the WordPress shortcode workspace.
+- Added deterministic Python, Flask, and Node conformance for the Contract 1.2 ledger fixture.
+- Added migration, claim-state, assumption-to-experiment, handoff-provenance, route, storage-indexing, and export-warning tests.
+- Expanded release validation to 53 pytest tests and 53 unittest tests before packaging.
+
 ## 1.4.0 — 2026-07-16
 
-### Canvas Contract 1.1
+### Canvas Contract 1.1 research model
 
-- Upgraded the canonical document contract to `catalyst-canvas/1.1` while retaining explicit migration support for Contract 1.0 and legacy v1.x payloads.
 - Expanded persona records with context, jobs, goals, needs, pains, gains, behaviors, barriers, motivations, accessibility needs, channels, quotes, evidence and assumption links, tags, source notes, confidence notes, and validation status.
 - Added empathy maps and attribute-level observed, research, or assumed basis records with evidence and confidence.
-- Expanded stakeholder records with type, relationship, quantified influence, interest, and impact, responsibilities, tensions, stance, decision role, engagement strategy, evidence links, dependencies, and tags.
-- Added reusable journey maps with persona linkage, scenario, desired outcome, status, ordered stages, evidence, assumptions, and tags.
-- Added stage-level actions, questions, thoughts, pain points, frictions, opportunities, touchpoints, channels, metrics, emotional state, owner, evidence links, and proposed experiment identifiers.
+- Expanded stakeholder records with quantified influence, interest, and impact, responsibilities, tensions, stance, decision role, engagement strategy, evidence links, dependencies, and tags.
+- Added reusable journey maps with persona linkage, scenario, desired outcome, ordered stages, evidence, assumptions, and tags.
 - Added behavioral-signal records whose schema enforces hint status and excludes identity or demographic fields.
-- Added a normalized research-readiness summary to every Canvas.
 
 ### Persona, stakeholder, and journey studio
 
-- Added a Flask research studio for editing persona and empathy records, influence/interest/impact stakeholder maps, and ordered journey stages.
+- Added Flask and browser-local editing for personas, empathy maps, stakeholder maps, and ordered journey stages.
 - Added six reusable persona templates and workspace persona/journey comparison.
-- Added UTF-8 analytics and GA4 CSV upload with file-type, size, and unsupported-column safeguards.
-- Added matrix and journey previews that remain tied to the saved canonical revision.
-- Added workspace-scoped `research_assets` and `project_research_links` storage with automatic indexing on save.
-- Added search, counts, retrieval, reuse, and archive operations for research assets without crossing workspace boundaries.
-- Added `GET /api/research/assets`, `GET /api/research/persona-templates`, comparison views, and project-level research-asset reuse routes.
-
-### Shared browser engine and exports
-
-- Updated the WordPress browser engine to generate and migrate Canvas Contract 1.1 documents.
-- Added browser-local persona, empathy, stakeholder, journey, CSV-hint, template, and comparison workflows while retaining the no-transmission privacy boundary.
-- Expanded Markdown and print exports with research readiness, persona detail, stakeholder maps, and journey stages.
-- Added deterministic Python, Flask, and Node conformance fixtures for the enriched research contract.
-
-### Validation and migration
-
-- Added Contract 1.0-to-1.1 migration coverage and migration provenance warnings.
-- Added research normalization, journey sequencing, stakeholder scoring, reusable asset, route, and browser conformance tests.
-- Expanded the release gate to validate research asset indexing and plugin packaging against Contract 1.1.
+- Added guarded UTF-8 analytics and GA4 CSV import.
+- Added workspace-scoped research assets and project research links with automatic indexing on save.
+- Added deterministic Python, Flask, and browser conformance fixtures for the enriched research contract.
 
 ## 1.3.0 — 2026-07-16
 

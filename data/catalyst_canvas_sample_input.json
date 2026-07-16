@@ -1,5 +1,5 @@
 {
-  "schema_version": "catalyst-canvas/1.1",
+  "schema_version": "catalyst-canvas/1.2",
   "canvas_id": "canvas-sample-community-impact",
   "revision_id": "revision-sample-v140",
   "title": "Community impact evidence canvas",
@@ -337,19 +337,74 @@
   "evidence": [
     {
       "evidence_id": "evidence-001",
-      "type": "workflow-review",
-      "title": "Quarterly reporting workflow review",
+      "source_id": "source-001",
+      "evidence_type": "observation",
+      "title": "Fragmented reporting workflow",
       "summary": "Current reporting uses multiple spreadsheets and manual source-note checks.",
-      "citation": "Internal workflow review, 2026",
-      "confidence": "medium"
+      "quote": "",
+      "locator": "workflow map, steps 2-5",
+      "citation": "Quarterly reporting workflow review, 2026",
+      "url": "",
+      "captured_at": "2026-07-16T12:00:00+00:00",
+      "captured_by": "Research lead",
+      "confidence": "medium",
+      "limitations": [
+        "One reporting cycle"
+      ],
+      "contradiction_ids": [],
+      "tags": [
+        "workflow",
+        "fragmentation"
+      ]
+    },
+    {
+      "evidence_id": "evidence-002",
+      "source_id": "source-002",
+      "evidence_type": "quote",
+      "title": "Need for defensible claims",
+      "summary": "The program director wants uncertainty to remain visible during review.",
+      "quote": "I need to be clear about what the data can and cannot show.",
+      "locator": "interview note 6",
+      "citation": "Program director interview, 2026-07-10",
+      "url": "",
+      "captured_at": "2026-07-10T16:00:00+00:00",
+      "captured_by": "Research lead",
+      "confidence": "medium",
+      "limitations": [
+        "Single participant"
+      ],
+      "contradiction_ids": [],
+      "tags": [
+        "claim-review",
+        "uncertainty"
+      ]
     }
   ],
   "assumptions": [
     {
       "assumption_id": "assumption-001",
       "statement": "A shared evidence-to-claim workflow will reduce reporting revisions.",
-      "status": "untested",
-      "criticality": "high"
+      "owner": "Program director",
+      "confidence": "low",
+      "criticality": "high",
+      "consequence": "If false, the workflow may add process without improving review.",
+      "test_method": "Compare revision counts and reviewer comprehension before and after the pilot.",
+      "status": "planned",
+      "experiment_ids": [
+        "test-001"
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "due_date": "2026-08-31",
+      "limitations": [
+        "Small pilot sample"
+      ],
+      "tags": [
+        "workflow",
+        "revision-reduction"
+      ]
     }
   ],
   "tests": [
@@ -360,6 +415,262 @@
       "method": "Run a reporting review with program staff and a funder-facing reviewer.",
       "learning_goal": "Determine whether the workflow improves clarity without hiding uncertainty.",
       "status": "planned"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "source-001",
+      "source_type": "document",
+      "title": "Quarterly reporting workflow review",
+      "creator": "Evaluation partner",
+      "publisher": "Community nonprofit",
+      "source_date": "2026-06-30",
+      "accessed_at": "2026-07-16T12:00:00+00:00",
+      "url": "",
+      "owner": "Program director",
+      "description": "Review of current reporting files, source notes, and approval steps.",
+      "rights": "Internal working record",
+      "limitations": [
+        "One reporting cycle",
+        "Internal process review"
+      ],
+      "tags": [
+        "reporting",
+        "workflow"
+      ],
+      "knowledge_library_record_id": "",
+      "provenance_note": "Captured during the v1.5.0 sample workflow."
+    },
+    {
+      "source_id": "source-002",
+      "source_type": "interview",
+      "title": "Program director interview",
+      "creator": "Research lead",
+      "publisher": "",
+      "source_date": "2026-07-10",
+      "accessed_at": "",
+      "url": "",
+      "owner": "Research lead",
+      "description": "Semi-structured interview about reporting pressure and evidence review.",
+      "rights": "Consent-limited research note",
+      "limitations": [
+        "Single participant"
+      ],
+      "tags": [
+        "interview",
+        "reporting"
+      ],
+      "knowledge_library_record_id": "",
+      "provenance_note": "Use only for workflow design; do not generalize to all nonprofits."
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "claim-001",
+      "statement": "The current reporting workflow requires manual reconciliation across multiple files.",
+      "state": "supported",
+      "owner": "Evaluation partner",
+      "confidence": "medium",
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "assumption_ids": [],
+      "source_ids": [
+        "source-001"
+      ],
+      "uncertainty": "Extent varies by reporting cycle.",
+      "limitations": [
+        "Observed in one cycle"
+      ],
+      "contradictions": [],
+      "missing_data": [
+        "Time-on-task baseline"
+      ],
+      "review_status": "review",
+      "reviewed_by": "",
+      "reviewed_at": "",
+      "updated_at": "2026-07-16T12:00:00+00:00",
+      "tags": [
+        "workflow"
+      ]
+    },
+    {
+      "claim_id": "claim-002",
+      "statement": "A shared evidence-to-claim workflow will reduce reporting revisions.",
+      "state": "partially_supported",
+      "owner": "Program director",
+      "confidence": "low",
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "source_ids": [
+        "source-001",
+        "source-002"
+      ],
+      "uncertainty": "No before-and-after comparison has been completed.",
+      "limitations": [
+        "Small sample",
+        "No baseline revision count"
+      ],
+      "contradictions": [],
+      "missing_data": [
+        "Pilot revision count",
+        "Reviewer comprehension measure"
+      ],
+      "review_status": "draft",
+      "reviewed_by": "",
+      "reviewed_at": "",
+      "updated_at": "2026-07-16T12:00:00+00:00",
+      "tags": [
+        "decision-clarity"
+      ]
+    },
+    {
+      "claim_id": "claim-003",
+      "statement": "The new workflow will guarantee stronger funder confidence.",
+      "state": "unsupported",
+      "owner": "",
+      "confidence": "unknown",
+      "evidence_ids": [],
+      "assumption_ids": [],
+      "source_ids": [],
+      "uncertainty": "Confidence is not measured and cannot be guaranteed.",
+      "limitations": [
+        "No direct funder evaluation"
+      ],
+      "contradictions": [],
+      "missing_data": [
+        "Funder review data"
+      ],
+      "review_status": "rejected",
+      "reviewed_by": "Program director",
+      "reviewed_at": "2026-07-16T12:00:00+00:00",
+      "updated_at": "2026-07-16T12:00:00+00:00",
+      "tags": [
+        "overclaim-risk"
+      ]
+    }
+  ],
+  "research_questions": [
+    {
+      "research_question_id": "research-question-001",
+      "question": "Where do reviewers lose confidence or context in the current reporting process?",
+      "owner": "Research lead",
+      "status": "investigating",
+      "priority": "high",
+      "source_ids": [
+        "source-001",
+        "source-002"
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "notes": "Compare staff and funder-facing review perspectives.",
+      "tags": [
+        "review",
+        "confidence"
+      ]
+    }
+  ],
+  "interview_guides": [
+    {
+      "interview_guide_id": "interview-guide-001",
+      "title": "Reporting review interview guide",
+      "purpose": "Identify where evidence context is lost during report review.",
+      "audience": "Program staff and funder-facing reviewers",
+      "questions": [
+        "Which claim is hardest to verify?",
+        "Where do you look for source context?",
+        "What limitation must remain visible?"
+      ],
+      "owner": "Research lead",
+      "status": "ready",
+      "source_ids": [
+        "source-001"
+      ],
+      "tags": [
+        "interview",
+        "reporting"
+      ]
+    }
+  ],
+  "observation_notes": [
+    {
+      "observation_note_id": "observation-001",
+      "title": "Source-note lookup during report review",
+      "note": "The program director moved between three files to verify one material claim.",
+      "observed_at": "2026-07-01T15:30:00+00:00",
+      "observer": "Evaluation partner",
+      "context": "Quarterly report review session",
+      "source_id": "source-001",
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "limitations": [
+        "One review session"
+      ],
+      "tags": [
+        "workflow",
+        "source-lookup"
+      ]
+    }
+  ],
+  "synthesis_tags": [
+    "decision clarity",
+    "traceable claims",
+    "visible limitations",
+    "reporting workflow"
+  ],
+  "handoffs": [
+    {
+      "handoff_id": "handoff-001",
+      "target": "knowledge_library",
+      "status": "ready",
+      "purpose": "Register the workflow review and interview as structured research sources.",
+      "context_note": "Preserve limitations and claim-state context with the source records.",
+      "source_ids": [
+        "source-001",
+        "source-002"
+      ],
+      "evidence_ids": [
+        "evidence-001",
+        "evidence-002"
+      ],
+      "claim_ids": [
+        "claim-001",
+        "claim-002"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "created_by": "Research lead"
+    },
+    {
+      "handoff_id": "handoff-002",
+      "target": "research_librarian",
+      "status": "draft",
+      "purpose": "Find comparable evidence-to-claim review methods for small nonprofits.",
+      "context_note": "Prioritize open and accessible sources; do not infer causality from reporting behavior.",
+      "source_ids": [
+        "source-001"
+      ],
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "claim_ids": [
+        "claim-002"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "created_at": "2026-07-16T12:00:00+00:00",
+      "created_by": "Research lead"
     }
   ]
 }

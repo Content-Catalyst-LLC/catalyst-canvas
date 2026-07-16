@@ -19,7 +19,7 @@ class CanvasStorageTests(unittest.TestCase):
             storage_id = save_canvas(db, contract)
             loaded = get_canvas(db, storage_id)
             self.assertEqual(loaded["canvas_id"], contract["canvas_id"])
-            self.assertEqual(loaded["schema_version"], "catalyst-canvas/1.1")
+            self.assertEqual(loaded["schema_version"], "catalyst-canvas/1.2")
             self.assertEqual(loaded["_storage_id"], storage_id)
 
     def test_save_rejects_invalid_contract(self):
@@ -52,7 +52,7 @@ class CanvasStorageTests(unittest.TestCase):
                 storage_id = cursor.lastrowid
                 conn.commit()
             loaded = get_canvas(db, storage_id)
-            self.assertEqual(loaded["schema_version"], "catalyst-canvas/1.1")
+            self.assertEqual(loaded["schema_version"], "catalyst-canvas/1.2")
             self.assertEqual(loaded["challenge"], "Migrate a local record")
             self.assertEqual(loaded["provenance"]["migrated_from"], "legacy-flask/1.x")
 

@@ -1,12 +1,12 @@
 # Catalyst Canvas Demo Workflow
 
-The v1.4.0 workflow follows:
+The v1.5.0 workflow follows:
 
 ```text
-challenge → audience → persona research → stakeholder map → journey stages → POV → HMW → framework → evidence and assumptions → prototype → test → review → export
+challenge → research questions → sources → evidence → claims and assumptions → personas/stakeholders/journeys → POV/HMW → prototype → experiment → review → handoff/export
 ```
 
-The WordPress plugin provides the public browser-local demonstration. The Flask workspace provides persistent projects, revisions, and reusable research assets. The canonical Python package provides reproducible contracts and exports.
+The WordPress plugin provides the public browser-local demonstration. The Flask workspace provides persistent projects, immutable revisions, reusable research assets, and the Evidence Ledger. The canonical Python package provides reproducible contracts, migrations, exports, and handoff packages.
 
 ## Recommended CLI
 

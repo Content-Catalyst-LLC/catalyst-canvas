@@ -1,4 +1,4 @@
-"""Stable Canvas Contract 1.1 JSON, Markdown, and print-report exporters."""
+"""Stable Canvas Contract 1.2 JSON, Markdown, and print-report exporters."""
 
 from __future__ import annotations
 
@@ -32,8 +32,14 @@ def export_markdown(contract: Mapping[str, Any]) -> str:
     constraints = _bullets([item["statement"] for item in data["constraints"]])
     hmw = _bullets([item["question"] for item in data["how_might_we"]])
     prompts = _bullets([f"{item['label']}: {item['question']}" for item in data["framework"]["prompts"]])
-    evidence = _bullets([f"{item['title']}: {item['summary']}" for item in data["evidence"]])
-    assumptions = _bullets([item["statement"] for item in data["assumptions"]])
+    sources = _bullets([f"{item['source_id']} — {item['title']} [{item['source_type']}] {item['url']}".strip() for item in data["sources"]])
+    evidence = _bullets([f"{item['evidence_id']} — {item['title']}: {item['summary'] or item['quote']} (source: {item['source_id'] or 'unlinked'})" for item in data["evidence"]])
+    claims = _bullets([f"[{item['state']}] {item['statement']} — evidence: {', '.join(item['evidence_ids']) or 'none'}; assumptions: {', '.join(item['assumption_ids']) or 'none'}; uncertainty: {item['uncertainty'] or 'not recorded'}" for item in data["claims"]])
+    assumptions = _bullets([f"[{item['criticality']}/{item['status']}] {item['statement']} — owner: {item['owner'] or 'unassigned'}; test: {item['test_method'] or 'not recorded'}; consequence: {item['consequence'] or 'not recorded'}" for item in data["assumptions"]])
+    research_questions = _bullets([f"[{item['priority']}/{item['status']}] {item['question']} — owner: {item['owner'] or 'unassigned'}" for item in data["research_questions"]])
+    interview_guides = _bullets([f"{item['title']} ({item['status']}): {'; '.join(item['questions']) or 'No questions recorded'}" for item in data["interview_guides"]])
+    observations = _bullets([f"{item['title']}: {item['note']} — observer: {item['observer'] or 'not recorded'}" for item in data["observation_notes"]])
+    handoffs = _bullets([f"{item['target']} [{item['status']}]: {item['purpose'] or item['context_note']}" for item in data["handoffs"]])
     reviews = _bullets([item["note"] for item in data["review_notes"]])
     audience = "\n".join([
         f"- **Primary:** {data['audience']['primary']}",
@@ -90,7 +96,15 @@ Canvas ID: {data['canvas_id']}
 Revision ID: {data['revision_id']}  
 Status: {data['status']}  
 Updated: {data['updated_at']}  
-Research readiness: {data['research_summary']['readiness']}
+Research readiness: {data['research_summary']['readiness']}  
+Evidence coverage: {data['ledger_summary']['evidence_coverage']}  
+Assumption exposure: {data['ledger_summary']['assumption_exposure']}
+
+## Publication and Review Warning
+
+{_bullets([f"{item['claim_id']}: {item['statement']} [{item['state']}]" for item in data['claims'] if item['state'] in {'unsupported','disputed','outdated'}]) if data['ledger_summary']['unsupported_or_disputed_count'] else 'No unsupported, disputed, or outdated claims are recorded.'}
+
+{data['ledger_summary']['indicator_note']}
 
 ## Challenge
 
@@ -161,13 +175,41 @@ Analytics remain evidence hints and do not establish intent, identity, motivatio
 
 {prompts}
 
-## Evidence
+## Source Register
+
+{sources}
+
+## Evidence Register
 
 {evidence}
 
-## Assumptions
+## Claim Register
+
+{claims}
+
+## Assumption Register
 
 {assumptions}
+
+## Research Questions
+
+{research_questions}
+
+## Interview Guides
+
+{interview_guides}
+
+## Observation Notes
+
+{observations}
+
+## Synthesis Tags
+
+{_bullets(data['synthesis_tags'])}
+
+## Research Handoffs
+
+{handoffs}
 
 ## Prototype
 

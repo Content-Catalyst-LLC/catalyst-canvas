@@ -1,4 +1,4 @@
-"""Flask form and view adapters for Canvas Contract 1.1."""
+"""Flask form and view adapters for Canvas Contract 1.2."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ from ..contract import build_contract, clean_text, new_id, strip_internal_fields
 from ..frameworks import framework_record
 from ..persona_templates import persona_template
 from ..research import (normalize_behavioral_signals, normalize_journeys, normalize_stakeholders, parse_behavioral_signal_csv, research_summary)
+from ..ledger import ledger_summary
 
 
 def compact_to_contract(payload: Mapping[str, Any]) -> Dict[str, Any]:
@@ -105,6 +106,19 @@ def _parse_stage_lines(value: Any) -> list[dict[str, Any]]:
         })
     return stages
 
+def _parse_pipe_records(value: Any, fields: list[str]) -> list[dict[str, str]]:
+    records: list[dict[str, str]] = []
+    for line in _lines(value):
+        parts = [part.strip() for part in line.split("|")]
+        parts += [""] * max(0, len(fields) - len(parts))
+        records.append(dict(zip(fields, parts[:len(fields)])))
+    return records
+
+
+def _csv_list(value: str) -> list[str]:
+    return [item.strip() for item in str(value or "").replace(";", ",").split(",") if item.strip()]
+
+
 def contract_to_form(contract: Mapping[str, Any], *, storage_id: int | None = None) -> Dict[str, Any]:
     data = validate_contract(contract)
     persona = _first(data["personas"])
@@ -174,6 +188,15 @@ def contract_to_form(contract: Mapping[str, Any], *, storage_id: int | None = No
             for item in data.get("behavioral_signals", [])
         ) if data.get("behavioral_signals") else "",
         "behavioral_signal_source_type": data.get("behavioral_signals", [{}])[0].get("source_type", "analytics_csv") if data.get("behavioral_signals") else "analytics_csv",
+        "source_lines": "\n".join(" | ".join([item.get("source_type", "other"), item.get("title", ""), item.get("creator", ""), item.get("source_date", ""), item.get("url", ""), item.get("owner", ""), "; ".join(item.get("limitations", [])), ", ".join(item.get("tags", [])), item.get("knowledge_library_record_id", ""), item.get("description", "")]) for item in data.get("sources", [])),
+        "evidence_lines": "\n".join(" | ".join([item.get("title", ""), item.get("evidence_type", "note"), item.get("source_id", ""), item.get("summary", ""), item.get("quote", ""), item.get("locator", ""), item.get("citation", ""), item.get("confidence", "unknown"), "; ".join(item.get("limitations", [])), ", ".join(item.get("tags", []))]) for item in data.get("evidence", [])),
+        "claim_lines": "\n".join(" | ".join([item.get("state", "unsupported"), item.get("statement", ""), item.get("owner", ""), item.get("confidence", "unknown"), ", ".join(item.get("evidence_ids", [])), ", ".join(item.get("assumption_ids", [])), item.get("uncertainty", ""), "; ".join(item.get("limitations", [])), "; ".join(item.get("contradictions", [])), "; ".join(item.get("missing_data", [])), item.get("review_status", "draft"), ", ".join(item.get("tags", []))]) for item in data.get("claims", [])),
+        "assumption_lines": "\n".join(" | ".join([item.get("criticality", "medium"), item.get("statement", ""), item.get("owner", ""), item.get("confidence", "unknown"), item.get("consequence", ""), item.get("test_method", ""), item.get("status", "untested"), ", ".join(item.get("experiment_ids", [])), ", ".join(item.get("evidence_ids", [])), item.get("due_date", ""), "; ".join(item.get("limitations", [])), ", ".join(item.get("tags", []))]) for item in data.get("assumptions", [])),
+        "research_question_lines": "\n".join(" | ".join([item.get("priority", "medium"), item.get("question", ""), item.get("owner", ""), item.get("status", "open"), ", ".join(item.get("source_ids", [])), ", ".join(item.get("evidence_ids", [])), item.get("notes", ""), ", ".join(item.get("tags", []))]) for item in data.get("research_questions", [])),
+        "interview_guide_lines": "\n".join(" | ".join([item.get("title", ""), item.get("purpose", ""), item.get("audience", ""), "; ".join(item.get("questions", [])), item.get("owner", ""), item.get("status", "draft"), ", ".join(item.get("source_ids", [])), ", ".join(item.get("tags", []))]) for item in data.get("interview_guides", [])),
+        "observation_note_lines": "\n".join(" | ".join([item.get("title", ""), item.get("note", ""), item.get("observed_at", ""), item.get("observer", ""), item.get("context", ""), item.get("source_id", ""), ", ".join(item.get("evidence_ids", [])), "; ".join(item.get("limitations", [])), ", ".join(item.get("tags", []))]) for item in data.get("observation_notes", [])),
+        "synthesis_tags": "\n".join(data.get("synthesis_tags", [])),
+        "handoff_lines": "\n".join(" | ".join([item.get("target", "knowledge_library"), item.get("status", "draft"), item.get("purpose", ""), item.get("context_note", ""), ", ".join(item.get("source_ids", [])), ", ".join(item.get("evidence_ids", [])), ", ".join(item.get("claim_ids", [])), ", ".join(item.get("assumption_ids", [])), item.get("created_by", "")]) for item in data.get("handoffs", [])),
         "research_readiness": data.get("research_summary", {}).get("readiness", "hypothesis"),
         "evidence": evidence.get("summary", ""),
         "assumption": assumption.get("statement", ""),
@@ -348,8 +371,9 @@ def form_to_contract(form: Mapping[str, Any], existing: Mapping[str, Any] | None
             updated["evidence"][0]["summary"] = summary
         elif summary:
             updated["evidence"] = [{
-                "evidence_id": "evidence-001", "type": "note", "title": "Available evidence",
-                "summary": summary, "citation": "", "confidence": "medium"
+                "evidence_id": "evidence-001", "source_id": "", "evidence_type": "note", "title": "Available evidence",
+                "summary": summary, "quote": "", "locator": "", "citation": "", "url": "", "captured_at": "", "captured_by": "",
+                "confidence": "medium", "limitations": [], "contradiction_ids": [], "tags": []
             }]
     if "assumption" in form:
         statement = clean_text(form.get("assumption"))
@@ -357,9 +381,53 @@ def form_to_contract(form: Mapping[str, Any], existing: Mapping[str, Any] | None
             updated["assumptions"][0]["statement"] = statement
         elif statement:
             updated["assumptions"] = [{
-                "assumption_id": "assumption-001", "statement": statement,
-                "status": "untested", "criticality": "medium"
+                "assumption_id": "assumption-001", "statement": statement, "owner": "", "confidence": "unknown",
+                "status": "untested", "criticality": "medium", "consequence": "", "test_method": "",
+                "experiment_ids": [], "evidence_ids": [], "due_date": "", "limitations": [], "tags": []
             }]
+    if "source_lines" in form:
+        updated["sources"] = []
+        for index, row in enumerate(_parse_pipe_records(form.get("source_lines"), ["source_type","title","creator","source_date","url","owner","limitations","tags","knowledge_library_record_id","description"]), start=1):
+            if row["title"]:
+                updated["sources"].append({**row, "source_id": f"source-{index:03d}", "publisher":"", "accessed_at":"", "rights":"", "limitations":_csv_list(row["limitations"]), "tags":_csv_list(row["tags"]), "provenance_note":""})
+    if "evidence_lines" in form:
+        updated["evidence"] = []
+        for index, row in enumerate(_parse_pipe_records(form.get("evidence_lines"), ["title","evidence_type","source_id","summary","quote","locator","citation","confidence","limitations","tags"]), start=1):
+            if row["title"] or row["summary"] or row["quote"]:
+                updated["evidence"].append({**row, "evidence_id":f"evidence-{index:03d}", "url":"", "captured_at":"", "captured_by":"", "limitations":_csv_list(row["limitations"]), "contradiction_ids":[], "tags":_csv_list(row["tags"])})
+    if "claim_lines" in form:
+        updated["claims"] = []
+        for index, row in enumerate(_parse_pipe_records(form.get("claim_lines"), ["state","statement","owner","confidence","evidence_ids","assumption_ids","uncertainty","limitations","contradictions","missing_data","review_status","tags"]), start=1):
+            if row["statement"]:
+                updated["claims"].append({**row, "claim_id":f"claim-{index:03d}", "evidence_ids":_csv_list(row["evidence_ids"]), "assumption_ids":_csv_list(row["assumption_ids"]), "source_ids":[], "limitations":_csv_list(row["limitations"]), "contradictions":_csv_list(row["contradictions"]), "missing_data":_csv_list(row["missing_data"]), "reviewed_by":"", "reviewed_at":"", "updated_at":updated["updated_at"], "tags":_csv_list(row["tags"])})
+    if "assumption_lines" in form:
+        updated["assumptions"] = []
+        for index, row in enumerate(_parse_pipe_records(form.get("assumption_lines"), ["criticality","statement","owner","confidence","consequence","test_method","status","experiment_ids","evidence_ids","due_date","limitations","tags"]), start=1):
+            if row["statement"]:
+                updated["assumptions"].append({**row, "assumption_id":f"assumption-{index:03d}", "experiment_ids":_csv_list(row["experiment_ids"]), "evidence_ids":_csv_list(row["evidence_ids"]), "limitations":_csv_list(row["limitations"]), "tags":_csv_list(row["tags"])})
+    if "research_question_lines" in form:
+        updated["research_questions"] = []
+        for index, row in enumerate(_parse_pipe_records(form.get("research_question_lines"), ["priority","question","owner","status","source_ids","evidence_ids","notes","tags"]), start=1):
+            if row["question"]:
+                updated["research_questions"].append({**row, "research_question_id":f"research-question-{index:03d}", "source_ids":_csv_list(row["source_ids"]), "evidence_ids":_csv_list(row["evidence_ids"]), "tags":_csv_list(row["tags"])})
+    if "interview_guide_lines" in form:
+        updated["interview_guides"] = []
+        for index, row in enumerate(_parse_pipe_records(form.get("interview_guide_lines"), ["title","purpose","audience","questions","owner","status","source_ids","tags"]), start=1):
+            if row["title"]:
+                updated["interview_guides"].append({**row, "interview_guide_id":f"interview-guide-{index:03d}", "questions":_csv_list(row["questions"]), "source_ids":_csv_list(row["source_ids"]), "tags":_csv_list(row["tags"])})
+    if "observation_note_lines" in form:
+        updated["observation_notes"] = []
+        for index, row in enumerate(_parse_pipe_records(form.get("observation_note_lines"), ["title","note","observed_at","observer","context","source_id","evidence_ids","limitations","tags"]), start=1):
+            if row["note"]:
+                updated["observation_notes"].append({**row, "observation_note_id":f"observation-{index:03d}", "evidence_ids":_csv_list(row["evidence_ids"]), "limitations":_csv_list(row["limitations"]), "tags":_csv_list(row["tags"])})
+    if "synthesis_tags" in form:
+        updated["synthesis_tags"] = _lines(form.get("synthesis_tags"))
+    if "handoff_lines" in form:
+        updated["handoffs"] = []
+        for index, row in enumerate(_parse_pipe_records(form.get("handoff_lines"), ["target","status","purpose","context_note","source_ids","evidence_ids","claim_ids","assumption_ids","created_by"]), start=1):
+            if row["purpose"] or row["context_note"]:
+                updated["handoffs"].append({**row, "handoff_id":f"handoff-{index:03d}", "source_ids":_csv_list(row["source_ids"]), "evidence_ids":_csv_list(row["evidence_ids"]), "claim_ids":_csv_list(row["claim_ids"]), "assumption_ids":_csv_list(row["assumption_ids"]), "created_at":updated["updated_at"]})
+
     if "prototype" in form:
         updated["prototypes"][0]["description"] = clean_text(form.get("prototype"), updated["prototypes"][0]["description"])
     if "test_plan" in form:
@@ -392,4 +460,4 @@ def form_to_contract(form: Mapping[str, Any], existing: Mapping[str, Any] | None
     updated["research_summary"] = research_summary(
         updated["personas"], updated["stakeholders"], updated.get("journeys", []), updated.get("behavioral_signals", []), generated_at=updated["updated_at"]
     )
-    return validate_contract(updated)
+    return build_contract(updated, source_surface="flask")

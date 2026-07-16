@@ -45,6 +45,15 @@
     return lines(value).map((line,index)=>{const parts=line.split('|').map(item=>item.trim());return {attribute_id:'attribute-'+String(index+1).padStart(3,'0'),category:parts[0]||'other',statement:parts[1]||'',basis:parts[2]||'assumed',confidence:parts[3]||'low',evidence_ids:String(parts[4]||'').split(',').map(item=>item.trim()).filter(Boolean),notes:parts[5]||''};}).filter(item=>item.statement);
   }
 
+  function pipeRows(value, count) { return lines(value).map(line => { const parts=line.split('|').map(item=>item.trim()); while(parts.length<count)parts.push(''); return parts; }); }
+  function ids(value){return String(value||'').replace(/;/g,',').split(',').map(item=>item.trim()).filter(Boolean);}
+  function parseSources(value){return pipeRows(value,10).filter(p=>p[1]).map((p,i)=>({source_id:'source-'+String(i+1).padStart(3,'0'),source_type:p[0]||'other',title:p[1],creator:p[2],publisher:'',source_date:p[3],accessed_at:'',url:p[4],owner:p[5],description:p[9],rights:'',limitations:ids(p[6]),tags:ids(p[7]),knowledge_library_record_id:p[8],provenance_note:''}));}
+  function parseEvidence(value){return pipeRows(value,10).filter(p=>p[0]||p[3]||p[4]).map((p,i)=>({evidence_id:'evidence-'+String(i+1).padStart(3,'0'),source_id:p[2],evidence_type:p[1]||'note',title:p[0]||'Evidence record',summary:p[3],quote:p[4],locator:p[5],citation:p[6],url:'',captured_at:'',captured_by:'',confidence:p[7]||'unknown',limitations:ids(p[8]),contradiction_ids:[],tags:ids(p[9])}));}
+  function parseClaims(value){return pipeRows(value,12).filter(p=>p[1]).map((p,i)=>({claim_id:'claim-'+String(i+1).padStart(3,'0'),state:p[0]||'unsupported',statement:p[1],owner:p[2],confidence:p[3]||'unknown',evidence_ids:ids(p[4]),assumption_ids:ids(p[5]),source_ids:[],uncertainty:p[6],limitations:ids(p[7]),contradictions:ids(p[8]),missing_data:ids(p[9]),review_status:p[10]||'draft',reviewed_by:'',reviewed_at:'',updated_at:'',tags:ids(p[11])}));}
+  function parseAssumptions(value){return pipeRows(value,12).filter(p=>p[1]).map((p,i)=>({assumption_id:'assumption-'+String(i+1).padStart(3,'0'),criticality:p[0]||'medium',statement:p[1],owner:p[2],confidence:p[3]||'unknown',consequence:p[4],test_method:p[5],status:p[6]||'untested',experiment_ids:ids(p[7]),evidence_ids:ids(p[8]),due_date:p[9],limitations:ids(p[10]),tags:ids(p[11])}));}
+  function parseResearchQuestions(value){return pipeRows(value,8).filter(p=>p[1]).map((p,i)=>({research_question_id:'research-question-'+String(i+1).padStart(3,'0'),priority:p[0]||'medium',question:p[1],owner:p[2],status:p[3]||'open',source_ids:ids(p[4]),evidence_ids:ids(p[5]),notes:p[6],tags:ids(p[7])}));}
+  function parseHandoffs(value){return pipeRows(value,9).filter(p=>p[2]||p[3]).map((p,i)=>({handoff_id:'handoff-'+String(i+1).padStart(3,'0'),target:p[0]||'knowledge_library',status:p[1]||'draft',purpose:p[2],context_note:p[3],source_ids:ids(p[4]),evidence_ids:ids(p[5]),claim_ids:ids(p[6]),assumption_ids:ids(p[7]),created_at:'',created_by:p[8]}));}
+
   function projectTitle(root) {
     const element = root.querySelector('[data-workspace-field="title"]');
     return element ? String(element.value || '').trim() : '';
@@ -79,6 +88,7 @@
         status: field(root,'journeyStatus') || 'draft', stages: parseJourneyStages(field(root, 'journeyStages'))
       }] : [],
       behavioral_signals:Engine.parseBehavioralSignalCsv(field(root,'behavioralSignalCsv'),field(root,'behavioralSignalSource')||'analytics_csv'),
+      sources:parseSources(field(root,'sourceLines')), evidence:parseEvidence(field(root,'evidenceLines')), claims:parseClaims(field(root,'claimLines')), assumptions:parseAssumptions(field(root,'assumptionLines')), research_questions:parseResearchQuestions(field(root,'researchQuestionLines')), interview_guides:existing.interview_guides||[], observation_notes:existing.observation_notes||[], synthesis_tags:lines(field(root,'synthesisTags')), handoffs:parseHandoffs(field(root,'handoffLines')),
       framework: field(root, 'framework'),
       provenance: { source_surface: 'wordpress', source_version: root.dataset.version || Engine.RELEASE_VERSION, warnings: [] }
     };
@@ -143,6 +153,10 @@
     setText(root, 'stakeholderCount', contract.research_summary.stakeholder_count + ' mapped');
     setText(root, 'journeyCount', contract.research_summary.journey_count + ' mapped');
     setText(root, 'signalCount', contract.research_summary.behavioral_signal_count + ' hints');
+    setText(root, 'sourceCount', contract.ledger_summary.source_count + ' recorded');
+    setText(root, 'claimRiskCount', contract.ledger_summary.unsupported_or_disputed_count + ' visible');
+    setText(root, 'evidenceCoverage', contract.ledger_summary.evidence_coverage.replace(/_/g, ' '));
+    setText(root, 'assumptionExposure', contract.ledger_summary.assumption_exposure.replace(/_/g, ' '));
     setList(root, 'stakeholderSummary', contract.stakeholders.map(item => `${item.name}: influence ${item.influence}/5, interest ${item.interest}/5 — ${item.engagement_strategy || item.stance}`));
     const journey = contract.journeys[0];
     setList(root, 'journeySummary', journey ? journey.stages.map(stage => `${stage.sequence}. ${stage.name}: ${stage.actions.join('; ') || 'No action recorded'} (emotion ${stage.emotion})`) : []);
@@ -174,6 +188,13 @@
     setField(root, 'journeyStages', (journey.stages || []).map(stage => [stage.name,(stage.actions||[]).join('; '),(stage.questions||[]).join('; '),stage.emotion,(stage.frictions||[]).join('; '),(stage.opportunities||[]).join('; '),(stage.touchpoints||[]).join('; '),(stage.channels||[]).join('; '),(stage.metrics||[]).join('; '),stage.owner,(stage.evidence_ids||[]).join(', '),(stage.experiment_ids||[]).join(', ')].join(' | ')).join('\n'));
     setField(root,'behavioralSignalSource',contract.behavioral_signals[0]?contract.behavioral_signals[0].source_type:'analytics_csv');
     setField(root,'behavioralSignalCsv',contract.behavioral_signals.length?'metric,segment,value,period,interpretation,limitation,evidence_ids,tags\n'+contract.behavioral_signals.map(item=>[item.metric,item.segment,item.value,item.period,item.interpretation,item.limitation,(item.evidence_ids||[]).join(';'),(item.tags||[]).join(';')].join(',')).join('\n'):'');
+    setField(root,'sourceLines',(contract.sources||[]).map(i=>[i.source_type,i.title,i.creator,i.source_date,i.url,i.owner,(i.limitations||[]).join('; '),(i.tags||[]).join(', '),i.knowledge_library_record_id,i.description].join(' | ')).join('\n'));
+    setField(root,'evidenceLines',(contract.evidence||[]).map(i=>[i.title,i.evidence_type,i.source_id,i.summary,i.quote,i.locator,i.citation,i.confidence,(i.limitations||[]).join('; '),(i.tags||[]).join(', ')].join(' | ')).join('\n'));
+    setField(root,'claimLines',(contract.claims||[]).map(i=>[i.state,i.statement,i.owner,i.confidence,(i.evidence_ids||[]).join(', '),(i.assumption_ids||[]).join(', '),i.uncertainty,(i.limitations||[]).join('; '),(i.contradictions||[]).join('; '),(i.missing_data||[]).join('; '),i.review_status,(i.tags||[]).join(', ')].join(' | ')).join('\n'));
+    setField(root,'assumptionLines',(contract.assumptions||[]).map(i=>[i.criticality,i.statement,i.owner,i.confidence,i.consequence,i.test_method,i.status,(i.experiment_ids||[]).join(', '),(i.evidence_ids||[]).join(', '),i.due_date,(i.limitations||[]).join('; '),(i.tags||[]).join(', ')].join(' | ')).join('\n'));
+    setField(root,'researchQuestionLines',(contract.research_questions||[]).map(i=>[i.priority,i.question,i.owner,i.status,(i.source_ids||[]).join(', '),(i.evidence_ids||[]).join(', '),i.notes,(i.tags||[]).join(', ')].join(' | ')).join('\n'));
+    setField(root,'synthesisTags',(contract.synthesis_tags||[]).join('\n'));
+    setField(root,'handoffLines',(contract.handoffs||[]).map(i=>[i.target,i.status,i.purpose,i.context_note,(i.source_ids||[]).join(', '),(i.evidence_ids||[]).join(', '),(i.claim_ids||[]).join(', '),(i.assumption_ids||[]).join(', '),i.created_by].join(' | ')).join('\n'));
     setField(root, 'framework', contract.framework.key);
     const title = root.querySelector('[data-workspace-field="title"]');
     if (title) title.value = contract.title || 'Untitled Canvas Project';

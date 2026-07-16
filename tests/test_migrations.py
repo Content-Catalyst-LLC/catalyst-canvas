@@ -65,7 +65,7 @@ class CanvasMigrationTests(unittest.TestCase):
         self.assertEqual(result.contract["provenance"]["migrated_from"], "legacy-wrapper/1.1.0")
 
     def test_future_contract_is_rejected_with_supported_version(self):
-        with self.assertRaisesRegex(UnsupportedContractVersion, "catalyst-canvas/1.1"):
+        with self.assertRaisesRegex(UnsupportedContractVersion, "catalyst-canvas/1.2"):
             migrate_payload({"schema_version": "catalyst-canvas/9.0"})
 
     def test_unknown_payload_is_rejected_with_expected_shape(self):
@@ -90,7 +90,7 @@ class ContractOneMigrationTests(unittest.TestCase):
             for key in ["stakeholder_type", "stance", "decision_role", "engagement_strategy", "evidence_ids", "dependencies", "tags"]:
                 stakeholder.pop(key, None)
         result = migrate_payload(legacy)
-        self.assertEqual(result.contract["schema_version"], "catalyst-canvas/1.1")
+        self.assertEqual(result.contract["schema_version"], "catalyst-canvas/1.2")
         self.assertEqual(result.migrated_from, "catalyst-canvas/1.0")
         self.assertIn("research fields", result.warnings[0])
         self.assertEqual(result.contract["personas"][0]["validation_status"], "hypothesis")

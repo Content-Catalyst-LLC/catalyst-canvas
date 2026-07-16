@@ -1,4 +1,4 @@
-"""Canvas Contract 1.1 normalization and JSON Schema validation."""
+"""Canvas Contract 1.2 normalization and JSON Schema validation."""
 
 from __future__ import annotations
 
@@ -12,6 +12,17 @@ from uuid import uuid4
 from jsonschema import Draft202012Validator
 
 from .version import CONTRACT_VERSION, __version__
+from .ledger import (
+    ledger_summary,
+    normalize_assumptions as normalize_ledger_assumptions,
+    normalize_claims,
+    normalize_evidence as normalize_ledger_evidence,
+    normalize_handoffs,
+    normalize_interview_guides,
+    normalize_observation_notes,
+    normalize_research_questions,
+    normalize_sources,
+)
 from .research import (
     normalize_behavioral_signals,
     normalize_journeys,
@@ -21,7 +32,7 @@ from .research import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA_PATH = ROOT / "schemas" / "catalyst_canvas_contract_1_1.schema.json"
+SCHEMA_PATH = ROOT / "schemas" / "catalyst_canvas_contract_1_2.schema.json"
 
 
 class CanvasContractError(ValueError):
@@ -296,7 +307,7 @@ def normalize_provenance(value: Any, *, source_surface: str, migrated_from: str 
 
 
 def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: str = "python") -> Dict[str, Any]:
-    """Normalize a compact or partially structured payload into Canvas Contract 1.1."""
+    """Normalize a compact or partially structured payload into Canvas Contract 1.2."""
     from .frameworks import framework_record
 
     source: Mapping[str, Any] = payload or {}
@@ -365,6 +376,14 @@ def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: 
     created_at = clean_text(source.get("created_at"), utc_now())
     updated_at = clean_text(source.get("updated_at"), created_at)
     title = clean_text(source.get("title"), "Catalyst Canvas Brief")
+    sources = normalize_sources(source.get("sources", source.get("source_records")))
+    evidence = normalize_ledger_evidence(source.get("evidence"))
+    assumptions = normalize_ledger_assumptions(source.get("assumptions", source.get("assumption")))
+    claims = normalize_claims(source.get("claims"))
+    research_questions = normalize_research_questions(source.get("research_questions"))
+    interview_guides = normalize_interview_guides(source.get("interview_guides"))
+    observation_notes = normalize_observation_notes(source.get("observation_notes"))
+    handoffs = normalize_handoffs(source.get("handoffs"))
 
     contract = {
         "schema_version": CONTRACT_VERSION,
@@ -387,8 +406,16 @@ def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: 
         "point_of_view": pov,
         "how_might_we": hmw_records,
         "framework": framework_record(framework_value),
-        "evidence": normalize_evidence(source.get("evidence")),
-        "assumptions": normalize_assumptions(source.get("assumptions", source.get("assumption"))),
+        "sources": sources,
+        "evidence": evidence,
+        "claims": claims,
+        "assumptions": assumptions,
+        "research_questions": research_questions,
+        "interview_guides": interview_guides,
+        "observation_notes": observation_notes,
+        "synthesis_tags": clean_list(source.get("synthesis_tags")),
+        "ledger_summary": ledger_summary(sources, evidence, claims, assumptions, research_questions, generated_at=updated_at),
+        "handoffs": handoffs,
         "prototypes": normalize_prototypes(source.get("prototypes", source.get("prototype"))),
         "tests": normalize_tests(source.get("tests", source.get("test_plan"))),
         "review_notes": normalize_review_notes(source.get("review_notes", source.get("review_note"))),

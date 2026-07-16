@@ -1,4 +1,4 @@
-"""Migration support for legacy exports and Canvas Contract 1.0."""
+"""Migration support for legacy exports and Canvas Contracts 1.0 and 1.1."""
 
 from __future__ import annotations
 
@@ -142,7 +142,7 @@ def migrate_payload(payload: Mapping[str, Any], *, source_surface: str = "migrat
     detected = detect_payload_version(payload)
     if detected == CONTRACT_VERSION:
         return MigrationResult(validate_contract(payload), "", [])
-    if detected == "catalyst-canvas/1.0":
+    if detected in {"catalyst-canvas/1.0", "catalyst-canvas/1.1"}:
         compact = dict(payload)
         warning = f"Migrated {detected} to {CONTRACT_VERSION}; research fields were normalized and should be reviewed."
         compact["schema_version"] = CONTRACT_VERSION
@@ -157,7 +157,7 @@ def migrate_payload(payload: Mapping[str, Any], *, source_surface: str = "migrat
         return MigrationResult(contract, detected, [warning])
     if detected.startswith("catalyst-canvas/"):
         raise UnsupportedContractVersion(
-            f"Unsupported Canvas contract {detected!r}. This release accepts {CONTRACT_VERSION!r} and migrates 'catalyst-canvas/1.0'. "
+            f"Unsupported Canvas contract {detected!r}. This release accepts {CONTRACT_VERSION!r} and migrates 'catalyst-canvas/1.0' and 'catalyst-canvas/1.1'. "
             "Export through a compatible Catalyst Canvas release before importing."
         )
 
@@ -169,7 +169,7 @@ def migrate_payload(payload: Mapping[str, Any], *, source_surface: str = "migrat
         compact = _legacy_flask_input(payload)
     else:
         raise UnsupportedContractVersion(
-            "Unable to identify this Canvas payload. Expected Canvas Contract 1.1, Canvas Contract 1.0, or a v1.0/v1.1 "
+            "Unable to identify this Canvas payload. Expected Canvas Contract 1.2, Canvas Contract 1.1, Canvas Contract 1.0, or a v1.0/v1.1 "
             "Python, Flask, or WordPress export containing challenge, audience, goal, and constraint fields."
         )
 

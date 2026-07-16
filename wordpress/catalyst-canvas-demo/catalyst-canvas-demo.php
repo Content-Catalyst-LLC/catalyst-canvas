@@ -3,7 +3,7 @@
  * Plugin Name: Catalyst Canvas Demo
  * Plugin URI: https://sustainablecatalyst.com/catalyst-canvas/
  * Description: Adds a persistent, client-side Catalyst Canvas project workspace via the [catalyst_canvas_demo] shortcode.
- * Version: 1.4.0
+ * Version: 1.5.0
  * Author: Content Catalyst LLC
  * License: MIT
  * Text Domain: catalyst-canvas-demo
@@ -14,8 +14,8 @@ if (!defined('ABSPATH')) {
 }
 
 final class Catalyst_Canvas_Demo_Plugin {
-    private const VERSION = '1.4.0';
-    private const CONTRACT_VERSION = 'catalyst-canvas/1.1';
+    private const VERSION = '1.5.0';
+    private const CONTRACT_VERSION = 'catalyst-canvas/1.2';
     private const SHORTCODE = 'catalyst_canvas_demo';
 
     public function __construct() {
@@ -172,6 +172,18 @@ final class Catalyst_Canvas_Demo_Plugin {
                     </div>
 
                     <div class="ccanvasdemo-panel">
+                        <p class="ccanvasdemo-section-label">Research evidence ledger</p>
+                        <p class="ccanvasdemo-help">Coverage indicators describe recorded links and gaps. They do not score truth or research quality.</p>
+                        <label><span>Sources</span><textarea data-field="sourceLines" rows="6" placeholder="Type | Title | Creator | Date | URL | Owner | Limitations | Tags | Knowledge Library ID | Description"></textarea></label>
+                        <label><span>Evidence</span><textarea data-field="evidenceLines" rows="7" placeholder="Title | Type | Source ID | Summary | Quote | Locator | Citation | Confidence | Limitations | Tags"></textarea></label>
+                        <label><span>Claims</span><textarea data-field="claimLines" rows="8" placeholder="State | Statement | Owner | Confidence | Evidence IDs | Assumption IDs | Uncertainty | Limitations | Contradictions | Missing data | Review status | Tags"></textarea></label>
+                        <label><span>Assumptions</span><textarea data-field="assumptionLines" rows="8" placeholder="Criticality | Statement | Owner | Confidence | Consequence | Test method | Status | Experiment IDs | Evidence IDs | Due date | Limitations | Tags"></textarea></label>
+                        <label><span>Research questions</span><textarea data-field="researchQuestionLines" rows="5" placeholder="Priority | Question | Owner | Status | Source IDs | Evidence IDs | Notes | Tags"></textarea></label>
+                        <label><span>Synthesis tags</span><textarea data-field="synthesisTags" rows="3" placeholder="One per line"></textarea></label>
+                        <label><span>Handoffs</span><textarea data-field="handoffLines" rows="4" placeholder="Target | Status | Purpose | Context note | Source IDs | Evidence IDs | Claim IDs | Assumption IDs | Created by"></textarea></label>
+                    </div>
+
+                    <div class="ccanvasdemo-panel">
                         <p class="ccanvasdemo-section-label">Ideation framework</p>
                         <label>
                             <span>Framework</span>
@@ -212,6 +224,10 @@ final class Catalyst_Canvas_Demo_Plugin {
                             <article class="ccanvasdemo-mini"><strong>Stakeholders</strong><p data-output="stakeholderCount">0 mapped</p></article>
                             <article class="ccanvasdemo-mini"><strong>Journeys</strong><p data-output="journeyCount">0 mapped</p></article>
                             <article class="ccanvasdemo-mini"><strong>Analytics</strong><p data-output="signalCount">0 hints</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Sources</strong><p data-output="sourceCount">0 recorded</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Unsupported / disputed</strong><p data-output="claimRiskCount">0 visible</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Evidence coverage</strong><p data-output="evidenceCoverage">not assessed</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Assumption exposure</strong><p data-output="assumptionExposure">none recorded</p></article>
                         </div>
                         <div class="ccanvasdemo-research-preview">
                             <h4>Stakeholder engagement</h4><ul data-output="stakeholderSummary"></ul>

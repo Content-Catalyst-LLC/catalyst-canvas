@@ -1,6 +1,6 @@
 """Workspace-aware SQLite persistence for Catalyst Canvas.
 
-Version 1.4.0 stores immutable Canvas revisions beneath durable workspace
+Version 1.5.0 stores immutable Canvas revisions beneath durable workspace
 projects. The legacy ``canvas_briefs`` table remains readable and is migrated
 into the default workspace during initialization.
 """
@@ -335,6 +335,13 @@ def _sync_research_assets_conn(
         "persona": payload.get("personas", []),
         "stakeholder": payload.get("stakeholders", []),
         "journey": payload.get("journeys", []),
+        "source": payload.get("sources", []),
+        "evidence": payload.get("evidence", []),
+        "claim": payload.get("claims", []),
+        "assumption": payload.get("assumptions", []),
+        "research_question": payload.get("research_questions", []),
+        "interview_guide": payload.get("interview_guides", []),
+        "observation_note": payload.get("observation_notes", []),
     }
     active_keys: set[str] = set()
     for asset_type, records in collections.items():
@@ -346,7 +353,7 @@ def _sync_research_assets_conn(
                 continue
             asset_key = _research_asset_key(project_id, asset_type, record_id)
             active_keys.add(asset_key)
-            name = str(record.get("name") or record.get("title") or f"Untitled {asset_type}").strip()
+            name = str(record.get("name") or record.get("title") or record.get("statement") or record.get("question") or record.get("note") or f"Untitled {asset_type}").strip()
             existing = conn.execute(
                 "SELECT created_at FROM research_assets WHERE asset_key=?", (asset_key,)
             ).fetchone()
@@ -886,7 +893,7 @@ def list_research_assets(
 ) -> List[Dict[str, Any]]:
     clauses = ["workspace_id=?"]
     params: List[Any] = [workspace_id]
-    if asset_type in {"persona", "stakeholder", "journey"}:
+    if asset_type in {"persona", "stakeholder", "journey", "source", "evidence", "claim", "assumption", "research_question", "interview_guide", "observation_note"}:
         clauses.append("asset_type=?")
         params.append(asset_type)
     if not include_archived:
@@ -919,7 +926,8 @@ def get_research_asset(db_path: str, asset_key: str) -> Dict[str, Any] | None:
 
 
 def research_asset_counts(db_path: str, workspace_id: str = DEFAULT_WORKSPACE_ID) -> Dict[str, int]:
-    result = {"persona": 0, "stakeholder": 0, "journey": 0, "total": 0}
+    result = {kind: 0 for kind in ["persona", "stakeholder", "journey", "source", "evidence", "claim", "assumption", "research_question", "interview_guide", "observation_note"]}
+    result["total"] = 0
     with closing(connect(db_path)) as conn:
         rows = conn.execute(
             """SELECT asset_type, COUNT(*) AS total FROM research_assets
@@ -946,7 +954,14 @@ def reuse_research_asset(
     payload["revision_id"] = new_id("revision")
     payload["updated_at"] = utc_now()
     kind = str(asset["asset_type"])
-    collection = {"persona": "personas", "stakeholder": "stakeholders", "journey": "journeys"}[kind]
+    collection_map = {
+        "persona": "personas", "stakeholder": "stakeholders", "journey": "journeys",
+        "source": "sources", "evidence": "evidence", "claim": "claims", "assumption": "assumptions",
+        "research_question": "research_questions", "interview_guide": "interview_guides", "observation_note": "observation_notes",
+    }
+    if kind not in collection_map:
+        raise ValueError("Unsupported research asset type.")
+    collection = collection_map[kind]
     record = json.loads(json.dumps(asset["payload"]))
     id_key = f"{kind}_id"
     existing_ids = {str(item.get(id_key, "")) for item in payload.get(collection, [])}
@@ -957,10 +972,8 @@ def reuse_research_asset(
         if record.get("persona_id") not in persona_ids and payload.get("personas"):
             record["persona_id"] = payload["personas"][0]["persona_id"]
     payload.setdefault(collection, []).append(record)
-    from catalyst_canvas.research import research_summary
-    payload["research_summary"] = research_summary(
-        payload.get("personas", []), payload.get("stakeholders", []), payload.get("journeys", []), payload.get("behavioral_signals", []), generated_at=payload["updated_at"]
-    )
+    from catalyst_canvas.engine import generate_canvas
+    payload = generate_canvas(payload, source_surface="workspace-reuse")
     return save_canvas(
         db_path, payload, project_id=project_id, workspace_id=workspace_id,
         change_note=f"Reused {kind} from workspace research library",

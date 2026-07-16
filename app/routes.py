@@ -18,6 +18,7 @@ from flask import (
 
 from catalyst_canvas.contract import CanvasContractError, load_schema, new_id, strip_internal_fields, utc_now
 from catalyst_canvas.migrations import migrate_payload
+from catalyst_canvas.ledger import build_handoff_package
 from catalyst_canvas.persona_templates import list_persona_templates
 from catalyst_canvas.workspaces import DEFAULT_WORKSPACE_ID, load_workspace_schema
 
@@ -301,6 +302,52 @@ def empathy():
         save_from_form(canvas, change_note="Empathy map updated")
         return redirect(url_for("canvas.ideate"))
     return render_template("empathize/empathy_map.html", canvas=view_model(canvas))
+
+
+@bp.route("/ledger", methods=["GET", "POST"])
+def evidence_ledger():
+    canvas = current_canvas()
+    project_id = str(canvas.get("_project_id") or session.get("project_id") or "")
+    if request.method == "POST":
+        try:
+            save_from_form(canvas, change_note="Research evidence and assumption ledger updated")
+        except ValueError as exc:
+            return Response(str(exc) + "\n", status=400, mimetype="text/plain")
+        return redirect(url_for("canvas.evidence_ledger"))
+    return render_template(
+        "research/ledger.html",
+        canvas=view_model(canvas),
+        contract=strip_internal_fields(canvas),
+        project_id=project_id,
+        assets=list_research_assets(db_path(), workspace_id=workspace_id(), query=request.args.get("q", "")),
+        asset_counts=research_asset_counts(db_path(), workspace_id()),
+        query=request.args.get("q", ""),
+    )
+
+
+@bp.route("/projects/<project_id>/research-handoff/<target>.json")
+def research_handoff_export(project_id: str, target: str):
+    if target not in {"knowledge_library", "research_librarian"}:
+        return jsonify({"error": "unsupported target"}), 404
+    if not _project_in_workspace(project_id):
+        return jsonify({"error": "not found"}), 404
+    canvas = get_project_canvas(db_path(), project_id)
+    return jsonify(build_handoff_package(strip_internal_fields(canvas), target))
+
+
+@bp.route("/api/ledger")
+def ledger_api():
+    canvas = current_canvas()
+    return jsonify({
+        "workspace_id": workspace_id(),
+        "project_id": canvas.get("_project_id", ""),
+        "ledger_summary": canvas.get("ledger_summary", {}),
+        "sources": canvas.get("sources", []),
+        "evidence": canvas.get("evidence", []),
+        "claims": canvas.get("claims", []),
+        "assumptions": canvas.get("assumptions", []),
+        "research_questions": canvas.get("research_questions", []),
+    })
 
 
 @bp.route("/research", methods=["GET", "POST"])

@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-CONTRACT_VERSION = "catalyst-canvas/1.1"
+CONTRACT_VERSION = "catalyst-canvas/1.2"
 WORKSPACE_CONTRACT_VERSION = "catalyst-canvas-workspace/1.0"
 
 
@@ -40,7 +40,7 @@ def verify_version_markers() -> None:
         raise RuntimeError(f"Invalid semantic version: {VERSION!r}")
 
     manifest = load_json("canvas_manifest.json")
-    schema = load_json("schemas/catalyst_canvas_contract_1_1.schema.json")
+    schema = load_json("schemas/catalyst_canvas_contract_1_2.schema.json")
     workspace_schema = load_json("schemas/catalyst_canvas_workspace_1_0.schema.json")
     plugin = (ROOT / "wordpress/catalyst-canvas-demo/catalyst-canvas-demo.php").read_text(encoding="utf-8")
     package_version = (ROOT / "catalyst_canvas/version.py").read_text(encoding="utf-8")
@@ -75,7 +75,7 @@ def verify_version_markers() -> None:
     if f"private const VERSION = '{VERSION}';" not in plugin:
         raise RuntimeError("WordPress plugin release constant does not match VERSION")
     if f"private const CONTRACT_VERSION = '{CONTRACT_VERSION}';" not in plugin:
-        raise RuntimeError("WordPress contract constant does not match Canvas Contract 1.1")
+        raise RuntimeError("WordPress contract constant does not match Canvas Contract 1.2")
     if f'"releaseVersion":"{VERSION}"' not in contract_data:
         raise RuntimeError("Generated browser contract data has the wrong release version")
     if f'"contractVersion":"{CONTRACT_VERSION}"' not in contract_data:
@@ -117,7 +117,7 @@ def verify_source_tree() -> None:
 
 
 def validate_schemas() -> tuple[dict, dict]:
-    schema = load_json("schemas/catalyst_canvas_contract_1_1.schema.json")
+    schema = load_json("schemas/catalyst_canvas_contract_1_2.schema.json")
     workspace_schema = load_json("schemas/catalyst_canvas_workspace_1_0.schema.json")
     Draft202012Validator.check_schema(schema)
     Draft202012Validator.check_schema(workspace_schema)
@@ -147,9 +147,9 @@ def validate_generated_contract(temp_dir: Path, schema: dict) -> None:
     if errors:
         raise RuntimeError("Generated sample failed schema validation: " + "; ".join(error.message for error in errors))
     if payload.get("schema_version") != CONTRACT_VERSION:
-        raise RuntimeError("Generated JSON does not declare Canvas Contract 1.1")
+        raise RuntimeError("Generated JSON does not declare Canvas Contract 1.2")
     if f"Contract: {CONTRACT_VERSION}" not in markdown_output.read_text(encoding="utf-8"):
-        raise RuntimeError("Generated Markdown does not declare Canvas Contract 1.1")
+        raise RuntimeError("Generated Markdown does not declare Canvas Contract 1.2")
     if "<!doctype html>" not in html_output.read_text(encoding="utf-8").lower():
         raise RuntimeError("Generated print report is not standalone HTML")
     run(sys.executable, "-m", "catalyst_canvas.cli", "validate", "--input", str(json_output))
@@ -174,7 +174,7 @@ def validate_demo_seed(temp_dir: Path) -> None:
     run(sys.executable, "demo/seed_demo.py", "--database", str(database))
     canvas = get_canvas(str(database), 1)
     if not canvas or canvas.get("schema_version") != CONTRACT_VERSION:
-        raise RuntimeError("Demo seed did not create a Canvas Contract 1.1 record")
+        raise RuntimeError("Demo seed did not create a Canvas Contract 1.2 record")
 
 
 
@@ -222,13 +222,23 @@ def validate_workspace_operations(temp_dir: Path, workspace_schema: dict) -> Non
     research_canvas = generate_canvas({**{k:v for k,v in research_canvas.items() if not k.startswith("_")},
         "revision_id": "revision-release-research", "updated_at": "2026-07-16T22:10:00+00:00",
         "journeys": [{"journey_id":"journey-release","title":"Release journey","persona_id":research_canvas["personas"][0]["persona_id"],"stages":[{"name":"Validate","actions":["Run release gate"]}]}],
+        "sources": [{"source_id":"source-release","source_type":"document","title":"Release evidence source"}],
+        "evidence": [{"evidence_id":"evidence-release","source_id":"source-release","evidence_type":"summary","title":"Release evidence","summary":"The release gate completed."}],
+        "claims": [{"claim_id":"claim-release","statement":"The release gate completed.","state":"supported","evidence_ids":["evidence-release"],"source_ids":["source-release"]}],
+        "assumptions": [{"assumption_id":"assumption-release","statement":"Installer preservation will remain reliable.","owner":"Maintainer","criticality":"high","status":"planned","test_method":"Run disposable installer test","experiment_ids":["test-release"]}],
+        "research_questions": [{"research_question_id":"research-question-release","question":"Does the upgrade preserve existing runtime data?","owner":"Maintainer","status":"investigating","priority":"high"}],
     })
     save_canvas(database, research_canvas, project_id=project["project_id"], change_note="Research validation")
     counts = research_asset_counts(database)
-    if counts["persona"] < 1 or counts["stakeholder"] < 1 or counts["journey"] < 1:
-        raise RuntimeError("Research asset library did not index personas, stakeholders, and journeys")
+    required_counts = ["persona", "stakeholder", "journey", "source", "evidence", "claim", "assumption", "research_question"]
+    if any(counts.get(asset_type, 0) < 1 for asset_type in required_counts):
+        raise RuntimeError("Research asset library did not index the complete research and ledger record set")
     if not list_research_assets(database, asset_type="journey"):
         raise RuntimeError("Journey research asset was not queryable")
+    from catalyst_canvas.ledger import build_handoff_package
+    handoff = build_handoff_package(research_canvas, "knowledge_library")
+    if handoff["handoff_contract"] != "catalyst-canvas-research-handoff/1.0" or not handoff["research"]["claims"]:
+        raise RuntimeError("Research handoff package did not preserve ledger context")
 
 def validate_migration_cli(temp_dir: Path, schema: dict) -> None:
     legacy = {
@@ -236,7 +246,7 @@ def validate_migration_cli(temp_dir: Path, schema: dict) -> None:
         "generated_at": "2026-07-16T10:00:00+00:00",
         "challenge": "Migrate a legacy export",
         "audience": "Maintainer",
-        "goal": "Produce Canvas Contract 1.1",
+        "goal": "Produce Canvas Contract 1.2",
         "constraint": "Flat fields",
         "framework": "AIDA",
         "persona": {"name": "Maintainer", "description": "Needs safe migration."},
@@ -250,7 +260,7 @@ def validate_migration_cli(temp_dir: Path, schema: dict) -> None:
     payload = json.loads(output.read_text(encoding="utf-8"))
     errors = list(Draft202012Validator(schema).iter_errors(payload))
     if errors:
-        raise RuntimeError("Migrated CLI output failed Canvas Contract 1.1 validation")
+        raise RuntimeError("Migrated CLI output failed Canvas Contract 1.2 validation")
     if payload["provenance"]["migrated_from"] != "legacy-core/1.1.1":
         raise RuntimeError("Migration provenance was not recorded")
 
@@ -259,8 +269,8 @@ def validate_cross_surface_fixture() -> None:
     from catalyst_canvas.adapters.flask import compact_to_contract
     from catalyst_canvas.engine import generate_canvas
 
-    source = load_json("fixtures/canvas_contract_1_1.input.json")
-    expected = load_json("fixtures/canvas_contract_1_1.expected.json")
+    source = load_json("fixtures/canvas_contract_1_2.input.json")
+    expected = load_json("fixtures/canvas_contract_1_2.expected.json")
     if generate_canvas(source, source_surface="python") != expected:
         raise RuntimeError("Python engine diverges from the shared fixture")
     if compact_to_contract(source) != expected:
@@ -271,6 +281,7 @@ def validate_cross_surface_fixture() -> None:
         run(node, "tests/js/test_contract_fixture.js")
         run(node, "tests/js/test_workspace.js")
         run(node, "tests/js/test_research_studio.js")
+        run(node, "tests/js/test_ledger.js")
     else:
         print("SKIP: Node.js is unavailable; browser fixture conformance will run in CI.")
 

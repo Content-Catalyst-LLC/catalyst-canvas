@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Research Evidence Ledger · Catalyst Canvas{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="label">Catalyst Canvas v1.5.0</p>
+  <h1>Research, Evidence, and Assumption Ledger</h1>
+  <p>Trace sources, excerpts, claims, assumptions, research questions, field notes, and handoffs without converting coverage into a truth score.</p>
+  {% if project_id %}<div class="actions"><a class="btn" href="{{ url_for('canvas.research_handoff_export', project_id=project_id, target='knowledge_library') }}">Knowledge Library handoff</a><a class="btn" href="{{ url_for('canvas.research_handoff_export', project_id=project_id, target='research_librarian') }}">Research Librarian handoff</a></div>{% endif %}
+</section>
+
+<section class="panel">
+  <div class="split-heading"><div><p class="label">Ledger indicators</p><h2>Recorded coverage and exposure</h2></div><span class="small-link">{{ contract.schema_version }}</span></div>
+  <div class="research-stats">
+    <div class="research-stat"><strong>{{ contract.ledger_summary.source_count }}</strong><span>Sources</span></div>
+    <div class="research-stat"><strong>{{ contract.ledger_summary.evidence_count }}</strong><span>Evidence records</span></div>
+    <div class="research-stat"><strong>{{ contract.ledger_summary.claim_count }}</strong><span>Claims</span></div>
+    <div class="research-stat"><strong>{{ contract.ledger_summary.unsupported_or_disputed_count }}</strong><span>Unsupported/disputed/outdated</span></div>
+    <div class="research-stat"><strong>{{ contract.ledger_summary.open_high_criticality_assumption_count }}</strong><span>Open critical assumptions</span></div>
+  </div>
+  <div class="grid two">
+    <article class="record-row"><strong>Evidence coverage</strong><p>{{ contract.ledger_summary.evidence_coverage|replace('_',' ') }}</p></article>
+    <article class="record-row"><strong>Assumption exposure</strong><p>{{ contract.ledger_summary.assumption_exposure|replace('_',' ') }}</p></article>
+  </div>
+  <p class="field-help">{{ contract.ledger_summary.indicator_note }}</p>
+</section>
+
+<form method="post">
+<section class="panel">
+  <p class="label">Source register</p><h2>Documents, interviews, observations, datasets, analytics, and statements</h2>
+  <textarea name="source_lines" rows="8" placeholder="document | Source title | Creator | 2026-07-16 | https://... | Owner | Limitations | tags | Knowledge Library ID | Description">{{ canvas.source_lines }}</textarea>
+  <p class="field-help">One per line: Type | Title | Creator | Date | URL | Owner | Limitations | Tags | Knowledge Library ID | Description</p>
+</section>
+<section class="panel">
+  <p class="label">Evidence records</p><h2>Excerpts, quotations, observations, and data points</h2>
+  <textarea name="evidence_lines" rows="9" placeholder="Interview quote | quote | source-001 | Summary | Exact quotation | transcript 12:10 | Citation | medium | Limitations | tags">{{ canvas.evidence_lines }}</textarea>
+  <p class="field-help">Title | Type | Source ID | Summary | Quote | Locator | Citation | Confidence | Limitations | Tags</p>
+</section>
+<section class="panel">
+  <p class="label">Claim register</p><h2>Support states, uncertainty, contradictions, and missing data</h2>
+  <textarea name="claim_lines" rows="10" placeholder="unsupported | Material recommendation or factual claim | Owner | unknown | evidence-001 | assumption-001 | Uncertainty | Limitations | Contradictions | Missing data | draft | tags">{{ canvas.claim_lines }}</textarea>
+  <p class="field-help">State | Statement | Owner | Confidence | Evidence IDs | Assumption IDs | Uncertainty | Limitations | Contradictions | Missing data | Review status | Tags</p>
+  <p class="field-help">States: supported, partially_supported, unsupported, disputed, outdated.</p>
+</section>
+<section class="panel">
+  <p class="label">Assumption register</p><h2>Ownership, consequence, test method, and status</h2>
+  <textarea name="assumption_lines" rows="10" placeholder="high | Assumption statement | Owner | low | Consequence if false | Test method | planned | test-001 | evidence-001 | 2026-08-01 | Limitations | tags">{{ canvas.assumption_lines }}</textarea>
+  <p class="field-help">Criticality | Statement | Owner | Confidence | Consequence | Test method | Status | Experiment IDs | Evidence IDs | Due date | Limitations | Tags</p>
+</section>
+<section class="panel">
+  <p class="label">Research planning</p><h2>Questions, interview guides, and observation notes</h2>
+  <label>Research questions<textarea name="research_question_lines" rows="6">{{ canvas.research_question_lines }}</textarea></label>
+  <p class="field-help">Priority | Question | Owner | Status | Source IDs | Evidence IDs | Notes | Tags</p>
+  <label>Interview guides<textarea name="interview_guide_lines" rows="6">{{ canvas.interview_guide_lines }}</textarea></label>
+  <p class="field-help">Title | Purpose | Audience | Semicolon-separated questions | Owner | Status | Source IDs | Tags</p>
+  <label>Observation notes<textarea name="observation_note_lines" rows="6">{{ canvas.observation_note_lines }}</textarea></label>
+  <p class="field-help">Title | Note | Observed at | Observer | Context | Source ID | Evidence IDs | Limitations | Tags</p>
+  <label>Synthesis tags<textarea name="synthesis_tags" rows="4">{{ canvas.synthesis_tags }}</textarea></label>
+</section>
+<section class="panel">
+  <p class="label">Structured handoffs</p><h2>Knowledge Library and Research Librarian context</h2>
+  <textarea name="handoff_lines" rows="6" placeholder="knowledge_library | ready | Register source records | Preserve Canvas context | source-001 | evidence-001 | claim-001 | assumption-001 | Owner">{{ canvas.handoff_lines }}</textarea>
+  <p class="field-help">Target | Status | Purpose | Context note | Source IDs | Evidence IDs | Claim IDs | Assumption IDs | Created by</p>
+  <div class="actions"><button class="btn" type="submit">Save ledger revision</button><a class="btn" href="{{ url_for('canvas.report') }}">Review report</a></div>
+</section>
+</form>
+
+<section class="panel">
+  <p class="label">Workspace research library</p><h2>Reusable records</h2>
+  <form class="search-row" method="get"><input name="q" value="{{ query }}" placeholder="Search sources, claims, assumptions, and research"><button class="btn">Search</button></form>
+  <div class="record-list">{% for asset in assets %}<article class="record-row"><p class="project-meta">{{ asset.asset_type }} · {{ asset.updated_at }}</p><h3>{{ asset.name }}</h3><p>{{ asset.payload.description or asset.payload.summary or asset.payload.statement or asset.payload.question or asset.payload.note or 'Reusable research record' }}</p>{% if project_id and asset.source_project_id != project_id %}<form method="post" action="{{ url_for('canvas.research_asset_reuse', project_id=project_id, asset_key=asset.asset_key) }}"><button class="small-link">Reuse in current project</button></form>{% endif %}</article>{% else %}<p class="muted">Save a ledger revision to populate the workspace library.</p>{% endfor %}</div>
+</section>
+{% endblock %}

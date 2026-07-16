@@ -1,4 +1,4 @@
-"""Authoritative Canvas Contract 1.1 generation engine."""
+"""Authoritative Canvas Contract 1.2 generation engine."""
 
 from __future__ import annotations
 
