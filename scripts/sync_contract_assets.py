@@ -13,11 +13,13 @@ DEFAULT_OUTPUT = ROOT / "wordpress" / "catalyst-canvas-demo" / "assets" / "catal
 
 def render() -> str:
     frameworks = json.loads((ROOT / "contracts" / "frameworks.json").read_text(encoding="utf-8"))
+    persona_templates = json.loads((ROOT / "contracts" / "persona_templates.json").read_text(encoding="utf-8"))
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
     payload = {
         "releaseVersion": version,
-        "contractVersion": "catalyst-canvas/1.0",
+        "contractVersion": "catalyst-canvas/1.1",
         "frameworks": frameworks,
+        "personaTemplates": persona_templates,
     }
     serialized = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
     return """(function (root, factory) {

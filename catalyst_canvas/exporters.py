@@ -1,4 +1,4 @@
-"""Stable Canvas Contract 1.0 JSON, Markdown, and print-report exporters."""
+"""Stable Canvas Contract 1.1 JSON, Markdown, and print-report exporters."""
 
 from __future__ import annotations
 
@@ -35,15 +35,52 @@ def export_markdown(contract: Mapping[str, Any]) -> str:
     evidence = _bullets([f"{item['title']}: {item['summary']}" for item in data["evidence"]])
     assumptions = _bullets([item["statement"] for item in data["assumptions"]])
     reviews = _bullets([item["note"] for item in data["review_notes"]])
-    prototype_text = (
-        f"**{prototype['title']}** — {prototype['description']}" if prototype else "No prototype recorded."
+    audience = "\n".join([
+        f"- **Primary:** {data['audience']['primary']}",
+        f"- **Secondary:** {', '.join(data['audience']['secondary']) or 'None recorded'}",
+        f"- **Affected:** {', '.join(data['audience']['affected']) or 'None recorded'}",
+        f"- **Excluded:** {', '.join(data['audience']['excluded']) or 'None recorded'}",
+    ])
+    empathy = "\n".join(
+        f"- **{key.title()}:** {'; '.join(values) or 'None recorded'}"
+        for key, values in persona["empathy_map"].items()
     )
+    attributes = _bullets([
+        f"{item['category']}: {item['statement']} [{item['basis']}, {item['confidence']}]"
+        for item in persona["attributes"]
+    ])
+    stakeholders = _bullets([
+        f"{item['name']} — influence {item['influence']}/5, interest {item['interest']}/5, "
+        f"impact {item['impact']}/5, {item['stance']}; responsibilities: "
+        f"{'; '.join(item['responsibilities']) or 'none'}; tensions: "
+        f"{'; '.join(item['tensions']) or 'none'}; strategy: "
+        f"{item['engagement_strategy'] or 'not recorded'}"
+        for item in data["stakeholders"]
+    ])
+    journey_sections = []
+    for journey in data["journeys"]:
+        stages = "\n".join(
+            f"- **{stage['sequence']}. {stage['name']}:** "
+            f"{'; '.join(stage['actions']) or 'No action recorded'} | "
+            f"questions: {'; '.join(stage['questions']) or 'none'} | "
+            f"friction: {'; '.join(stage['frictions']) or 'none'} | "
+            f"opportunity: {'; '.join(stage['opportunities']) or 'none'} | "
+            f"experiments: {', '.join(stage['experiment_ids']) or 'none'} | "
+            f"owner: {stage['owner'] or 'unassigned'}"
+            for stage in journey["stages"]
+        )
+        journey_sections.append(f"### {journey['title']}\n\n{journey['scenario']}\n\n{stages}")
+    journeys = "\n\n".join(journey_sections) if journey_sections else "No journey recorded."
+    behavioral_signals = _bullets([
+        f"{item['metric']} ({item['segment']}): {item['value'] or 'value not recorded'} — "
+        f"{item['interpretation'] or 'No interpretation'} [evidence hint; {item['limitation']}]"
+        for item in data["behavioral_signals"]
+    ])
+    prototype_text = f"**{prototype['title']}** — {prototype['description']}" if prototype else "No prototype recorded."
     test_text = (
         "\n".join([
-            f"- **Title:** {test['title']}",
-            f"- **Signal:** {test['signal']}",
-            f"- **Method:** {test['method']}",
-            f"- **Learning goal:** {test['learning_goal']}",
+            f"- **Title:** {test['title']}", f"- **Signal:** {test['signal']}",
+            f"- **Method:** {test['method']}", f"- **Learning goal:** {test['learning_goal']}",
         ]) if test else "No test recorded."
     )
     return f"""# {data['title']}
@@ -52,7 +89,8 @@ Contract: {data['schema_version']}
 Canvas ID: {data['canvas_id']}  
 Revision ID: {data['revision_id']}  
 Status: {data['status']}  
-Updated: {data['updated_at']}
+Updated: {data['updated_at']}  
+Research readiness: {data['research_summary']['readiness']}
 
 ## Challenge
 
@@ -60,7 +98,7 @@ Updated: {data['updated_at']}
 
 ## Audience
 
-{data['audience']['primary']}
+{audience}
 
 ## Goal
 
@@ -75,9 +113,41 @@ Updated: {data['updated_at']}
 **{persona['name']}** — {persona['description']}
 
 - **Role:** {persona['role']}
+- **Context:** {persona['context']}
+- **Jobs:** {', '.join(persona['jobs']) or 'None recorded'}
+- **Goals:** {', '.join(persona['goals']) or 'None recorded'}
 - **Needs:** {', '.join(persona['needs']) or 'None recorded'}
 - **Pains:** {', '.join(persona['pains']) or 'None recorded'}
-- **Source / confidence:** {persona['source_type']} / {persona['confidence']}
+- **Gains:** {', '.join(persona['gains']) or 'None recorded'}
+- **Behaviors:** {', '.join(persona['behaviors']) or 'None recorded'}
+- **Barriers:** {', '.join(persona['barriers']) or 'None recorded'}
+- **Motivations:** {', '.join(persona['motivations']) or 'None recorded'}
+- **Accessibility:** {', '.join(persona['accessibility_needs']) or 'None recorded'}
+- **Source / confidence / validation:** {persona['source_type']} / {persona['confidence']} / {persona['validation_status']}
+- **Source notes:** {persona['source_notes'] or 'None recorded'}
+- **Confidence notes:** {persona['confidence_notes'] or 'None recorded'}
+
+### Empathy Map
+
+{empathy}
+
+### Attribute Basis
+
+{attributes}
+
+## Stakeholder Map
+
+{stakeholders}
+
+## Journey Maps
+
+{journeys}
+
+## Behavioral Signals
+
+Analytics remain evidence hints and do not establish intent, identity, motivation, or demographic attributes.
+
+{behavioral_signals}
 
 ## Point of View
 
@@ -115,7 +185,6 @@ Updated: {data['updated_at']}
 
 Generated by Catalyst Canvas {data['provenance']['generator_version']} from the {data['provenance']['source_surface']} surface.
 """
-
 
 def export_print_html(contract: Mapping[str, Any]) -> str:
     data = validate_contract(contract)

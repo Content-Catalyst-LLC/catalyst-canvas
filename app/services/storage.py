@@ -1,6 +1,6 @@
 """Workspace-aware SQLite persistence for Catalyst Canvas.
 
-Version 1.3.0 stores immutable Canvas revisions beneath durable workspace
+Version 1.4.0 stores immutable Canvas revisions beneath durable workspace
 projects. The legacy ``canvas_briefs`` table remains readable and is migrated
 into the default workspace during initialization.
 """
@@ -105,6 +105,43 @@ def init_db(db_path: str) -> None:
               restored_from_revision_id TEXT NOT NULL DEFAULT '',
               FOREIGN KEY(project_id) REFERENCES projects(project_id) ON DELETE CASCADE
             )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS research_assets (
+              asset_key TEXT PRIMARY KEY,
+              workspace_id TEXT NOT NULL,
+              source_project_id TEXT NOT NULL,
+              asset_type TEXT NOT NULL,
+              source_record_id TEXT NOT NULL,
+              name TEXT NOT NULL,
+              payload TEXT NOT NULL,
+              created_at TEXT NOT NULL,
+              updated_at TEXT NOT NULL,
+              archived_at TEXT NOT NULL DEFAULT '',
+              FOREIGN KEY(workspace_id) REFERENCES workspaces(workspace_id),
+              FOREIGN KEY(source_project_id) REFERENCES projects(project_id) ON DELETE CASCADE
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS project_research_links (
+              project_id TEXT NOT NULL,
+              asset_key TEXT NOT NULL,
+              relationship TEXT NOT NULL DEFAULT 'source',
+              created_at TEXT NOT NULL,
+              PRIMARY KEY(project_id, asset_key),
+              FOREIGN KEY(project_id) REFERENCES projects(project_id) ON DELETE CASCADE,
+              FOREIGN KEY(asset_key) REFERENCES research_assets(asset_key) ON DELETE CASCADE
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE INDEX IF NOT EXISTS idx_research_assets_workspace_type_updated
+            ON research_assets(workspace_id, asset_type, updated_at DESC)
             """
         )
         conn.execute(
@@ -282,6 +319,65 @@ def _project_for_revision_storage(conn: sqlite3.Connection, revision_storage_id:
     ).fetchone()
 
 
+def _research_asset_key(project_id: str, asset_type: str, record_id: str) -> str:
+    return f"{project_id}:{asset_type}:{record_id}"
+
+
+def _sync_research_assets_conn(
+    conn: sqlite3.Connection, project_id: str, payload: Mapping[str, Any]
+) -> None:
+    project = _project_row(conn, project_id)
+    if not project:
+        return
+    workspace_id = str(project["workspace_id"])
+    now = str(payload.get("updated_at") or utc_now())
+    collections = {
+        "persona": payload.get("personas", []),
+        "stakeholder": payload.get("stakeholders", []),
+        "journey": payload.get("journeys", []),
+    }
+    active_keys: set[str] = set()
+    for asset_type, records in collections.items():
+        for record in records if isinstance(records, list) else []:
+            if not isinstance(record, Mapping):
+                continue
+            record_id = str(record.get(f"{asset_type}_id") or "").strip()
+            if not record_id:
+                continue
+            asset_key = _research_asset_key(project_id, asset_type, record_id)
+            active_keys.add(asset_key)
+            name = str(record.get("name") or record.get("title") or f"Untitled {asset_type}").strip()
+            existing = conn.execute(
+                "SELECT created_at FROM research_assets WHERE asset_key=?", (asset_key,)
+            ).fetchone()
+            created_at = str(existing["created_at"]) if existing else now
+            conn.execute(
+                """
+                INSERT INTO research_assets
+                  (asset_key, workspace_id, source_project_id, asset_type, source_record_id, name, payload, created_at, updated_at, archived_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '')
+                ON CONFLICT(asset_key) DO UPDATE SET
+                  name=excluded.name, payload=excluded.payload, updated_at=excluded.updated_at, archived_at=''
+                """,
+                (asset_key, workspace_id, project_id, asset_type, record_id, name, json.dumps(record, ensure_ascii=False), created_at, now),
+            )
+            conn.execute(
+                """
+                INSERT INTO project_research_links (project_id, asset_key, relationship, created_at)
+                VALUES (?, ?, 'source', ?)
+                ON CONFLICT(project_id, asset_key) DO NOTHING
+                """,
+                (project_id, asset_key, now),
+            )
+    rows = conn.execute(
+        "SELECT asset_key FROM research_assets WHERE source_project_id=? AND archived_at=''",
+        (project_id,),
+    ).fetchall()
+    stale = [str(row["asset_key"]) for row in rows if str(row["asset_key"]) not in active_keys]
+    for asset_key in stale:
+        conn.execute("UPDATE research_assets SET archived_at=?, updated_at=? WHERE asset_key=?", (now, now, asset_key))
+
+
 def _insert_revision_conn(
     conn: sqlite3.Connection,
     project_id: str,
@@ -318,6 +414,7 @@ def _insert_revision_conn(
         """,
         (payload["title"], payload["updated_at"], revision_storage_id, project_id),
     )
+    _sync_research_assets_conn(conn, project_id, payload)
     if autosave:
         _prune_autosaves_conn(conn, project_id)
     return revision_storage_id
@@ -613,7 +710,7 @@ def list_canvases(db_path: str, limit: int = 12) -> List[Dict[str, Any]]:
             "id": item["_current_revision_storage_id"],
             "project_id": item["project_id"],
             "canvas_id": item["current_canvas_id"],
-            "schema_version": "catalyst-canvas/1.0",
+            "schema_version": payload_schema_version(db_path, item["project_id"]),
             "title": item["title"],
             "status": item["status"],
             "created_at": item["created_at"],
@@ -772,3 +869,109 @@ def project_counts(db_path: str, workspace_id: str = DEFAULT_WORKSPACE_ID) -> Di
     for row in rows:
         counts[str(row["status"])] = int(row["total"])
     return counts
+
+
+def payload_schema_version(db_path: str, project_id: str) -> str:
+    canvas = get_project_canvas(db_path, project_id)
+    return str(canvas.get("schema_version", "")) if canvas else ""
+
+
+def list_research_assets(
+    db_path: str,
+    *,
+    workspace_id: str = DEFAULT_WORKSPACE_ID,
+    asset_type: str = "all",
+    query: str = "",
+    include_archived: bool = False,
+) -> List[Dict[str, Any]]:
+    clauses = ["workspace_id=?"]
+    params: List[Any] = [workspace_id]
+    if asset_type in {"persona", "stakeholder", "journey"}:
+        clauses.append("asset_type=?")
+        params.append(asset_type)
+    if not include_archived:
+        clauses.append("archived_at=''")
+    if query.strip():
+        clauses.append("(LOWER(name) LIKE ? OR LOWER(payload) LIKE ?)")
+        needle = f"%{query.strip().lower()}%"
+        params.extend([needle, needle])
+    with closing(connect(db_path)) as conn:
+        rows = conn.execute(
+            f"SELECT * FROM research_assets WHERE {' AND '.join(clauses)} ORDER BY updated_at DESC, name ASC",
+            params,
+        ).fetchall()
+    result: List[Dict[str, Any]] = []
+    for row in rows:
+        item = dict(row)
+        item["payload"] = json.loads(item["payload"])
+        result.append(item)
+    return result
+
+
+def get_research_asset(db_path: str, asset_key: str) -> Dict[str, Any] | None:
+    with closing(connect(db_path)) as conn:
+        row = conn.execute("SELECT * FROM research_assets WHERE asset_key=?", (asset_key,)).fetchone()
+    if not row:
+        return None
+    item = dict(row)
+    item["payload"] = json.loads(item["payload"])
+    return item
+
+
+def research_asset_counts(db_path: str, workspace_id: str = DEFAULT_WORKSPACE_ID) -> Dict[str, int]:
+    result = {"persona": 0, "stakeholder": 0, "journey": 0, "total": 0}
+    with closing(connect(db_path)) as conn:
+        rows = conn.execute(
+            """SELECT asset_type, COUNT(*) AS total FROM research_assets
+               WHERE workspace_id=? AND archived_at='' GROUP BY asset_type""",
+            (workspace_id,),
+        ).fetchall()
+    for row in rows:
+        kind = str(row["asset_type"])
+        result[kind] = int(row["total"])
+        result["total"] += int(row["total"])
+    return result
+
+
+def reuse_research_asset(
+    db_path: str, project_id: str, asset_key: str, *, workspace_id: str = DEFAULT_WORKSPACE_ID
+) -> int:
+    asset = get_research_asset(db_path, asset_key)
+    if not asset or asset["workspace_id"] != workspace_id or asset["archived_at"]:
+        raise ValueError("Research asset not found in this workspace.")
+    canvas = get_project_canvas(db_path, project_id)
+    if not canvas or canvas.get("_workspace_id") != workspace_id:
+        raise ValueError("Project not found in this workspace.")
+    payload = strip_internal_fields(canvas)
+    payload["revision_id"] = new_id("revision")
+    payload["updated_at"] = utc_now()
+    kind = str(asset["asset_type"])
+    collection = {"persona": "personas", "stakeholder": "stakeholders", "journey": "journeys"}[kind]
+    record = json.loads(json.dumps(asset["payload"]))
+    id_key = f"{kind}_id"
+    existing_ids = {str(item.get(id_key, "")) for item in payload.get(collection, [])}
+    if str(record.get(id_key, "")) in existing_ids:
+        record[id_key] = new_id(kind)
+    if kind == "journey":
+        persona_ids = {item.get("persona_id") for item in payload.get("personas", [])}
+        if record.get("persona_id") not in persona_ids and payload.get("personas"):
+            record["persona_id"] = payload["personas"][0]["persona_id"]
+    payload.setdefault(collection, []).append(record)
+    from catalyst_canvas.research import research_summary
+    payload["research_summary"] = research_summary(
+        payload.get("personas", []), payload.get("stakeholders", []), payload.get("journeys", []), payload.get("behavioral_signals", []), generated_at=payload["updated_at"]
+    )
+    return save_canvas(
+        db_path, payload, project_id=project_id, workspace_id=workspace_id,
+        change_note=f"Reused {kind} from workspace research library",
+    )
+
+
+def archive_research_asset(db_path: str, asset_key: str, *, workspace_id: str = DEFAULT_WORKSPACE_ID) -> bool:
+    with closing(connect(db_path)) as conn:
+        cursor = conn.execute(
+            "UPDATE research_assets SET archived_at=?, updated_at=? WHERE asset_key=? AND workspace_id=?",
+            (utc_now(), utc_now(), asset_key, workspace_id),
+        )
+        conn.commit()
+        return bool(cursor.rowcount)

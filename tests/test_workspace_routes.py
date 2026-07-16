@@ -46,3 +46,39 @@ class WorkspaceRouteTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class ResearchStudioRouteTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.app = create_app({
+            "TESTING": True,
+            "SECRET_KEY": "test-secret",
+            "CANVAS_DB": str(Path(self.tmp.name) / "research-routes.sqlite3"),
+            "CANVAS_WORKSPACE_ID": "workspace-local-default",
+        })
+        self.client = self.app.test_client()
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_research_studio_saves_and_indexes_records(self):
+        self.client.post("/projects", data={"title": "Research Project"})
+        project_id = self.client.get("/api/projects").get_json()["projects"][0]["project_id"]
+        response = self.client.post("/research", data={
+            "persona_name": "Program Lead",
+            "persona_context": "Coordinates a cross-agency pilot",
+            "persona_goals": "Align partners",
+            "persona_confidence": "medium",
+            "persona_validation_status": "researching",
+            "stakeholder_lines": "Sponsor | sponsor | 5 | 4 | supportive | approver | Review evidence |",
+            "journey_title": "Pilot journey",
+            "journey_stages": "Discover | Review evidence | -1 | Missing data | Show gaps | Dashboard | Web | evidence-001",
+        })
+        self.assertEqual(response.status_code, 302)
+        detail = self.client.get(f"/api/projects/{project_id}").get_json()["canvas"]
+        self.assertEqual(detail["research_summary"]["stakeholder_count"], 1)
+        self.assertEqual(detail["research_summary"]["journey_count"], 1)
+        assets = self.client.get("/api/research/assets").get_json()
+        self.assertEqual(assets["counts"]["persona"], 1)
+        self.assertEqual(assets["counts"]["stakeholder"], 1)
+        self.assertEqual(assets["counts"]["journey"], 1)

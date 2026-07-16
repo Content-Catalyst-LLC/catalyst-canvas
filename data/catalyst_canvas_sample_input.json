@@ -1,7 +1,365 @@
 {
+  "schema_version": "catalyst-canvas/1.1",
+  "canvas_id": "canvas-sample-community-impact",
+  "revision_id": "revision-sample-v140",
+  "title": "Community impact evidence canvas",
+  "status": "active",
+  "created_at": "2026-07-16T12:00:00+00:00",
+  "updated_at": "2026-07-16T12:00:00+00:00",
   "challenge": "A nonprofit needs a clearer way to explain program impact to funders without overstating certainty.",
-  "audience": "Program director at a community nonprofit",
+  "audience": {
+    "primary": "Program director at a community nonprofit",
+    "secondary": [
+      "Evaluation partner"
+    ],
+    "affected": [
+      "Program participants"
+    ],
+    "excluded": [
+      "Individual-level targeting"
+    ]
+  },
   "goal": "Build a defensible impact story with traceable indicators",
-  "constraint": "Limited data, small team capacity, and stakeholder pressure for simple results",
-  "framework": "JTBD"
+  "constraints": [
+    {
+      "constraint_id": "constraint-001",
+      "statement": "Limited data, small team capacity, and stakeholder pressure for simple results",
+      "source": "workshop"
+    }
+  ],
+  "framework": "JTBD",
+  "personas": [
+    {
+      "persona_id": "persona-001",
+      "name": "Maya Chen",
+      "role": "Program director",
+      "description": "Leads delivery and reporting for a small community nonprofit.",
+      "context": "Balances frontline service, funder reporting, and a limited evaluation budget.",
+      "jobs": [
+        "Coordinate delivery and reporting",
+        "Translate evidence into a defensible funder update"
+      ],
+      "goals": [
+        "Explain outcomes honestly",
+        "Reduce reporting burden"
+      ],
+      "needs": [
+        "Traceable indicators",
+        "Reusable evidence language"
+      ],
+      "pains": [
+        "Fragmented data",
+        "Pressure to simplify uncertainty"
+      ],
+      "gains": [
+        "A shared evidence trail",
+        "Faster review cycles"
+      ],
+      "behaviors": [
+        "Builds reports in spreadsheets",
+        "Consults staff before publishing claims"
+      ],
+      "barriers": [
+        "Inconsistent measures",
+        "Limited evaluation capacity"
+      ],
+      "motivations": [
+        "Protect program credibility",
+        "Keep reporting useful to frontline staff"
+      ],
+      "accessibility_needs": [
+        "Plain-language summaries"
+      ],
+      "preferred_channels": [
+        "Email",
+        "Working sessions"
+      ],
+      "quotes": [
+        "I need to be clear about what the data can and cannot show."
+      ],
+      "empathy_map": {
+        "says": [
+          "We need a claim we can defend."
+        ],
+        "thinks": [
+          "Which limitation will a reviewer question?"
+        ],
+        "does": [
+          "Checks source notes before drafting"
+        ],
+        "feels": [
+          "Accountable for accuracy and timeliness"
+        ],
+        "sees": [
+          "Multiple spreadsheets with inconsistent definitions"
+        ],
+        "hears": [
+          "Funders asking for simple outcomes"
+        ],
+        "pains": [
+          "Pressure to simplify uncertainty"
+        ],
+        "gains": [
+          "A shared evidence trail"
+        ]
+      },
+      "attributes": [
+        {
+          "attribute_id": "attribute-001",
+          "category": "behavior",
+          "statement": "Checks source notes before drafting claims.",
+          "basis": "observed",
+          "confidence": "medium",
+          "evidence_ids": [
+            "evidence-001"
+          ],
+          "notes": "Observed in reporting workflow review."
+        },
+        {
+          "attribute_id": "attribute-002",
+          "category": "motivation",
+          "statement": "Prefers defensible claims over more persuasive language.",
+          "basis": "assumed",
+          "confidence": "low",
+          "evidence_ids": [],
+          "notes": "Requires interview validation."
+        }
+      ],
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "tags": [
+        "program",
+        "reporting"
+      ],
+      "source_type": "mixed",
+      "source_notes": "Combined workflow observation and workshop synthesis.",
+      "confidence": "medium",
+      "confidence_notes": "Behavioral claims are stronger than motivation claims.",
+      "validation_status": "researching"
+    }
+  ],
+  "stakeholders": [
+    {
+      "stakeholder_id": "stakeholder-001",
+      "name": "Foundation program officer",
+      "stakeholder_type": "sponsor",
+      "relationship": "External decision-maker",
+      "influence": 5,
+      "interest": 4,
+      "impact": 3,
+      "stance": "supportive",
+      "decision_role": "approver",
+      "engagement_strategy": "Review indicator definitions and uncertainty language before publication",
+      "responsibilities": [
+        "Review evidence definitions",
+        "Approve renewal recommendation"
+      ],
+      "tensions": [
+        "Preference for simple outcomes may conflict with evidence limitations"
+      ],
+      "notes": "Needs concise explanations with traceable sources.",
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "dependencies": [
+        "Approved indicator definitions"
+      ],
+      "tags": [
+        "funding",
+        "review"
+      ]
+    }
+  ],
+  "journeys": [
+    {
+      "journey_id": "journey-001",
+      "title": "Quarterly impact reporting",
+      "persona_id": "persona-001",
+      "scenario": "Prepare a funder update from incomplete program data.",
+      "desired_outcome": "Publish a concise, evidence-linked report with explicit limitations.",
+      "status": "research",
+      "stages": [
+        {
+          "stage_id": "stage-001",
+          "name": "Collect",
+          "actions": [
+            "Request data from program staff"
+          ],
+          "questions": [
+            "Are measures defined consistently?"
+          ],
+          "thoughts": [
+            "What is missing?"
+          ],
+          "emotion": -1,
+          "pain_points": [
+            "Measures are inconsistent"
+          ],
+          "frictions": [
+            "Measures are inconsistent"
+          ],
+          "opportunities": [
+            "Use a shared indicator glossary"
+          ],
+          "touchpoints": [
+            "Spreadsheet",
+            "Staff email"
+          ],
+          "channels": [
+            "Email"
+          ],
+          "evidence_ids": [
+            "evidence-001"
+          ],
+          "experiment_ids": [],
+          "owner": "Program director",
+          "metrics": [
+            "Collection cycle time"
+          ]
+        },
+        {
+          "stage_id": "stage-002",
+          "name": "Interpret",
+          "actions": [
+            "Compare results with prior periods"
+          ],
+          "questions": [
+            "What conclusion is supported?"
+          ],
+          "thoughts": [
+            "Small samples limit certainty"
+          ],
+          "emotion": 0,
+          "pain_points": [
+            "Small samples limit certainty"
+          ],
+          "frictions": [
+            "Unclear confidence"
+          ],
+          "opportunities": [
+            "Attach confidence and source notes"
+          ],
+          "touchpoints": [
+            "Canvas",
+            "Evidence register"
+          ],
+          "channels": [
+            "Workspace"
+          ],
+          "evidence_ids": [
+            "evidence-001"
+          ],
+          "experiment_ids": [
+            "test-001"
+          ],
+          "owner": "Evaluation partner",
+          "metrics": [
+            "Claims with source notes"
+          ]
+        },
+        {
+          "stage_id": "stage-003",
+          "name": "Publish",
+          "actions": [
+            "Draft and review the funder narrative"
+          ],
+          "questions": [
+            "Can every claim be traced?"
+          ],
+          "thoughts": [
+            "Keep limitations visible"
+          ],
+          "emotion": 1,
+          "pain_points": [
+            "Review pressure"
+          ],
+          "frictions": [
+            "Late changes"
+          ],
+          "opportunities": [
+            "Export approved claims and limitations"
+          ],
+          "touchpoints": [
+            "Report",
+            "Review meeting"
+          ],
+          "channels": [
+            "Document",
+            "Meeting"
+          ],
+          "evidence_ids": [
+            "evidence-001"
+          ],
+          "experiment_ids": [
+            "test-001"
+          ],
+          "owner": "Program director",
+          "metrics": [
+            "Review corrections"
+          ]
+        }
+      ],
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "assumption_ids": [
+        "assumption-001"
+      ],
+      "tags": [
+        "reporting",
+        "journey"
+      ]
+    }
+  ],
+  "behavioral_signals": [
+    {
+      "signal_id": "signal-001",
+      "source_type": "ga4_export",
+      "metric": "report_template_downloads",
+      "segment": "all visitors",
+      "value": "28",
+      "period": "2026-Q2",
+      "interpretation": "Repeated downloads suggest the report format warrants qualitative follow-up.",
+      "limitation": "Download activity indicates behavior but does not prove intent, identity, motivation, or demographic attributes.",
+      "evidence_ids": [
+        "evidence-001"
+      ],
+      "tags": [
+        "behavioral-hint",
+        "report-format"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "evidence-001",
+      "type": "workflow-review",
+      "title": "Quarterly reporting workflow review",
+      "summary": "Current reporting uses multiple spreadsheets and manual source-note checks.",
+      "citation": "Internal workflow review, 2026",
+      "confidence": "medium"
+    }
+  ],
+  "assumptions": [
+    {
+      "assumption_id": "assumption-001",
+      "statement": "A shared evidence-to-claim workflow will reduce reporting revisions.",
+      "status": "untested",
+      "criticality": "high"
+    }
+  ],
+  "tests": [
+    {
+      "test_id": "test-001",
+      "title": "Evidence-to-claim review",
+      "signal": "Reviewers trace each material claim to a source and limitation.",
+      "method": "Run a reporting review with program staff and a funder-facing reviewer.",
+      "learning_goal": "Determine whether the workflow improves clarity without hiding uncertainty.",
+      "status": "planned"
+    }
+  ]
 }

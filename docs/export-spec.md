@@ -1,14 +1,14 @@
 # Catalyst Canvas Export Specification
 
-Catalyst Canvas v1.3.0 exports the same validated `catalyst-canvas/1.0` document through JSON, Markdown, and standalone print HTML.
+Catalyst Canvas v1.4.0 exports the same validated `catalyst-canvas/1.1` document through JSON, Markdown, and standalone print HTML.
 
 ## JSON
 
-JSON is the canonical machine-readable representation and must validate against `schemas/catalyst_canvas_contract_1_0.schema.json`.
+JSON is the canonical machine-readable representation and must validate against `schemas/catalyst_canvas_contract_1_1.schema.json`. It includes project research records and the normalized research summary.
 
 ## Markdown
 
-Markdown preserves contract version, Canvas and revision IDs, status, updated timestamp, all core design sections, and provenance in a stable human-readable order.
+Markdown preserves contract version, Canvas and revision IDs, status, updated timestamp, research readiness, persona detail, stakeholder mapping, journey stages, design records, testing records, review notes, and provenance in a stable order.
 
 ## Print HTML
 

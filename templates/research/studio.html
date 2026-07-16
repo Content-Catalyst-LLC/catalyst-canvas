@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block title %}Research Studio — Catalyst Canvas<script>
+(() => {
+  const templates = {{ persona_templates|tojson }};
+  const select = document.querySelector('[data-persona-template]');
+  const button = document.querySelector('[data-apply-persona-template]');
+  if (!select || !button) return;
+  const setLines = (name, values) => { const node = document.querySelector(`[name="${name}"]`); if (node) node.value = (values || []).join('\n'); };
+  const setText = (name, value) => { const node = document.querySelector(`[name="${name}"]`); if (node) node.value = value || ''; };
+  button.addEventListener('click', () => {
+    const item = templates[select.value];
+    if (!item) return;
+    setText('persona_name', item.name); setText('persona_role', item.role); setText('persona_context', item.context);
+    setLines('persona_jobs', item.jobs); setLines('persona_needs', item.needs); setLines('persona_barriers', item.barriers);
+    setLines('persona_motivations', item.motivations); setLines('persona_tags', item.tags);
+    setText('persona_source_type', 'assumption'); setText('persona_confidence', 'low'); setText('persona_validation_status', 'hypothesis');
+    document.querySelector('form[data-autosave-project]')?.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+})();
+</script>
+{% endblock %}
+{% block content %}
+<section class="panel">
+  <p class="label">Persona, Stakeholder, and Journey Studio</p>
+  <div class="split-heading">
+    <div><h2>Make the human system inspectable</h2><p class="muted">Separate findings from assumptions, map influence and impact, model experience stages, and treat analytics as evidence hints rather than identity claims.</p></div>
+    <div><span class="small-link">{{ contract.research_summary.readiness|replace('_',' ') }}</span><br><a class="small-link" href="{{ url_for('canvas.research_compare') }}">Compare research records</a></div>
+  </div>
+  <div class="research-stats">
+    <div class="research-stat"><strong>{{ contract.research_summary.persona_count }}</strong><span>Personas</span></div>
+    <div class="research-stat"><strong>{{ contract.research_summary.stakeholder_count }}</strong><span>Stakeholders</span></div>
+    <div class="research-stat"><strong>{{ contract.research_summary.journey_count }}</strong><span>Journeys</span></div>
+    <div class="research-stat"><strong>{{ contract.research_summary.behavioral_signal_count }}</strong><span>Signal hints</span></div>
+    <div class="research-stat"><strong>{{ contract.research_summary.evidence_link_count }}</strong><span>Evidence links</span></div>
+  </div>
+</section>
+
+<section class="panel">
+  <form method="post" enctype="multipart/form-data" data-autosave-project="{{ project_id }}">
+    <p class="label">Audience designations</p>
+    <div class="grid two">
+      <div><label>Primary audience</label><input name="audience" value="{{ canvas.audience }}"></div>
+      <div><label>Secondary audiences</label><textarea name="audience_secondary">{{ canvas.audience_secondary }}</textarea><p class="field-help">One per line.</p></div>
+      <div><label>Affected groups</label><textarea name="audience_affected">{{ canvas.audience_affected }}</textarea></div>
+      <div><label>Excluded from current scope</label><textarea name="audience_excluded">{{ canvas.audience_excluded }}</textarea></div>
+    </div>
+
+    <p class="label" style="margin-top:28px">Primary persona</p>
+    <div class="grid two">
+      <div><label>Reusable template</label><select name="persona_template" data-persona-template><option value="">No template</option>{% for key, item in persona_templates.items() %}<option value="{{ key }}">{{ item.name }}</option>{% endfor %}</select><button class="small-link" type="button" data-apply-persona-template>Apply template</button><p class="field-help">Templates provide editable starting points and remain marked as assumptions until supported.</p></div>
+      <div><label>Name</label><input name="persona_name" value="{{ canvas.persona_name }}"></div>
+      <div><label>Role</label><input name="persona_role" value="{{ canvas.persona_role }}"></div>
+      <div><label>Context</label><textarea name="persona_context">{{ canvas.persona_context }}</textarea></div>
+    </div>
+    <div class="grid two">
+      <div><label>Jobs</label><textarea name="persona_jobs">{{ canvas.persona_jobs }}</textarea></div>
+      <div><label>Goals</label><textarea name="persona_goals">{{ canvas.persona_goals }}</textarea></div>
+      <div><label>Needs</label><textarea name="persona_needs">{{ canvas.persona_needs }}</textarea></div>
+      <div><label>Pains</label><textarea name="persona_pains">{{ canvas.persona_pains }}</textarea></div>
+      <div><label>Gains</label><textarea name="persona_gains">{{ canvas.persona_gains }}</textarea></div>
+      <div><label>Behaviors</label><textarea name="persona_behaviors">{{ canvas.persona_behaviors }}</textarea></div>
+      <div><label>Barriers</label><textarea name="persona_barriers">{{ canvas.persona_barriers }}</textarea></div>
+      <div><label>Motivations</label><textarea name="persona_motivations">{{ canvas.persona_motivations }}</textarea></div>
+      <div><label>Accessibility needs</label><textarea name="persona_accessibility">{{ canvas.persona_accessibility }}</textarea></div>
+      <div><label>Preferred channels</label><textarea name="persona_channels">{{ canvas.persona_channels }}</textarea></div>
+      <div><label>Direct quotes</label><textarea name="persona_quotes">{{ canvas.persona_quotes }}</textarea></div>
+      <div><label>Tags</label><textarea name="persona_tags">{{ canvas.persona_tags }}</textarea></div>
+    </div>
+    <div class="grid">
+      <div><label>Source type</label><select name="persona_source_type">{% for value in ['assumption','research','observed','mixed'] %}<option value="{{ value }}" {% if canvas.persona_source_type==value %}selected{% endif %}>{{ value }}</option>{% endfor %}</select></div>
+      <div><label>Confidence</label><select name="persona_confidence">{% for value in ['low','medium','high'] %}<option value="{{ value }}" {% if canvas.persona_confidence==value %}selected{% endif %}>{{ value }}</option>{% endfor %}</select></div>
+      <div><label>Validation</label><select name="persona_validation_status">{% for value in ['hypothesis','researching','validated','retired'] %}<option value="{{ value }}" {% if canvas.persona_validation_status==value %}selected{% endif %}>{{ value }}</option>{% endfor %}</select></div>
+    </div>
+    <div class="grid two">
+      <div><label>Source notes</label><textarea name="persona_source_notes">{{ canvas.persona_source_notes }}</textarea></div>
+      <div><label>Confidence notes</label><textarea name="persona_confidence_notes">{{ canvas.persona_confidence_notes }}</textarea></div>
+      <div><label>Evidence IDs</label><textarea name="persona_evidence_ids">{{ canvas.persona_evidence_ids }}</textarea></div>
+      <div><label>Assumption IDs</label><textarea name="persona_assumption_ids">{{ canvas.persona_assumption_ids }}</textarea></div>
+    </div>
+
+    <p class="label" style="margin-top:28px">Observed versus assumed attributes</p>
+    <textarea name="persona_attribute_lines" rows="6">{{ canvas.persona_attribute_lines }}</textarea>
+    <p class="field-help">One per line: Category | Statement | observed/research/assumed | Confidence | Evidence IDs | Notes</p>
+
+    <p class="label" style="margin-top:28px">Empathy map</p>
+    <div class="grid two">
+      <div><label>Says</label><textarea name="persona_empathy_says">{{ canvas.persona_empathy_says }}</textarea></div>
+      <div><label>Thinks</label><textarea name="persona_empathy_thinks">{{ canvas.persona_empathy_thinks }}</textarea></div>
+      <div><label>Does</label><textarea name="persona_empathy_does">{{ canvas.persona_empathy_does }}</textarea></div>
+      <div><label>Feels</label><textarea name="persona_empathy_feels">{{ canvas.persona_empathy_feels }}</textarea></div>
+      <div><label>Sees</label><textarea name="persona_empathy_sees">{{ canvas.persona_empathy_sees }}</textarea></div>
+      <div><label>Hears</label><textarea name="persona_empathy_hears">{{ canvas.persona_empathy_hears }}</textarea></div>
+    </div>
+
+    <p class="label" style="margin-top:28px">Stakeholder map</p>
+    <textarea name="stakeholder_lines" rows="9">{{ canvas.stakeholder_lines }}</textarea>
+    <p class="field-help">One per line: Name | Type | Influence 1–5 | Interest 1–5 | Impact 1–5 | Stance | Decision role | Strategy | Responsibilities separated by ; | Tensions separated by ; | Notes</p>
+
+    <p class="label" style="margin-top:28px">Journey map</p>
+    <div class="grid two">
+      <div><label>Journey title</label><input name="journey_title" value="{{ canvas.journey_title }}"></div>
+      <div><label>Status</label><select name="journey_status">{% for value in ['draft','research','review','validated','archived'] %}<option value="{{ value }}" {% if canvas.journey_status==value %}selected{% endif %}>{{ value }}</option>{% endfor %}</select></div>
+    </div>
+    <label>Scenario</label><textarea name="journey_scenario">{{ canvas.journey_scenario }}</textarea>
+    <label>Desired outcome</label><textarea name="journey_outcome">{{ canvas.journey_outcome }}</textarea>
+    <label>Journey stages</label><textarea name="journey_stages" rows="12">{{ canvas.journey_stages }}</textarea>
+    <p class="field-help">One per line: Stage | Actions ; | Questions ; | Emotion -2..2 | Frictions ; | Opportunities ; | Touchpoints ; | Channels ; | Metrics ; | Owner | Evidence IDs | Experiment IDs</p>
+
+    <p class="label" style="margin-top:28px">Behavioral signal import</p>
+    <div class="grid two">
+      <div><label>Source</label><select name="behavioral_signal_source_type"><option value="analytics_csv" {% if canvas.behavioral_signal_source_type=='analytics_csv' %}selected{% endif %}>Analytics CSV</option><option value="ga4_export" {% if canvas.behavioral_signal_source_type=='ga4_export' %}selected{% endif %}>GA4 export</option></select></div>
+      <div><p class="field-help">Accepted columns: metric, segment, value, period, interpretation, limitation, evidence_ids, tags. Extra demographic or identity columns are ignored.</p></div>
+    </div>
+    <label>Upload CSV (UTF-8, 2 MB maximum)</label><input type="file" name="behavioral_signal_file" accept=".csv,text/csv"><textarea name="behavioral_signal_csv" rows="7" placeholder="metric,segment,value,period,interpretation,limitation,evidence_ids,tags">{{ canvas.behavioral_signal_csv }}</textarea>
+    <p class="field-help"><strong>Safeguard:</strong> analytics rows are stored only as evidence hints. They never create persona identity, intent, motivation, or demographic claims.</p>
+
+    <div class="actions"><button class="btn" type="submit">Save research revision</button><a class="btn" href="{{ url_for('canvas.report') }}">Review report</a></div>
+  </form>
+</section>
+
+{% if contract.stakeholders %}
+<section class="panel">
+  <p class="label">Influence × Interest</p><h2>Stakeholder engagement matrix</h2>
+  <div class="matrix">
+    {% for label, title in [('manage_closely','Manage closely'),('keep_satisfied','Keep satisfied'),('keep_informed','Keep informed'),('monitor','Monitor')] %}
+    <div class="matrix-cell"><h3>{{ title }}</h3>
+      {% for item in contract.stakeholders %}{% set high_i = item.influence >= 4 %}{% set high_n = item.interest >= 4 %}{% set quadrant = 'manage_closely' if high_i and high_n else ('keep_satisfied' if high_i else ('keep_informed' if high_n else 'monitor')) %}
+      {% if quadrant == label %}<p><strong>{{ item.name }}</strong><br><span class="muted">{{ item.stance }} · influence {{ item.influence }} · interest {{ item.interest }} · impact {{ item.impact }}</span></p>{% endif %}{% endfor %}
+    </div>{% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% for journey in contract.journeys %}
+<section class="panel"><p class="label">Journey</p><h2>{{ journey.title }}</h2><p>{{ journey.scenario }}</p>
+  <div class="journey">{% for stage in journey.stages %}<article class="journey-stage"><p class="project-meta">Stage {{ stage.sequence }}</p><h3>{{ stage.name }}</h3><p class="emotion">{{ '↑' if stage.emotion > 0 else ('↓' if stage.emotion < 0 else '→') }} {{ stage.emotion }}</p><p><strong>Actions</strong><br>{{ stage.actions|join('; ') or 'Not recorded' }}</p><p><strong>Questions</strong><br>{{ stage.questions|join('; ') or 'Not recorded' }}</p><p><strong>Friction</strong><br>{{ stage.frictions|join('; ') or 'Not recorded' }}</p><p><strong>Opportunity</strong><br>{{ stage.opportunities|join('; ') or 'Not recorded' }}</p><p><strong>Experiment links</strong><br>{{ stage.experiment_ids|join(', ') or 'Not recorded' }}</p></article>{% endfor %}</div>
+</section>
+{% endfor %}
+
+{% if contract.behavioral_signals %}<section class="panel"><p class="label">Behavioral signals</p><h2>Evidence hints, not identity claims</h2><div class="record-list">{% for signal in contract.behavioral_signals %}<article class="record-row"><p class="project-meta">{{ signal.source_type }} · {{ signal.period or 'period not recorded' }}</p><h3>{{ signal.metric }} — {{ signal.value or 'value not recorded' }}</h3><p>{{ signal.segment }} · {{ signal.interpretation or 'No interpretation recorded' }}</p><p class="muted">{{ signal.limitation }}</p></article>{% endfor %}</div></section>{% endif %}
+
+<section class="panel"><div class="split-heading"><div><p class="label">Workspace Research Library</p><h2>Reusable records</h2></div><div class="stats"><span><strong>{{ asset_counts.persona }}</strong> personas</span><span><strong>{{ asset_counts.stakeholder }}</strong> stakeholders</span><span><strong>{{ asset_counts.journey }}</strong> journeys</span></div></div>
+<form class="search-row" method="get"><input name="q" value="{{ query }}" placeholder="Search research records"><button class="btn">Search</button></form>
+<div class="record-list">{% for asset in assets %}<article class="record-row"><p class="project-meta">{{ asset.asset_type }} · {{ asset.updated_at }}</p><h3>{{ asset.name }}</h3><p>{{ asset.payload.description or asset.payload.scenario or asset.payload.notes or 'Reusable research record' }}</p>{% if project_id and asset.source_project_id != project_id %}<form method="post" action="{{ url_for('canvas.research_asset_reuse', project_id=project_id, asset_key=asset.asset_key) }}"><button class="small-link">Reuse in current project</button></form>{% endif %}</article>{% else %}<p class="muted">Save a project research revision to populate the workspace library.</p>{% endfor %}</div>
+</section>
+<script>
+(() => {
+  const templates = {{ persona_templates|tojson }};
+  const select = document.querySelector('[data-persona-template]');
+  const button = document.querySelector('[data-apply-persona-template]');
+  if (!select || !button) return;
+  const setLines = (name, values) => { const node = document.querySelector(`[name="${name}"]`); if (node) node.value = (values || []).join('\n'); };
+  const setText = (name, value) => { const node = document.querySelector(`[name="${name}"]`); if (node) node.value = value || ''; };
+  button.addEventListener('click', () => {
+    const item = templates[select.value];
+    if (!item) return;
+    setText('persona_name', item.name); setText('persona_role', item.role); setText('persona_context', item.context);
+    setLines('persona_jobs', item.jobs); setLines('persona_needs', item.needs); setLines('persona_barriers', item.barriers);
+    setLines('persona_motivations', item.motivations); setLines('persona_tags', item.tags);
+    setText('persona_source_type', 'assumption'); setText('persona_confidence', 'low'); setText('persona_validation_status', 'hypothesis');
+    document.querySelector('form[data-autosave-project]')?.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+})();
+</script>
+{% endblock %}

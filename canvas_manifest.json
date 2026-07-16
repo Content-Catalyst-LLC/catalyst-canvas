@@ -5,16 +5,18 @@
   "shortcode": "[catalyst_canvas_demo]",
   "layers": [
     "canonical catalyst_canvas domain package",
-    "Canvas Contract 1.0 JSON Schema",
+    "Canvas Contract 1.1 JSON Schema",
     "Workspace Project Contract 1.0 JSON Schema",
     "workspace-scoped Flask project registry and immutable revision storage",
-    "legacy v1.2 SQLite migration",
+    "evidence-aware persona, empathy-map, stakeholder, journey, and behavioral-signal studio",
+    "six reusable persona templates and research comparison workflows",
+    "automatic Canvas Contract 1.0 and legacy SQLite migration",
     "Python and CLI adapters",
-    "WordPress browser-local project workspace",
+    "WordPress browser-local project and research workspace",
     "cross-surface fixtures and conformance tests",
     "stable JSON, Markdown, and print-report exporters"
   ],
-  "method_path": "challenge -> audience -> goal -> constraints -> personas and stakeholders -> POV -> HMW -> framework prompts -> evidence and assumptions -> prototypes -> tests -> review",
+  "method_path": "challenge -> designated audiences -> persona jobs/needs/pains/gains -> observed versus assumed attributes -> empathy map -> stakeholder influence/interest/impact -> journey questions/frictions/opportunities/evidence/experiments -> behavioral hints -> POV -> HMW -> prototype -> test -> review",
   "boundaries": [
     "educational and research-oriented",
     "not consulting advice",
@@ -22,15 +24,16 @@
     "not product-market fit validation",
     "requires human review"
   ],
-  "version": "1.3.0",
-  "release": "Persistent Projects and Workspace Management",
+  "version": "1.4.0",
+  "release": "Persona, Stakeholder, and Journey Studio",
   "released_at": "2026-07-16",
   "canonical_version_source": "VERSION",
-  "contract_version": "catalyst-canvas/1.0",
-  "canonical_schema": "schemas/catalyst_canvas_contract_1_0.schema.json",
+  "contract_version": "catalyst-canvas/1.1",
+  "canonical_schema": "schemas/catalyst_canvas_contract_1_1.schema.json",
   "framework_registry": "contracts/frameworks.json",
-  "shared_fixture": "fixtures/canvas_contract_1_0.input.json",
+  "shared_fixture": "fixtures/canvas_contract_1_1.input.json",
   "migration_support": [
+    "Canvas Contract 1.0",
     "legacy Python core v1.0-v1.1 exports",
     "legacy wrapper exports",
     "legacy Flask flat records"
@@ -38,5 +41,7 @@
   "compatibility_note": "python/catalyst_canvas_core.py and python/catalyst_canvas_brief.py are deprecated adapters over the catalyst_canvas package",
   "workspace_contract_version": "catalyst-canvas-workspace/1.0",
   "workspace_schema": "schemas/catalyst_canvas_workspace_1_0.schema.json",
-  "storage_model": "workspaces -> projects -> immutable canvas revisions"
+  "storage_model": "workspaces -> projects -> immutable canvas revisions + reusable persona/stakeholder/journey assets",
+  "persona_template_registry": "contracts/persona_templates.json",
+  "behavioral_signal_boundary": "Analytics and GA4 CSV rows are evidence hints only and cannot create identity, intent, motivation, or demographic claims."
 }

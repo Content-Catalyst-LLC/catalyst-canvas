@@ -16,6 +16,35 @@
     return element ? element.value : '';
   }
 
+  function lines(value) { return String(value || '').split(/\r?\n/).map(item => item.trim()).filter(Boolean); }
+
+  function parseStakeholders(value) {
+    return lines(value).map((line, index) => {
+      const parts = line.split('|').map(item => item.trim());
+      const list = text => String(text || '').split(';').map(item => item.trim()).filter(Boolean);
+      return {
+        stakeholder_id: 'stakeholder-' + String(index + 1).padStart(3, '0'),
+        name: parts[0] || 'Stakeholder ' + (index + 1),
+        stakeholder_type: parts[1] || 'other', influence: parts[2] || 3, interest: parts[3] || 3, impact: parts[4] || 3,
+        stance: parts[5] || 'unknown', decision_role: parts[6] || 'affected', engagement_strategy: parts[7] || '',
+        responsibilities: list(parts[8]), tensions: list(parts[9]), notes: parts[10] || ''
+      };
+    });
+  }
+
+  function parseJourneyStages(value) {
+    return lines(value).map((line, index) => {
+      const parts = line.split('|').map(item => item.trim());
+      const list = text => String(text || '').split(';').map(item => item.trim()).filter(Boolean);
+      const ids = text => String(text || '').split(',').map(item => item.trim()).filter(Boolean);
+      return { stage_id:'stage-' + String(index + 1).padStart(3,'0'), name:parts[0] || 'Stage ' + (index + 1), actions:list(parts[1]), questions:list(parts[2]), emotion:parts[3] || 0, frictions:list(parts[4]), opportunities:list(parts[5]), touchpoints:list(parts[6]), channels:list(parts[7]), metrics:list(parts[8]), owner:parts[9] || '', evidence_ids:ids(parts[10]), experiment_ids:ids(parts[11]) };
+    });
+  }
+
+  function parseAttributes(value) {
+    return lines(value).map((line,index)=>{const parts=line.split('|').map(item=>item.trim());return {attribute_id:'attribute-'+String(index+1).padStart(3,'0'),category:parts[0]||'other',statement:parts[1]||'',basis:parts[2]||'assumed',confidence:parts[3]||'low',evidence_ids:String(parts[4]||'').split(',').map(item=>item.trim()).filter(Boolean),notes:parts[5]||''};}).filter(item=>item.statement);
+  }
+
   function projectTitle(root) {
     const element = root.querySelector('[data-workspace-field="title"]');
     return element ? String(element.value || '').trim() : '';
@@ -29,15 +58,29 @@
       created_at: existing.created_at,
       title: projectTitle(root) || existing.title || 'Catalyst Canvas Brief',
       challenge: field(root, 'challenge'),
-      audience: field(root, 'audience'),
+      audience: {primary:field(root,'audience'),secondary:lines(field(root,'audienceSecondary')),affected:lines(field(root,'audienceAffected')),excluded:lines(field(root,'audienceExcluded'))},
       goal: field(root, 'goal'),
       constraint: field(root, 'constraint'),
+      persona: {
+        persona_id: existing.personas && existing.personas[0] ? existing.personas[0].persona_id : undefined,
+        name: field(root, 'personaName') || field(root, 'audience'),
+        role: field(root, 'personaRole'), description: field(root, 'personaContext'), context: field(root, 'personaContext'),
+        jobs:lines(field(root,'personaJobs')), goals: lines(field(root, 'personaGoals')), needs: lines(field(root, 'personaNeeds')), pains: lines(field(root, 'personaPains')), gains:lines(field(root,'personaGains')), behaviors: lines(field(root, 'personaBehaviors')), barriers:lines(field(root,'personaBarriers')), motivations:lines(field(root,'personaMotivations')), accessibility_needs: lines(field(root, 'personaAccessibility')), preferred_channels:lines(field(root,'personaChannels')), quotes:lines(field(root,'personaQuotes')),
+        empathy_map:{says:lines(field(root,'empathySays')),thinks:lines(field(root,'empathyThinks')),does:lines(field(root,'empathyDoes')),feels:lines(field(root,'empathyFeels')),sees:lines(field(root,'empathySees')),hears:lines(field(root,'empathyHears'))},
+        attributes:parseAttributes(field(root,'personaAttributes')), evidence_ids:lines(field(root,'personaEvidenceIds')), assumption_ids:lines(field(root,'personaAssumptionIds')), tags:lines(field(root,'personaTags')),
+        source_type: field(root, 'personaSource') || 'assumption', source_notes:field(root,'personaSourceNotes'), confidence: field(root, 'personaConfidence') || 'low', confidence_notes:field(root,'personaConfidenceNotes'), validation_status: field(root, 'personaValidation') || 'hypothesis'
+      },
+      stakeholders: parseStakeholders(field(root, 'stakeholders')),
+      journeys: field(root, 'journeyTitle') || field(root, 'journeyStages') ? [{
+        journey_id: existing.journeys && existing.journeys[0] ? existing.journeys[0].journey_id : undefined,
+        title: field(root, 'journeyTitle') || 'Primary experience journey',
+        persona_id: existing.personas && existing.personas[0] ? existing.personas[0].persona_id : 'persona-001',
+        scenario: field(root, 'journeyScenario'), desired_outcome: field(root, 'journeyOutcome') || field(root, 'goal'),
+        status: field(root,'journeyStatus') || 'draft', stages: parseJourneyStages(field(root, 'journeyStages'))
+      }] : [],
+      behavioral_signals:Engine.parseBehavioralSignalCsv(field(root,'behavioralSignalCsv'),field(root,'behavioralSignalSource')||'analytics_csv'),
       framework: field(root, 'framework'),
-      provenance: {
-        source_surface: 'wordpress',
-        source_version: root.dataset.version || Engine.RELEASE_VERSION,
-        warnings: []
-      }
+      provenance: { source_surface: 'wordpress', source_version: root.dataset.version || Engine.RELEASE_VERSION, warnings: [] }
     };
   }
 
@@ -95,7 +138,14 @@
     setText(root, 'contractVersion', contract.schema_version);
     setText(root, 'summary', summary(contract));
     setText(root, 'personaName', persona.name);
-    setText(root, 'personaBody', persona.description || `Needs a practical way to make progress on “${contract.challenge}” without losing sight of the constraint: ${contract.constraints[0].statement}.`);
+    setText(root, 'personaBody', persona.description || persona.context || `Needs a practical way to make progress on “${contract.challenge}” without losing sight of the constraint: ${contract.constraints[0].statement}.`);
+    setText(root, 'researchReadiness', contract.research_summary.readiness.replace(/_/g, ' '));
+    setText(root, 'stakeholderCount', contract.research_summary.stakeholder_count + ' mapped');
+    setText(root, 'journeyCount', contract.research_summary.journey_count + ' mapped');
+    setText(root, 'signalCount', contract.research_summary.behavioral_signal_count + ' hints');
+    setList(root, 'stakeholderSummary', contract.stakeholders.map(item => `${item.name}: influence ${item.influence}/5, interest ${item.interest}/5 — ${item.engagement_strategy || item.stance}`));
+    const journey = contract.journeys[0];
+    setList(root, 'journeySummary', journey ? journey.stages.map(stage => `${stage.sequence}. ${stage.name}: ${stage.actions.join('; ') || 'No action recorded'} (emotion ${stage.emotion})`) : []);
     setText(root, 'pov', contract.point_of_view.statement);
     setList(root, 'hmw', contract.how_might_we.map(item => item.question));
     setText(root, 'prototypeTitle', prototype.title || 'Prototype concept');
@@ -111,6 +161,19 @@
     setField(root, 'audience', contract.audience.primary);
     setField(root, 'goal', contract.goal);
     setField(root, 'constraint', contract.constraints[0] ? contract.constraints[0].statement : '');
+    const persona = contract.personas[0] || {};
+    setField(root,'audienceSecondary',(contract.audience.secondary||[]).join('\n')); setField(root,'audienceAffected',(contract.audience.affected||[]).join('\n')); setField(root,'audienceExcluded',(contract.audience.excluded||[]).join('\n'));
+    setField(root, 'personaName', persona.name); setField(root,'personaRole',persona.role); setField(root, 'personaContext', persona.context || persona.role);
+    setField(root,'personaJobs',(persona.jobs||[]).join('\n')); setField(root, 'personaGoals', (persona.goals || []).join('\n')); setField(root,'personaNeeds',(persona.needs||[]).join('\n')); setField(root, 'personaBehaviors', (persona.behaviors || []).join('\n')); setField(root, 'personaPains', (persona.pains || []).join('\n')); setField(root,'personaGains',(persona.gains||[]).join('\n')); setField(root,'personaBarriers',(persona.barriers||[]).join('\n')); setField(root,'personaMotivations',(persona.motivations||[]).join('\n')); setField(root, 'personaAccessibility', (persona.accessibility_needs || []).join('\n')); setField(root,'personaChannels',(persona.preferred_channels||[]).join('\n')); setField(root,'personaQuotes',(persona.quotes||[]).join('\n')); setField(root,'personaEvidenceIds',(persona.evidence_ids||[]).join('\n')); setField(root,'personaAssumptionIds',(persona.assumption_ids||[]).join('\n')); setField(root,'personaTags',(persona.tags||[]).join('\n'));
+    setField(root,'empathySays',(persona.empathy_map&&persona.empathy_map.says||[]).join('\n')); setField(root,'empathyThinks',(persona.empathy_map&&persona.empathy_map.thinks||[]).join('\n')); setField(root,'empathyDoes',(persona.empathy_map&&persona.empathy_map.does||[]).join('\n')); setField(root,'empathyFeels',(persona.empathy_map&&persona.empathy_map.feels||[]).join('\n')); setField(root,'empathySees',(persona.empathy_map&&persona.empathy_map.sees||[]).join('\n')); setField(root,'empathyHears',(persona.empathy_map&&persona.empathy_map.hears||[]).join('\n'));
+    setField(root,'personaAttributes',(persona.attributes||[]).map(item=>[item.category,item.statement,item.basis,item.confidence,(item.evidence_ids||[]).join(', '),item.notes].join(' | ')).join('\n'));
+    setField(root, 'personaSource', persona.source_type); setField(root,'personaSourceNotes',persona.source_notes); setField(root, 'personaConfidence', persona.confidence); setField(root,'personaConfidenceNotes',persona.confidence_notes); setField(root, 'personaValidation', persona.validation_status);
+    setField(root, 'stakeholders', contract.stakeholders.map(item => [item.name,item.stakeholder_type,item.influence,item.interest,item.impact,item.stance,item.decision_role,item.engagement_strategy,(item.responsibilities||[]).join('; '),(item.tensions||[]).join('; '),item.notes].join(' | ')).join('\n'));
+    const journey = contract.journeys[0] || {};
+    setField(root, 'journeyTitle', journey.title); setField(root, 'journeyScenario', journey.scenario); setField(root, 'journeyOutcome', journey.desired_outcome); setField(root,'journeyStatus',journey.status);
+    setField(root, 'journeyStages', (journey.stages || []).map(stage => [stage.name,(stage.actions||[]).join('; '),(stage.questions||[]).join('; '),stage.emotion,(stage.frictions||[]).join('; '),(stage.opportunities||[]).join('; '),(stage.touchpoints||[]).join('; '),(stage.channels||[]).join('; '),(stage.metrics||[]).join('; '),stage.owner,(stage.evidence_ids||[]).join(', '),(stage.experiment_ids||[]).join(', ')].join(' | ')).join('\n'));
+    setField(root,'behavioralSignalSource',contract.behavioral_signals[0]?contract.behavioral_signals[0].source_type:'analytics_csv');
+    setField(root,'behavioralSignalCsv',contract.behavioral_signals.length?'metric,segment,value,period,interpretation,limitation,evidence_ids,tags\n'+contract.behavioral_signals.map(item=>[item.metric,item.segment,item.value,item.period,item.interpretation,item.limitation,(item.evidence_ids||[]).join(';'),(item.tags||[]).join(';')].join(',')).join('\n'):'');
     setField(root, 'framework', contract.framework.key);
     const title = root.querySelector('[data-workspace-field="title"]');
     if (title) title.value = contract.title || 'Untitled Canvas Project';
@@ -164,6 +227,17 @@
       select.appendChild(option);
     });
     select.value = active ? active.project_id : '';
+    const comparison = root.querySelector('[data-output="researchComparison"]');
+    if (comparison) {
+      comparison.innerHTML = '';
+      store.list('active').forEach(project => {
+        const canvas=store.currentCanvas(project.project_id); if(!canvas)return;
+        const card=document.createElement('article'); card.className='ccanvasdemo-mini';
+        const persona=canvas.personas&&canvas.personas[0]||{}; const journey=canvas.journeys&&canvas.journeys[0]||{};
+        const title=document.createElement('strong'); title.textContent=project.title; card.appendChild(title);
+        const text=document.createElement('p'); text.textContent=(persona.name||'No persona')+' · '+(persona.source_type||'assumption')+' · '+((journey.stages||[]).length)+' journey stages'; card.appendChild(text); comparison.appendChild(card);
+      });
+    }
   }
 
   function saveProject(root, store, autosave) {
@@ -210,6 +284,21 @@
     const titleInput = root.querySelector('[data-workspace-field="title"]');
     if (titleInput) titleInput.addEventListener('input', queueAutosave);
 
+    const signalFile = root.querySelector('[data-field="behavioralSignalFile"]');
+    if (signalFile) signalFile.addEventListener('change', function () {
+      const file = signalFile.files && signalFile.files[0];
+      if (!file) return;
+      if (!/\.csv$/i.test(file.name) || file.size > 2000000) {
+        setWorkspaceStatus(root, 'Choose a UTF-8 CSV file no larger than 2 MB.', 'error');
+        signalFile.value = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function () { setField(root, 'behavioralSignalCsv', String(reader.result || '')); render(root, buildFromInputs(root)); queueAutosave(); };
+      reader.onerror = function () { setWorkspaceStatus(root, 'The CSV file could not be read.', 'error'); };
+      reader.readAsText(file, 'UTF-8');
+    });
+
     const projectSelect = root.querySelector('[data-workspace-project]');
     if (projectSelect) projectSelect.addEventListener('change', function () {
       const selected = store.get(projectSelect.value);
@@ -244,6 +333,12 @@
       button.addEventListener('click', function () {
         const action = button.getAttribute('data-action');
         try {
+          if (action === 'apply-persona-template') {
+            const key=field(root,'personaTemplate'), template=Engine.PERSONA_TEMPLATES[key];
+            if(!template) throw new Error('Choose a persona template first.');
+            setField(root,'personaName',template.name); setField(root,'personaRole',template.role); setField(root,'personaContext',template.context); setField(root,'personaJobs',(template.jobs||[]).join('\n')); setField(root,'personaNeeds',(template.needs||[]).join('\n')); setField(root,'personaBarriers',(template.barriers||[]).join('\n')); setField(root,'personaMotivations',(template.motivations||[]).join('\n')); setField(root,'personaTags',(template.tags||[]).join('\n')); setField(root,'personaSource','assumption'); setField(root,'personaConfidence','low'); setField(root,'personaValidation','hypothesis');
+            queueAutosave(); return;
+          }
           if (action === 'generate') {
             render(root, buildFromInputs(root));
             queueAutosave();

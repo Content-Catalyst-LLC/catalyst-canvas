@@ -1,23 +1,19 @@
-# Catalyst Canvas v1.3.0 Submission Notes
+# Catalyst Canvas Submission
 
-## Release
+**Catalyst Canvas v1.4.0 — Persona, Stakeholder, and Journey Studio**
 
-**Catalyst Canvas v1.3.0 — Persistent Projects and Workspace Management**
+This release adds Canvas Contract 1.1, evidence-aware personas and empathy maps, observed-versus-assumed attributes, quantified stakeholder mapping, experiment-linked journeys, guarded analytics CSV hints, reusable templates, workspace research comparison, enriched exports, and matching Flask and browser engines.
 
-## Deliverables
+Run the release gate before submission:
 
-- canonical repository ZIP;
-- versioned WordPress plugin ZIP;
-- macOS install, validate, commit, and push script;
-- SHA-256 checksum manifest;
-- full validation log.
-
-## Release focus
-
-This release adds workspace-scoped projects, immutable revisions, autosave, search, duplication, archive/restore, v1.2 SQLite migration, workspace APIs, and browser-local WordPress persistence.
-
-## Package
-
-```text
-dist/catalyst-canvas-demo-v1.3.0.zip
+```bash
+python scripts/validate_release.py
 ```
+
+Build the WordPress package with:
+
+```bash
+python scripts/build_plugin.py
+```
+
+Canonical release metadata is stored in `VERSION` and `canvas_manifest.json`.

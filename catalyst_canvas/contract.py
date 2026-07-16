@@ -1,4 +1,4 @@
-"""Canvas Contract 1.0 normalization and JSON Schema validation."""
+"""Canvas Contract 1.1 normalization and JSON Schema validation."""
 
 from __future__ import annotations
 
@@ -12,9 +12,16 @@ from uuid import uuid4
 from jsonschema import Draft202012Validator
 
 from .version import CONTRACT_VERSION, __version__
+from .research import (
+    normalize_behavioral_signals,
+    normalize_journeys,
+    normalize_personas as normalize_research_personas,
+    normalize_stakeholders as normalize_research_stakeholders,
+    research_summary,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA_PATH = ROOT / "schemas" / "catalyst_canvas_contract_1_0.schema.json"
+SCHEMA_PATH = ROOT / "schemas" / "catalyst_canvas_contract_1_1.schema.json"
 
 
 class CanvasContractError(ValueError):
@@ -22,7 +29,7 @@ class CanvasContractError(ValueError):
 
 
 class CanvasValidationError(CanvasContractError):
-    """Raised when a payload does not satisfy Canvas Contract 1.0."""
+    """Raised when a payload does not satisfy the active Canvas contract."""
 
 
 def utc_now() -> str:
@@ -76,7 +83,7 @@ def validate_contract(contract: Mapping[str, Any]) -> Dict[str, Any]:
     payload = strip_internal_fields(contract)
     errors = validation_errors(payload)
     if errors:
-        raise CanvasValidationError("Canvas Contract 1.0 validation failed: " + "; ".join(errors))
+        raise CanvasValidationError(f"{CONTRACT_VERSION} validation failed: " + "; ".join(errors))
     return payload
 
 
@@ -289,7 +296,7 @@ def normalize_provenance(value: Any, *, source_surface: str, migrated_from: str 
 
 
 def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: str = "python") -> Dict[str, Any]:
-    """Normalize a compact or partially structured payload into Canvas Contract 1.0."""
+    """Normalize a compact or partially structured payload into Canvas Contract 1.1."""
     from .frameworks import framework_record
 
     source: Mapping[str, Any] = payload or {}
@@ -301,7 +308,7 @@ def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: 
     goal = clean_text(source.get("goal"), "Create a more useful, testable, and reviewable next step.")
     constraints = normalize_constraints(source.get("constraints", source.get("constraint")))
     constraint_text = constraints[0]["statement"]
-    personas = normalize_personas(
+    personas = normalize_research_personas(
         source.get("personas", source.get("persona")),
         audience=audience,
         challenge=challenge,
@@ -309,6 +316,9 @@ def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: 
         constraint=constraint_text,
     )
     primary_persona = personas[0]
+    stakeholders = normalize_research_stakeholders(source.get("stakeholders"))
+    journeys = normalize_journeys(source.get("journeys", source.get("journey")), personas=personas, goal=goal)
+    behavioral_signals = normalize_behavioral_signals(source.get("behavioral_signals"))
     point_of_view = source.get("point_of_view")
     if isinstance(point_of_view, Mapping):
         pov = {
@@ -370,7 +380,10 @@ def build_contract(payload: Mapping[str, Any] | None = None, *, source_surface: 
         "goal": goal,
         "constraints": constraints,
         "personas": personas,
-        "stakeholders": normalize_stakeholders(source.get("stakeholders")),
+        "stakeholders": stakeholders,
+        "journeys": journeys,
+        "behavioral_signals": behavioral_signals,
+        "research_summary": research_summary(personas, stakeholders, journeys, behavioral_signals, generated_at=updated_at),
         "point_of_view": pov,
         "how_might_we": hmw_records,
         "framework": framework_record(framework_value),

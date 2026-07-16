@@ -3,7 +3,7 @@
  * Plugin Name: Catalyst Canvas Demo
  * Plugin URI: https://sustainablecatalyst.com/catalyst-canvas/
  * Description: Adds a persistent, client-side Catalyst Canvas project workspace via the [catalyst_canvas_demo] shortcode.
- * Version: 1.3.0
+ * Version: 1.4.0
  * Author: Content Catalyst LLC
  * License: MIT
  * Text Domain: catalyst-canvas-demo
@@ -14,8 +14,8 @@ if (!defined('ABSPATH')) {
 }
 
 final class Catalyst_Canvas_Demo_Plugin {
-    private const VERSION = '1.3.0';
-    private const CONTRACT_VERSION = 'catalyst-canvas/1.0';
+    private const VERSION = '1.4.0';
+    private const CONTRACT_VERSION = 'catalyst-canvas/1.1';
     private const SHORTCODE = 'catalyst_canvas_demo';
 
     public function __construct() {
@@ -114,11 +114,61 @@ final class Catalyst_Canvas_Demo_Plugin {
             <div class="ccanvasdemo-layout">
                 <form class="ccanvasdemo-inputs" data-canvas-form>
                     <div class="ccanvasdemo-panel">
-                        <p class="ccanvasdemo-section-label">Problem framing</p>
+                        <p class="ccanvasdemo-section-label">Problem framing and audiences</p>
                         <label><span>Challenge</span><textarea data-field="challenge" rows="3" placeholder="Example: A nonprofit needs a clearer way to explain program impact to funders."></textarea></label>
-                        <label><span>Audience / user</span><input data-field="audience" type="text" placeholder="Example: Program director at a community nonprofit"></label>
+                        <label><span>Primary audience / user</span><input data-field="audience" type="text" placeholder="Example: Program director at a community nonprofit"></label>
+                        <div class="ccanvasdemo-inline-fields">
+                            <label><span>Secondary audiences</span><textarea data-field="audienceSecondary" rows="2" placeholder="One per line"></textarea></label>
+                            <label><span>Affected groups</span><textarea data-field="audienceAffected" rows="2" placeholder="One per line"></textarea></label>
+                            <label><span>Excluded from scope</span><textarea data-field="audienceExcluded" rows="2" placeholder="One per line"></textarea></label>
+                        </div>
                         <label><span>Goal</span><input data-field="goal" type="text" placeholder="Example: Build a defensible impact story with traceable indicators"></label>
                         <label><span>Constraint</span><input data-field="constraint" type="text" placeholder="Example: Limited data, small team, stakeholder pressure"></label>
+                    </div>
+
+                    <div class="ccanvasdemo-panel">
+                        <p class="ccanvasdemo-section-label">Persona research</p>
+                        <div class="ccanvasdemo-inline-fields"><label><span>Template</span><select data-field="personaTemplate"><option value="">Choose a reusable template</option><option value="civic">Civic service</option><option value="sustainability">Sustainability</option><option value="research">Research</option><option value="technical_content">Technical content</option><option value="institutional">Institutional</option><option value="public_interest">Public interest</option></select></label><div class="ccanvasdemo-template-action"><button type="button" class="ccanvasdemo-btn" data-action="apply-persona-template">Apply template</button></div></div>
+                        <div class="ccanvasdemo-inline-fields"><label><span>Persona name</span><input data-field="personaName" type="text"></label><label><span>Role</span><input data-field="personaRole" type="text"></label></div>
+                        <label><span>Context</span><textarea data-field="personaContext" rows="3"></textarea></label>
+                        <div class="ccanvasdemo-inline-fields"><label><span>Jobs</span><textarea data-field="personaJobs" rows="2"></textarea></label><label><span>Goals</span><textarea data-field="personaGoals" rows="2"></textarea></label><label><span>Needs</span><textarea data-field="personaNeeds" rows="2"></textarea></label></div>
+                        <div class="ccanvasdemo-inline-fields"><label><span>Pains</span><textarea data-field="personaPains" rows="2"></textarea></label><label><span>Gains</span><textarea data-field="personaGains" rows="2"></textarea></label><label><span>Behaviors</span><textarea data-field="personaBehaviors" rows="2"></textarea></label></div>
+                        <div class="ccanvasdemo-inline-fields"><label><span>Barriers</span><textarea data-field="personaBarriers" rows="2"></textarea></label><label><span>Motivations</span><textarea data-field="personaMotivations" rows="2"></textarea></label><label><span>Accessibility needs</span><textarea data-field="personaAccessibility" rows="2"></textarea></label></div>
+                        <div class="ccanvasdemo-inline-fields"><label><span>Preferred channels</span><textarea data-field="personaChannels" rows="2"></textarea></label><label><span>Quotes</span><textarea data-field="personaQuotes" rows="2"></textarea></label><label><span>Tags</span><textarea data-field="personaTags" rows="2"></textarea></label></div>
+                        <div class="ccanvasdemo-inline-fields">
+                            <label><span>Source</span><select data-field="personaSource"><option value="assumption">Assumption</option><option value="research">Research</option><option value="observed">Observed</option><option value="mixed">Mixed</option></select></label>
+                            <label><span>Confidence</span><select data-field="personaConfidence"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select></label>
+                            <label><span>Validation</span><select data-field="personaValidation"><option value="hypothesis">Hypothesis</option><option value="researching">Researching</option><option value="validated">Validated</option><option value="retired">Retired</option></select></label>
+                        </div>
+                        <div class="ccanvasdemo-inline-fields"><label><span>Source notes</span><textarea data-field="personaSourceNotes" rows="2"></textarea></label><label><span>Confidence notes</span><textarea data-field="personaConfidenceNotes" rows="2"></textarea></label><label><span>Evidence IDs</span><textarea data-field="personaEvidenceIds" rows="2"></textarea></label></div>
+                        <label><span>Assumption IDs</span><textarea data-field="personaAssumptionIds" rows="2"></textarea></label>
+                        <label><span>Observed versus assumed attributes</span><textarea data-field="personaAttributes" rows="5" placeholder="Category | Statement | observed/research/assumed | Confidence | Evidence IDs | Notes"></textarea></label>
+                    </div>
+
+                    <div class="ccanvasdemo-panel">
+                        <p class="ccanvasdemo-section-label">Empathy map</p>
+                        <div class="ccanvasdemo-inline-fields"><label><span>Says</span><textarea data-field="empathySays" rows="2"></textarea></label><label><span>Thinks</span><textarea data-field="empathyThinks" rows="2"></textarea></label><label><span>Does</span><textarea data-field="empathyDoes" rows="2"></textarea></label></div>
+                        <div class="ccanvasdemo-inline-fields"><label><span>Feels</span><textarea data-field="empathyFeels" rows="2"></textarea></label><label><span>Sees</span><textarea data-field="empathySees" rows="2"></textarea></label><label><span>Hears</span><textarea data-field="empathyHears" rows="2"></textarea></label></div>
+                    </div>
+
+                    <div class="ccanvasdemo-panel">
+                        <p class="ccanvasdemo-section-label">Stakeholder map</p>
+                        <label><span>Stakeholders</span><textarea data-field="stakeholders" rows="7" placeholder="Name | Type | Influence | Interest | Impact | Stance | Decision role | Strategy | Responsibilities ; | Tensions ; | Notes"></textarea></label>
+                    </div>
+
+                    <div class="ccanvasdemo-panel">
+                        <p class="ccanvasdemo-section-label">Journey map</p>
+                        <div class="ccanvasdemo-inline-fields"><label><span>Journey title</span><input data-field="journeyTitle" type="text"></label><label><span>Status</span><select data-field="journeyStatus"><option value="draft">Draft</option><option value="research">Research</option><option value="review">Review</option><option value="validated">Validated</option><option value="archived">Archived</option></select></label></div>
+                        <label><span>Scenario</span><textarea data-field="journeyScenario" rows="2"></textarea></label>
+                        <label><span>Desired outcome</span><textarea data-field="journeyOutcome" rows="2"></textarea></label>
+                        <label><span>Stages</span><textarea data-field="journeyStages" rows="9" placeholder="Stage | Actions ; | Questions ; | Emotion | Frictions ; | Opportunities ; | Touchpoints ; | Channels ; | Metrics ; | Owner | Evidence IDs | Experiment IDs"></textarea></label>
+                    </div>
+
+                    <div class="ccanvasdemo-panel">
+                        <p class="ccanvasdemo-section-label">Behavioral signal import</p>
+                        <label><span>Source</span><select data-field="behavioralSignalSource"><option value="analytics_csv">Analytics CSV</option><option value="ga4_export">GA4 export</option></select></label>
+                        <label><span>CSV file</span><input data-field="behavioralSignalFile" type="file" accept=".csv,text/csv"></label><label><span>CSV</span><textarea data-field="behavioralSignalCsv" rows="7" placeholder="metric,segment,value,period,interpretation,limitation,evidence_ids,tags"></textarea></label>
+                        <p class="ccanvasdemo-help">Analytics are stored only as evidence hints. Extra demographic or identity columns are ignored and never create persona claims.</p>
                     </div>
 
                     <div class="ccanvasdemo-panel">
@@ -153,6 +203,26 @@ final class Catalyst_Canvas_Demo_Plugin {
                         <article class="ccanvasdemo-card"><span>POV</span><h4>Point of view</h4><p data-output="pov">A point-of-view statement will appear here.</p></article>
                         <article class="ccanvasdemo-card"><span>HMW</span><h4>How might we?</h4><ul data-output="hmw"></ul></article>
                         <article class="ccanvasdemo-card"><span>Prototype</span><h4 data-output="prototypeTitle">Concept card</h4><p data-output="prototypeBody">A prototype concept will appear here.</p></article>
+                    </div>
+
+                    <div class="ccanvasdemo-panel">
+                        <p class="ccanvasdemo-section-label">Research readiness</p>
+                        <div class="ccanvasdemo-grid ccanvasdemo-grid-three">
+                            <article class="ccanvasdemo-mini"><strong>Readiness</strong><p data-output="researchReadiness">Hypothesis</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Stakeholders</strong><p data-output="stakeholderCount">0 mapped</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Journeys</strong><p data-output="journeyCount">0 mapped</p></article>
+                            <article class="ccanvasdemo-mini"><strong>Analytics</strong><p data-output="signalCount">0 hints</p></article>
+                        </div>
+                        <div class="ccanvasdemo-research-preview">
+                            <h4>Stakeholder engagement</h4><ul data-output="stakeholderSummary"></ul>
+                            <h4>Journey stages</h4><ul data-output="journeySummary"></ul>
+                        </div>
+                    </div>
+
+                    <div class="ccanvasdemo-panel">
+                        <p class="ccanvasdemo-section-label">Saved research comparison</p>
+                        <p class="ccanvasdemo-help">Compare the primary persona and journey coverage across active browser projects.</p>
+                        <div class="ccanvasdemo-grid ccanvasdemo-grid-three" data-output="researchComparison"></div>
                     </div>
 
                     <div class="ccanvasdemo-panel">

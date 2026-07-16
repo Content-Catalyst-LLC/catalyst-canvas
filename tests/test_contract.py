@@ -24,8 +24,8 @@ class CanvasContractTests(unittest.TestCase):
         self.assertEqual(validate_contract(contract), contract)
 
     def test_python_engine_matches_shared_fixture(self):
-        source = json.loads((ROOT / "fixtures" / "canvas_contract_1_0.input.json").read_text(encoding="utf-8"))
-        expected = json.loads((ROOT / "fixtures" / "canvas_contract_1_0.expected.json").read_text(encoding="utf-8"))
+        source = json.loads((ROOT / "fixtures" / "canvas_contract_1_1.input.json").read_text(encoding="utf-8"))
+        expected = json.loads((ROOT / "fixtures" / "canvas_contract_1_1.expected.json").read_text(encoding="utf-8"))
         self.assertEqual(generate_canvas(source, source_surface="python"), expected)
 
     def test_unknown_framework_falls_back_to_aida(self):
@@ -41,3 +41,36 @@ class CanvasContractTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class ResearchContractTests(unittest.TestCase):
+    def test_research_records_are_normalized_and_summarized(self):
+        contract = generate_canvas({
+            "challenge": "Coordinate a community pilot",
+            "audience": "Program lead",
+            "goal": "Reach a reviewable decision",
+            "constraint": "Uneven evidence",
+            "persona": {
+                "name": "Program Lead",
+                "goals": ["Align partners"],
+                "behaviors": ["Reviews evidence before workshops"],
+                "evidence_ids": ["evidence-001"],
+                "validation_status": "researching",
+                "confidence": "medium",
+            },
+            "stakeholders": [{
+                "name": "Funding sponsor", "influence": "high", "interest": "medium",
+                "stance": "supportive", "decision_role": "approver",
+            }],
+            "journeys": [{
+                "title": "Pilot decision journey",
+                "stages": [{"name": "Review", "emotion": -9}, {"name": "Commit", "emotion": 8}],
+            }],
+        })
+        self.assertEqual(contract["schema_version"], "catalyst-canvas/1.1")
+        self.assertEqual(contract["stakeholders"][0]["influence"], 5)
+        self.assertEqual(contract["stakeholders"][0]["interest"], 3)
+        self.assertEqual(contract["journeys"][0]["stages"][0]["emotion"], -2)
+        self.assertEqual(contract["journeys"][0]["stages"][1]["emotion"], 2)
+        self.assertEqual(contract["research_summary"]["journey_count"], 1)
+        self.assertEqual(contract["research_summary"]["evidence_link_count"], 1)
+        self.assertEqual(contract["research_summary"]["readiness"], "review_ready")

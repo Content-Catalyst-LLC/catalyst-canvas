@@ -2,6 +2,6 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://sustainablecatalyst.com/schemas/catalyst_canvas_brief.schema.json",
   "title": "Catalyst Canvas Brief Compatibility Alias",
-  "description": "Compatibility alias. New integrations must use catalyst_canvas_contract_1_0.schema.json.",
-  "$ref": "catalyst_canvas_contract_1_0.schema.json"
+  "description": "Compatibility alias. New integrations must use catalyst_canvas_contract_1_1.schema.json.",
+  "$ref": "catalyst_canvas_contract_1_1.schema.json"
 }

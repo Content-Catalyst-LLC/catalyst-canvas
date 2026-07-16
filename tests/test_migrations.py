@@ -1,4 +1,7 @@
+import json
 import unittest
+
+from catalyst_canvas import generate_canvas
 
 from catalyst_canvas import CONTRACT_VERSION
 from catalyst_canvas.migrations import UnsupportedContractVersion, migrate_payload
@@ -62,7 +65,7 @@ class CanvasMigrationTests(unittest.TestCase):
         self.assertEqual(result.contract["provenance"]["migrated_from"], "legacy-wrapper/1.1.0")
 
     def test_future_contract_is_rejected_with_supported_version(self):
-        with self.assertRaisesRegex(UnsupportedContractVersion, "catalyst-canvas/1.0"):
+        with self.assertRaisesRegex(UnsupportedContractVersion, "catalyst-canvas/1.1"):
             migrate_payload({"schema_version": "catalyst-canvas/9.0"})
 
     def test_unknown_payload_is_rejected_with_expected_shape(self):
@@ -72,3 +75,22 @@ class CanvasMigrationTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class ContractOneMigrationTests(unittest.TestCase):
+    def test_contract_1_0_migrates_to_contract_1_1(self):
+        current = generate_canvas({"challenge": "Upgrade a contract"})
+        legacy = json.loads(json.dumps(current))
+        legacy["schema_version"] = "catalyst-canvas/1.0"
+        legacy.pop("journeys", None)
+        legacy.pop("research_summary", None)
+        for persona in legacy["personas"]:
+            for key in ["context", "goals", "behaviors", "accessibility_needs", "preferred_channels", "quotes", "evidence_ids", "assumption_ids", "tags", "validation_status"]:
+                persona.pop(key, None)
+        for stakeholder in legacy["stakeholders"]:
+            for key in ["stakeholder_type", "stance", "decision_role", "engagement_strategy", "evidence_ids", "dependencies", "tags"]:
+                stakeholder.pop(key, None)
+        result = migrate_payload(legacy)
+        self.assertEqual(result.contract["schema_version"], "catalyst-canvas/1.1")
+        self.assertEqual(result.migrated_from, "catalyst-canvas/1.0")
+        self.assertIn("research fields", result.warnings[0])
+        self.assertEqual(result.contract["personas"][0]["validation_status"], "hypothesis")

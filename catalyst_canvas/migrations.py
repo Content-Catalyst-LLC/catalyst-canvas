@@ -1,4 +1,4 @@
-"""Migration support for Catalyst Canvas v1.0 and v1.1 export shapes."""
+"""Migration support for legacy exports and Canvas Contract 1.0."""
 
 from __future__ import annotations
 
@@ -138,13 +138,26 @@ def _legacy_flask_input(payload: Mapping[str, Any]) -> Dict[str, Any]:
 
 
 def migrate_payload(payload: Mapping[str, Any], *, source_surface: str = "migration") -> MigrationResult:
-    """Return a validated Contract 1.0 payload or a useful incompatibility error."""
+    """Return a validated current contract or a useful incompatibility error."""
     detected = detect_payload_version(payload)
     if detected == CONTRACT_VERSION:
         return MigrationResult(validate_contract(payload), "", [])
+    if detected == "catalyst-canvas/1.0":
+        compact = dict(payload)
+        warning = f"Migrated {detected} to {CONTRACT_VERSION}; research fields were normalized and should be reviewed."
+        compact["schema_version"] = CONTRACT_VERSION
+        compact["provenance"] = {
+            **(dict(payload.get("provenance")) if isinstance(payload.get("provenance"), Mapping) else {}),
+            "source_surface": source_surface,
+            "source_version": detected,
+            "migrated_from": detected,
+            "warnings": [warning],
+        }
+        contract = build_contract(compact, source_surface=source_surface)
+        return MigrationResult(contract, detected, [warning])
     if detected.startswith("catalyst-canvas/"):
         raise UnsupportedContractVersion(
-            f"Unsupported Canvas contract {detected!r}. This release accepts {CONTRACT_VERSION!r}. "
+            f"Unsupported Canvas contract {detected!r}. This release accepts {CONTRACT_VERSION!r} and migrates 'catalyst-canvas/1.0'. "
             "Export through a compatible Catalyst Canvas release before importing."
         )
 
@@ -156,7 +169,7 @@ def migrate_payload(payload: Mapping[str, Any], *, source_surface: str = "migrat
         compact = _legacy_flask_input(payload)
     else:
         raise UnsupportedContractVersion(
-            "Unable to identify this Canvas payload. Expected Canvas Contract 1.0 or a v1.0/v1.1 "
+            "Unable to identify this Canvas payload. Expected Canvas Contract 1.1, Canvas Contract 1.0, or a v1.0/v1.1 "
             "Python, Flask, or WordPress export containing challenge, audience, goal, and constraint fields."
         )
 

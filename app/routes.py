@@ -18,6 +18,7 @@ from flask import (
 
 from catalyst_canvas.contract import CanvasContractError, load_schema, new_id, strip_internal_fields, utc_now
 from catalyst_canvas.migrations import migrate_payload
+from catalyst_canvas.persona_templates import list_persona_templates
 from catalyst_canvas.workspaces import DEFAULT_WORKSPACE_ID, load_workspace_schema
 
 from .models import SAMPLE_PERSONAS
@@ -36,6 +37,9 @@ from .services.storage import (
     list_projects,
     list_revisions,
     list_workspaces,
+    list_research_assets,
+    research_asset_counts,
+    reuse_research_asset,
     project_counts,
     restore_project,
     restore_revision,
@@ -87,8 +91,26 @@ def view_model(canvas: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
+def read_behavioral_signal_upload(upload: Any) -> str:
+    """Validate and decode a behavioral-signal CSV upload."""
+    filename = str(getattr(upload, "filename", "") or "")
+    if not filename.lower().endswith(".csv"):
+        raise ValueError("Behavioral signal uploads must be CSV files.")
+    raw = upload.read(2_000_001)
+    if len(raw) > 2_000_000:
+        raise ValueError("Behavioral signal CSV files must be 2 MB or smaller.")
+    try:
+        return raw.decode("utf-8-sig")
+    except UnicodeDecodeError as exc:
+        raise ValueError("Behavioral signal CSV files must use UTF-8 encoding.") from exc
+
+
 def save_from_form(canvas: dict[str, Any], *, change_note: str = "Canvas updated") -> tuple[int, str]:
-    updated = normalize_form(request.form, canvas)
+    form_data = request.form.to_dict(flat=True)
+    upload = request.files.get("behavioral_signal_file")
+    if upload and upload.filename:
+        form_data["behavioral_signal_csv"] = read_behavioral_signal_upload(upload)
+    updated = normalize_form(form_data, canvas)
     project_id = str(canvas.get("_project_id") or session.get("project_id") or "")
     revision_storage_id = save_canvas(
         db_path(),
@@ -279,6 +301,63 @@ def empathy():
         save_from_form(canvas, change_note="Empathy map updated")
         return redirect(url_for("canvas.ideate"))
     return render_template("empathize/empathy_map.html", canvas=view_model(canvas))
+
+
+@bp.route("/research", methods=["GET", "POST"])
+def research_studio():
+    canvas = current_canvas()
+    project_id = str(canvas.get("_project_id") or session.get("project_id") or "")
+    if request.method == "POST":
+        try:
+            save_from_form(canvas, change_note="Persona, stakeholder, and journey research updated")
+        except ValueError as exc:
+            return Response(str(exc) + "\n", status=400, mimetype="text/plain")
+        return redirect(url_for("canvas.research_studio"))
+    return render_template(
+        "research/studio.html",
+        canvas=view_model(canvas),
+        contract=strip_internal_fields(canvas),
+        assets=list_research_assets(db_path(), workspace_id=workspace_id(), query=request.args.get("q", "")),
+        asset_counts=research_asset_counts(db_path(), workspace_id()),
+        project_id=project_id,
+        query=request.args.get("q", ""),
+        persona_templates=list_persona_templates(),
+    )
+
+
+@bp.route("/research/compare")
+def research_compare():
+    asset_type = request.args.get("type", "persona")
+    if asset_type not in {"persona", "journey"}:
+        asset_type = "persona"
+    assets = list_research_assets(db_path(), workspace_id=workspace_id(), asset_type=asset_type, query=request.args.get("q", ""))
+    return render_template("research/compare.html", asset_type=asset_type, assets=assets, query=request.args.get("q", ""))
+
+
+@bp.route("/projects/<project_id>/research-assets/<path:asset_key>/reuse", methods=["POST"])
+def research_asset_reuse(project_id: str, asset_key: str):
+    if not _project_in_workspace(project_id):
+        return Response("Project not found\n", status=404, mimetype="text/plain")
+    try:
+        reuse_research_asset(db_path(), project_id, asset_key, workspace_id=workspace_id())
+    except ValueError as exc:
+        return Response(str(exc) + "\n", status=404, mimetype="text/plain")
+    session["project_id"] = project_id
+    return redirect(url_for("canvas.research_studio"))
+
+
+@bp.route("/api/research/persona-templates")
+def persona_templates_api():
+    return jsonify({"templates": list_persona_templates()})
+
+
+@bp.route("/api/research/assets")
+def research_assets_api():
+    asset_type = request.args.get("type", "all")
+    assets = list_research_assets(
+        db_path(), workspace_id=workspace_id(), asset_type=asset_type, query=request.args.get("q", "")
+    )
+    return jsonify({"workspace_id": workspace_id(), "counts": research_asset_counts(db_path(), workspace_id()), "assets": assets})
 
 
 @bp.route("/personas")

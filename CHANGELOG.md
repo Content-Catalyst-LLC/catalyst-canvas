@@ -1,5 +1,43 @@
 # Changelog
 
+All notable changes to Catalyst Canvas are documented here.
+
+## 1.4.0 — 2026-07-16
+
+### Canvas Contract 1.1
+
+- Upgraded the canonical document contract to `catalyst-canvas/1.1` while retaining explicit migration support for Contract 1.0 and legacy v1.x payloads.
+- Expanded persona records with context, jobs, goals, needs, pains, gains, behaviors, barriers, motivations, accessibility needs, channels, quotes, evidence and assumption links, tags, source notes, confidence notes, and validation status.
+- Added empathy maps and attribute-level observed, research, or assumed basis records with evidence and confidence.
+- Expanded stakeholder records with type, relationship, quantified influence, interest, and impact, responsibilities, tensions, stance, decision role, engagement strategy, evidence links, dependencies, and tags.
+- Added reusable journey maps with persona linkage, scenario, desired outcome, status, ordered stages, evidence, assumptions, and tags.
+- Added stage-level actions, questions, thoughts, pain points, frictions, opportunities, touchpoints, channels, metrics, emotional state, owner, evidence links, and proposed experiment identifiers.
+- Added behavioral-signal records whose schema enforces hint status and excludes identity or demographic fields.
+- Added a normalized research-readiness summary to every Canvas.
+
+### Persona, stakeholder, and journey studio
+
+- Added a Flask research studio for editing persona and empathy records, influence/interest/impact stakeholder maps, and ordered journey stages.
+- Added six reusable persona templates and workspace persona/journey comparison.
+- Added UTF-8 analytics and GA4 CSV upload with file-type, size, and unsupported-column safeguards.
+- Added matrix and journey previews that remain tied to the saved canonical revision.
+- Added workspace-scoped `research_assets` and `project_research_links` storage with automatic indexing on save.
+- Added search, counts, retrieval, reuse, and archive operations for research assets without crossing workspace boundaries.
+- Added `GET /api/research/assets`, `GET /api/research/persona-templates`, comparison views, and project-level research-asset reuse routes.
+
+### Shared browser engine and exports
+
+- Updated the WordPress browser engine to generate and migrate Canvas Contract 1.1 documents.
+- Added browser-local persona, empathy, stakeholder, journey, CSV-hint, template, and comparison workflows while retaining the no-transmission privacy boundary.
+- Expanded Markdown and print exports with research readiness, persona detail, stakeholder maps, and journey stages.
+- Added deterministic Python, Flask, and Node conformance fixtures for the enriched research contract.
+
+### Validation and migration
+
+- Added Contract 1.0-to-1.1 migration coverage and migration provenance warnings.
+- Added research normalization, journey sequencing, stakeholder scoring, reusable asset, route, and browser conformance tests.
+- Expanded the release gate to validate research asset indexing and plugin packaging against Contract 1.1.
+
 ## 1.3.0 — 2026-07-16
 
 ### Persistent workspaces and projects
@@ -8,72 +46,29 @@
 - Added workspace-scoped project creation, switching, search, metadata editing, duplication, archive, and restore workflows.
 - Added immutable Canvas revision storage, bounded autosave retention, historical export, and restore-as-new-revision behavior.
 - Added idempotent migration of v1.2 `canvas_briefs` rows into the default workspace while preserving old numeric export URLs.
-
-### Flask and WordPress surfaces
-
 - Added Flask project, revision, autosave, workspace, schema, and export APIs with active-workspace boundary checks.
-- Added a persistent dashboard, project history view, metadata controls, and debounced form autosave.
 - Added a dependency-free WordPress localStorage workspace with project save, autosave, switch, duplicate, archive, and revision retention.
-- Added browser workspace tests and plugin package validation for the new asset.
-
-All notable changes to Catalyst Canvas are documented here.
 
 ## 1.2.0 — 2026-07-16
 
-### Canvas Contract 1.0
+### Canvas Contract 1.0 and shared engine
 
 - Added the canonical `catalyst_canvas/` package for normalization, generation, JSON Schema validation, migrations, surface adapters, and stable exporters.
-- Introduced `catalyst-canvas/1.0` with Canvas and revision IDs, lifecycle and owner metadata, structured audiences, personas, stakeholders, POV/HMW records, framework prompts, evidence, assumptions, prototypes, tests, review notes, and provenance.
-- Added the authoritative `schemas/catalyst_canvas_contract_1_0.schema.json` schema and archived the v1.1 brief schema under `schemas/legacy/`.
-- Added explicit migration paths for legacy Python core exports, legacy wrapper exports, and Flask flat records, with useful rejection messages for unknown or future contracts.
-
-### Shared engines and adapters
-
-- Replaced the Flask-specific generation engine with a form/view adapter over the canonical package.
-- Converted the legacy Python core and brief modules into compatibility adapters over the canonical engine.
-- Added a WordPress browser engine that creates canonical contracts and exports contract-aware JSON and Markdown locally.
-- Moved framework definitions into `contracts/frameworks.json` and added deterministic generation of the browser contract-data asset.
-- Removed the unused Flask POV/HMW engine to eliminate a remaining divergent generation path.
-
-### Persistence, exports, and validation
-
-- Enforced Contract 1.0 validation on Flask saves, reads, imports, and exports.
-- Added the Flask `POST /api/canvas/import` migration endpoint and JSON Schema endpoint.
-- Added stable JSON, Markdown, and standalone print-HTML exporters.
-- Added deterministic Python/Flask/WordPress fixtures and Node conformance tests.
-- Expanded the release suite to 31 pytest and 31 unittest checks plus browser, CLI migration, syntax, generated-asset, schema, and package validation.
+- Introduced `catalyst-canvas/1.0` with stable identities, lifecycle metadata, structured design records, evidence, assumptions, prototypes, tests, review notes, and provenance.
+- Added explicit migration paths for legacy Python, wrapper, and Flask flat records.
+- Routed Flask, Python compatibility modules, CLI, storage, exporters, and the WordPress browser engine through the shared contract.
+- Added deterministic cross-surface fixtures and a unified release gate.
 
 ## 1.1.1 — 2026-07-16
 
-### Repository integrity
+### Repository integrity and CI repair
 
-- Added `VERSION` as the canonical release version source.
-- Synchronized the project manifest, Python exports, JSON Schema, WordPress plugin header, WordPress asset version, documentation, and package naming to v1.1.1.
-- Added the MIT `LICENSE` file.
-- Added `.env.example` and required `CATALYST_CANVAS_SECRET` outside development, local, and test environments.
-- Removed committed SQLite runtime databases and the generated WordPress ZIP.
-- Expanded `.gitignore` for environments, caches, runtime databases, and generated release artifacts.
-
-### Python and tests
-
-- Made the `python/` utilities importable as a package from the repository root.
-- Reclassified `catalyst_canvas_brief.py` as a deprecated v1.x compatibility adapter over `catalyst_canvas_core.py`.
-- Added the canonical version to core JSON and Markdown outputs.
-- Rebuilt the tests so both `python -m pytest tests` and `python -m unittest discover -s tests -v` execute the same integrity suite.
-- Added application secret configuration, schema validation, version synchronization, and source-tree hygiene tests.
-- Closed SQLite connections deterministically to prevent resource leaks during application and test initialization.
-
-### CI and packaging
-
-- Consolidated the two competing workflows into one authoritative GitHub Actions release-validation workflow.
-- Added `scripts/validate_release.py` for repeatable local and CI validation.
-- Added `scripts/build_plugin.py` for deterministic, versioned WordPress plugin packaging.
-- Added PHP syntax, JavaScript syntax, JSON Schema, sample generation, and plugin-content validation gates.
+- Added `VERSION` as the canonical release source and synchronized release markers.
+- Added MIT licensing, environment configuration, source-tree hygiene, deterministic validation, and versioned plugin packaging.
+- Removed tracked runtime databases and generated release artifacts.
+- Consolidated CI and made pytest and unittest execute the same maintained suite.
+- Converted duplicate Python generators into compatibility adapters over the canonical core.
 
 ## 1.1.0 — 2026-07-01
 
-- Added the WordPress shortcode demo plugin for the Catalyst Canvas page.
-- Added the dependency-light Python core generator and CLI.
-- Added JSON Schema, sample input, example output notes, and documentation.
-- Added the review checklist, repository architecture, export specification, and WordPress installation instructions.
-- Added the initial Python tests and GitHub Actions workflows.
+- Added the WordPress shortcode demo plugin, Python core generator, CLI, schema, documentation, examples, tests, and initial CI workflows.

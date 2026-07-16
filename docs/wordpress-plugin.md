@@ -1,10 +1,11 @@
 # WordPress Plugin
 
-The v1.3.0 shortcode plugin uses four scripts:
+The v1.4.0 shortcode plugin uses four dependency-free scripts:
 
-1. generated contract/framework data;
-2. the shared browser Canvas engine;
-3. the presentation and interaction layer.
+1. generated release and framework data;
+2. the shared browser Canvas Contract 1.1 engine;
+3. the browser-local project and revision workspace;
+4. the presentation, research-studio, and export layer.
 
 Build:
 
@@ -16,7 +17,7 @@ python scripts/build_plugin.py
 Artifact:
 
 ```text
-dist/catalyst-canvas-demo-v1.3.0.zip
+dist/catalyst-canvas-demo-v1.4.0.zip
 ```
 
 Shortcode:
@@ -25,4 +26,4 @@ Shortcode:
 [catalyst_canvas_demo]
 ```
 
-Generated JSON declares `catalyst-canvas/1.0`. Visitor inputs remain in the browser.
+Generated JSON declares `catalyst-canvas/1.1`. The plugin supports structured personas, influence/interest stakeholder records, journey stages, local project persistence, Contract 1.0 migration, Markdown export, JSON download, and browser printing. Visitor inputs remain in the browser.

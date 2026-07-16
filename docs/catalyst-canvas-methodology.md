@@ -1,20 +1,21 @@
 # Catalyst Canvas Methodology
 
-Catalyst Canvas is a design-thinking workflow for turning vague problems into structured, testable, and reviewable work products.
+Catalyst Canvas is a design-thinking and research-synthesis workflow for turning vague problems into structured, testable, and reviewable work products.
 
 ## Core sequence
 
 1. **Challenge** — name the problem without inflating certainty.
-2. **Audience** — identify the person or group whose problem is being framed.
-3. **Goal** — define the improvement or decision the work should support.
-4. **Constraint** — make limits visible rather than hiding them.
-5. **Persona** — describe the user’s situation, need, friction, and desired progress.
-6. **Point of view** — write a clear problem statement.
+2. **Audience** — identify primary, secondary, affected, and excluded groups.
+3. **Persona research** — separate observed, research-informed, and assumed attributes.
+4. **Stakeholder map** — make influence, interest, stance, decision role, and dependencies visible.
+5. **Journey** — model ordered stages, behavior, pain points, touchpoints, evidence, and opportunities.
+6. **Point of view** — write a focused problem statement.
 7. **How might we** — convert the problem into generative prompts.
-8. **Prototype** — define a small next artifact or experiment.
-9. **Test plan** — identify a signal, method, and learning goal.
-10. **Review** — check assumptions, evidence gaps, and overclaims.
+8. **Framework** — apply a transparent ideation structure.
+9. **Evidence and assumptions** — link support and uncertainty to the design record.
+10. **Prototype and test** — define a small next artifact, signal, method, and learning goal.
+11. **Review** — check representation, evidence gaps, overclaiming, and decision readiness.
 
 ## Operating rule
 
-A Canvas output is not finished because it sounds persuasive. It is finished enough to test when its assumptions, user, constraint, and next signal are visible.
+A Canvas is not complete because it sounds persuasive. It is ready for the next test when its users, stakeholders, journey, evidence, assumptions, constraints, and learning signal are visible and reviewable.

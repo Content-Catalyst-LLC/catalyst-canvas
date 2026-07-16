@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deprecated v1.x core adapter over Canvas Contract 1.0.
+"""Deprecated v1.x core adapter over Canvas Contract 1.1.
 
 New code should import ``catalyst_canvas.generate_canvas`` or use
 ``python -m catalyst_canvas.cli``. This module preserves the original dataclass
@@ -79,7 +79,7 @@ def load_json(path: Path) -> Dict[str, Any]:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate a canonical Catalyst Canvas contract.")
     parser.add_argument("--input", required=True)
-    parser.add_argument("--output", help="Path to write Canvas Contract 1.0 JSON.")
+    parser.add_argument("--output", help="Path to write Canvas Contract 1.1 JSON.")
     parser.add_argument("--markdown", help="Path to write Markdown.")
     args = parser.parse_args()
     contract = generate_canvas(load_json(Path(args.input)), source_surface="python")

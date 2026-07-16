@@ -101,3 +101,32 @@ class WorkspaceStorageTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class ResearchAssetStorageTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.db = str(Path(self.tmp.name) / "research.sqlite3")
+        init_db(self.db)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_research_assets_are_indexed_and_reusable(self):
+        from app.services.storage import list_research_assets, research_asset_counts, reuse_research_asset
+        source_canvas = generate_canvas({
+            "title": "Source research",
+            "persona": {"name": "Research Participant", "confidence": "medium"},
+            "stakeholders": [{"name": "Sponsor", "influence": 5, "interest": 4}],
+            "journeys": [{"title": "Research journey", "stages": [{"name": "Discover"}]}],
+        })
+        source = create_project(self.db, source_canvas, title="Source research")
+        counts = research_asset_counts(self.db)
+        self.assertEqual(counts["persona"], 1)
+        self.assertEqual(counts["stakeholder"], 1)
+        self.assertEqual(counts["journey"], 1)
+        target = create_project(self.db, generate_canvas({"title": "Target"}), title="Target")
+        persona_asset = list_research_assets(self.db, asset_type="persona")[0]
+        reuse_research_asset(self.db, target["project_id"], persona_asset["asset_key"])
+        target_canvas = get_project_canvas(self.db, target["project_id"])
+        self.assertEqual(len(target_canvas["personas"]), 2)
+        self.assertNotEqual(target_canvas["personas"][0]["persona_id"], target_canvas["personas"][1]["persona_id"])

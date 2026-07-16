@@ -1,22 +1,21 @@
 # Catalyst Canvas Demo Workflow
 
-The current Canvas workflow follows:
+The v1.4.0 workflow follows:
 
 ```text
-challenge → audience → goal → constraint → persona → POV → HMW → ideas → prototype → test plan → export
+challenge → audience → persona research → stakeholder map → journey stages → POV → HMW → framework → evidence and assumptions → prototype → test → review → export
 ```
 
-The WordPress plugin provides the public guided demo. The maintained Python core provides reproducible JSON and Markdown exports.
+The WordPress plugin provides the public browser-local demonstration. The Flask workspace provides persistent projects, revisions, and reusable research assets. The canonical Python package provides reproducible contracts and exports.
 
 ## Recommended CLI
 
 ```bash
-python python/catalyst_canvas_core.py \
+python -m catalyst_canvas.cli generate \
   --input data/catalyst_canvas_sample_input.json \
-  --output outputs/sample-canvas-brief.json \
-  --markdown outputs/sample-canvas-brief.md
+  --json outputs/sample-canvas.json \
+  --markdown outputs/sample-canvas.md \
+  --html outputs/sample-canvas.html
 ```
 
-## Legacy-compatible CLI
-
-Existing v1.x automation may continue to call `python/catalyst_canvas_brief.py`. That module is now a compatibility adapter over the core engine and should not be used for new development.
+Existing v1.x automation may continue to call `python/catalyst_canvas_core.py` or `python/catalyst_canvas_brief.py`; both are compatibility adapters over the canonical package.
