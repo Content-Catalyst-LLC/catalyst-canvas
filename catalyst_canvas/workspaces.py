@@ -25,6 +25,8 @@ def load_workspace_schema() -> Dict[str, Any]:
     return json.loads(WORKSPACE_SCHEMA_PATH.read_text(encoding="utf-8"))
 
 
+# Schema validity is separate from membership or owner authorization. A
+# caller serving records to users must check those permissions elsewhere.
 def validate_project_record(record: Mapping[str, Any]) -> Dict[str, Any]:
     payload = deepcopy(dict(record))
     validator = Draft202012Validator(load_workspace_schema())

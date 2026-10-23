@@ -33,6 +33,8 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+# Normalize supplied source metadata for the ledger. Creator, rights, owner,
+# URL, and Knowledge Library identifiers are copied, not verified here.
 def normalize_sources(value: Any) -> List[Dict[str, Any]]:
     raw = value if isinstance(value, list) else ([value] if isinstance(value, Mapping) else [])
     records: List[Dict[str, Any]] = []
@@ -235,6 +237,8 @@ def normalize_handoffs(value: Any) -> List[Dict[str, Any]]:
     return records
 
 
+# Count declared links and review states. A linked claim is not necessarily
+# supported: source quality, citation resolution, and consent need review.
 def ledger_summary(
     sources: List[Mapping[str, Any]],
     evidence: List[Mapping[str, Any]],
@@ -287,6 +291,8 @@ def ledger_summary(
     }
 
 
+# Build a transfer payload only; this helper does not upload it, authorize
+# access in the target library, or independently verify its research records.
 def build_handoff_package(contract: Mapping[str, Any], target: str) -> Dict[str, Any]:
     target = _choice(target, {"knowledge_library", "research_librarian"}, "knowledge_library")
     return {
